@@ -49,9 +49,35 @@
       border-radius: 14px;
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
       text-align: center;
+    
     }
+#secret-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid rgb(64, 255, 58);
+  color: rgb(64, 255, 58);
+  font-size: 14px;
+  cursor: pointer;
+  display: none; /* hidden by default */
+  border-radius: 8px;
+}
+
+#secret-button:hover {
+  background: rgb(64, 255, 58);
+  color: black;
+}
+
+
   </style>
 </head>
+
+<a id="secret-button" href="main.html">
+  ☢ SECRET ENTRY ☢
+</a>
+
 
 <body>
 
@@ -71,6 +97,25 @@
     <a href="https://spacehey.com/profile?id=1863486" target="_blank">SpaceHey</a>
   </div>
 
+
+ <script>
+  (function () {
+    const now = new Date();
+
+    // CONFIG — change these
+    const allowedDay = 5;     // 0=Sunday, 5=Friday
+    const startHour = 20;     // 8 PM
+    const endHour = 23;       // 11 PM
+
+    const day = now.getDay();
+    const hour = now.getHours();
+
+    if (day === allowedDay && hour >= startHour && hour < endHour) {
+      document.getElementById("secret-button").style.display = "block";
+    }
+  })();
+</script>
+ 
 </body>
 </html>
 
