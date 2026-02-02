@@ -12,12 +12,6 @@
       padding: 0;
     }
 
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 40px 20px;
-    }
-
     h1, h2, h3, h6 {
       color: white;
       font-weight: bold;
@@ -39,7 +33,6 @@
       color: white;
     }
 
-    /* FIXED: missing dot + invalid property */
     .info-box {
       max-width: 900px;
       margin: 40px auto;
@@ -49,47 +42,50 @@
       border-radius: 14px;
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
       text-align: center;
-    
     }
-#secret-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 10px 14px;
-  background: rgba(0, 0, 0, 0.7);
-  border: 2px solid rgb(64, 255, 58);
-  color: rgb(64, 255, 58);
-  font-size: 14px;
-  cursor: pointer;
-  display: none; /* hidden by default */
-  border-radius: 8px;
-}
 
-#secret-button:hover {
-  background: rgb(64, 255, 58);
-  color: black;
-}
+    /* SECRET BUTTON */
+    #secret-button {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      padding: 8px 12px;
+      background: rgba(0, 0, 0, 0.75);
+      border: 2px solid rgb(64, 255, 58);
+      color: rgb(64, 255, 58);
+      font-size: 13px;
+      cursor: pointer;
+      display: none;
+      border-radius: 8px;
+      z-index: 9999;
+    }
 
-
+    #secret-button:hover {
+      background: rgb(64, 255, 58);
+      color: black;
+    }
   </style>
 </head>
 
-<a id="secret-button" href="main.html">
-  ☢ SECRET ENTRY ☢
-</a>
-
-
 <body>
 
+  <!-- SECRET BUTTON -->
+  <a id="secret-button" href="main.html">
+    ☢ SECRET ENTRY ☢
+  </a>
+
+  <!-- MUSIC -->
   <audio autoplay loop>
     <source src="./sounds/music/monkeyball.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 
-  <div style="text-align: center;">
+  <!-- IMAGE -->
+  <div style="text-align: center; margin-top: 40px;">
     <img src="./gifs/abootme.gif" alt="About me animation">
   </div>
 
+  <!-- INFO BOX -->
   <div class="info-box">
     <h1>its the man. the myth. the legends. Yur boy Conshaunery</h1>
     <h3>links</h3>
@@ -97,25 +93,25 @@
     <a href="https://spacehey.com/profile?id=1863486" target="_blank">SpaceHey</a>
   </div>
 
+  <!-- TIME LOGIC -->
+  <script>
+    (function () {
+      const now = new Date();
 
- <script>
-  (function () {
-    const now = new Date();
+      // Monday only
+      const allowedDay = 1; // 0=Sunday, 1=Monday
+      const startHour = 0;  // 12 AM
+      const endHour = 1;    // 1 AM
 
-    // CONFIG — change these
-    const allowedDay = 5;     // 0=Sunday, 5=Friday
-    const startHour = 20;     // 8 PM
-    const endHour = 23;       // 11 PM
+      if (
+        now.getDay() === allowedDay &&
+        now.getHours() >= startHour &&
+        now.getHours() < endHour
+      ) {
+        document.getElementById("secret-button").style.display = "block";
+      }
+    })();
+  </script>
 
-    const day = now.getDay();
-    const hour = now.getHours();
-
-    if (day === allowedDay && hour >= startHour && hour < endHour) {
-      document.getElementById("secret-button").style.display = "block";
-    }
-  })();
-</script>
- 
 </body>
 </html>
-
