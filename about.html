@@ -1,78 +1,76 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>conshaunery.com</title>
-    <style>
-      body {
-        background-color: #493370;
-        color: white;
-        font-family: Helvetica, Arial, sans-serif;
-        font-size: 16px;
-      }
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 40px 20px;
-      }
-      h1, h2, h3, h6 {
-        color: white;
-        font-weight: bold;
-        text-align: center;
-      }
-      p {
-        line-height: 1.5;
-        text-align: center;
-      }
-      a {
-        color: orange;
-        text-decoration: none;
-      }
-      a:hover {
-        color: white;
-      }
-info-box {
-        max-width: 900px;
-        margin: 40px auto;
-        padding: 24px 32px;
-        background: rgba(0, 0, 0, 0.5);
-        border: 2px solid rgb(64, 255, 58);
-        border-radius: 14px;
-        text-box: 0 0 30px rgba(0, 0, 0, 0.7);
-        text-align: left;
-  }
+<head>
+  <title>conshaunery.com</title>
+  <style>
+    body {
+      background-color: #493370;
+      color: white;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      margin: 0;
+      padding: 0;
+    }
 
-    </style>
-  </head>
-  <body>
-        
-      <audio autoplay loop>
-        <source src="./sounds/music/monkeyball.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-      </audio>
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    h1, h2, h3, h6 {
+      color: white;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    p {
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    a {
+      color: orange;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    a:hover {
+      color: white;
+    }
+
+    /* FIXED: missing dot + invalid property */
+    .info-box {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 24px 32px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid rgb(64, 255, 58);
+      border-radius: 14px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <audio autoplay loop>
+    <source src="./sounds/music/monkeyball.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
 
   <div style="text-align: center;">
-        <img src="./gifs/abootme.gif" alt="Download animation">
+    <img src="./gifs/abootme.gif" alt="About me animation">
   </div>
-    
-
 
   <div class="info-box">
-        <h1>its the man. the myth. the legends. Yur boy Conshaunery</h1>
-        <h3>links</h3>
-        <a href="https://www.bitview.net/user/ConShaunery" target="_blank">BitView</a>
-
-        <a href="https://spacehey.com/profile?id=1863486" target="_blank">SpaceHey</a>
+    <h1>its the man. the myth. the legends. Yur boy Conshaunery</h1>
+    <h3>links</h3>
+    <a href="https://www.bitview.net/user/ConShaunery" target="_blank">BitView</a>
+    <a href="https://spacehey.com/profile?id=1863486" target="_blank">SpaceHey</a>
   </div>
 
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-    </div>
-  </body>
-  <footer>
-
-  </footer>
+</body>
 </html>
+
