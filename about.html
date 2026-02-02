@@ -46,24 +46,26 @@
 
     /* SECRET BUTTON */
     #secret-button {
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      padding: 8px 12px;
-      background: rgba(0, 0, 0, 0.75);
-      border: 2px solid rgb(64, 255, 58);
-      color: rgb(64, 255, 58);
-      font-size: 13px;
-      cursor: pointer;
-      display: none;
-      border-radius: 8px;
-      z-index: 9999;
-    }
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  display: none;
+  z-index: 9999;
+}
 
-    #secret-button:hover {
-      background: rgb(64, 255, 58);
-      color: black;
-    }
+#secret-button img {
+  width: 32px;          /* adjust size */
+  height: auto;
+  cursor: pointer;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 6px rgba(64,255,58,0.8));
+}
+
+#secret-button img:hover {
+  filter: drop-shadow(0 0 12px rgba(64,255,58,1));
+}
+
+
   </style>
 </head>
 
