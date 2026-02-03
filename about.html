@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>conshaunery.com</title>
+
   <style>
     body {
       background-color: #493370;
@@ -11,22 +12,13 @@
       margin: 0;
       padding: 0;
     }
->>>>>>> 855908498a3a7d9810754eb5ba2fc7067bcc0921
 
-     <audio autoplay loop>
-        <source src="./sounds/music/games_vox.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-      </audio>
     h1, h2, h3, h6 {
       color: white;
       font-weight: bold;
       text-align: center;
     }
 
-    <div style="text-align: center;">
-        <img src="./gifs/abootme.gif" alt="Download animation">
-    </div>
-    
     p {
       line-height: 1.5;
       text-align: center;
@@ -55,26 +47,24 @@
 
     /* SECRET BUTTON */
     #secret-button {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  display: none;
-  z-index: 9999;
-}
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      display: none;
+      z-index: 9999;
+    }
 
-#secret-button img {
-  width: 64px;          /* adjust size */
-  height: auto;
-  cursor: pointer;
-  image-rendering: pixelated;
-  filter: drop-shadow(0 0 6px rgba(64,255,58,0.8));
-}
+    #secret-button img {
+      width: 64px;
+      height: auto;
+      cursor: pointer;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 6px rgba(64,255,58,0.8));
+    }
 
-#secret-button img:hover {
-  filter: drop-shadow(0 0 12px rgba(64,255,58,1));
-}
-
-
+    #secret-button img:hover {
+      filter: drop-shadow(0 0 12px rgba(64,255,58,1));
+    }
   </style>
 </head>
 
@@ -82,7 +72,7 @@
 
   <!-- SECRET BUTTON -->
   <a id="secret-button" href="secret.html">
-    <img src="./gifs/time.gif" alt="secret gif">
+    <img src="./gifs/time.gif" alt="Secret Entry">
   </a>
 
   <!-- MUSIC -->
@@ -109,8 +99,7 @@
     (function () {
       const now = new Date();
 
-      // Monday only
-      const allowedDay = 1; // 0=Sunday, 1=Monday
+      const allowedDay = 1; // Monday
       const startHour = 0;  // 12 AM
       const endHour = 1;    // 1 AM
 
