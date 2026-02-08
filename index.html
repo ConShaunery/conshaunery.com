@@ -1,206 +1,255 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>conshaunery.com</title>
-   <!-- Favicon: -->
-  <link rel="icon" href="./favicon.ico" type="image/x-icon">
-  <style>
-    body {
-      background-color: #272323;
-      color: white;
-      font-family: Helvetica, Arial, sans-serif;
-      font-size: 16px;
-      text-align: center;
-      padding: 40px 20px;
-    }
-    .dialogue { margin-top: 20px; }
-    input[type="text"] {
-      padding: 10px; font-size: 18px;
-      width: 80%; max-width: 400px;
-      border: 2px solid #555; border-radius: 5px;
-      background-color: #222; color: white;
-      text-align: center; margin-bottom: 10px;
-    }
-    button {
-      padding: 10px 20px; font-size: 16px;
-      background-color: purple; color: white;
-      border: none; cursor: pointer; margin: 10px;
-    }
-    button:hover { background-color: orange; color: black; }
-    .hidden { display: none; }
-    #name-reaction, #question-response {
-      font-style: italic; margin-top: 10px;
-    }
-    #enter-line a {
-      color: orange; font-size: 18px; text-decoration: underline;
-    }
-    #enter-line a:hover { color: white; }
-    #rejection-line {
-      color: crimson; font-size: 20px;
-      font-weight: bold; margin-top: 20px;
-    }
-    #rejection-line button { margin-top: 10px; }
-  </style>
-</head>
-<body>
+<html><head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=0.37">
+        <title>NAV MENU</title>
+        <link href="styles/common.css" rel="stylesheet" type="text/css" media="all">
+        <style>
+            body {
+                /* Cool dark blue! #000020 */
+                background-color: #000014;
+                /* background-image: linear-gradient(#1a2964, #00051e); */
+                background-image: linear-gradient(#210971, #020010);
+                color: yellow;
+                text-align: center;
+                /* box-shadow: inset 0px 0px 50px 0px #000014; */
+            }
 
-  <div class="quick-enter">
-    <a href="main.html">Lazy? click here if youre unkool...</a>
-  </div>
+            #bubbles {
+                background-image: url("./gifs/faces.gif");
+                background-size: 100%;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                top: 0px;
+                float: left;
+                z-index: -10;
+                opacity: 0.9;
+            }
 
+            a {
+                text-decoration: underline;
+            }
 
-  <img src="./gifs/moon_face.gif" alt="logo" width="500">
+            a:hover {
+                cursor: pointer;
+            }
 
-  <!-- Step 1: Name -->
-  <div class="dialogue" id="step1">
-    <h1 id="initial-greeting">"Oh... And whomest could dis be?"</h1>
-    <input type="text" id="q1" placeholder="Your name?">
-    <p id="name-reaction" class="hidden"></p>
-    <br>
-    <button onclick="nextStep(1)">Proceed</button>
-  </div>
+            h1 {
+                font-size: 16px;
+                padding-top: 10px;
+                margin: 0px;
+                padding-bottom: 15px;
+                color: #ffd596;
+            }
 
-  <!-- Step 2: Origin -->
-  <div class="dialogue hidden" id="step2">
-    <h1>"Hmm... Un traveller, perchance... But from where?"</h1>
-    <input type="text" id="q2" placeholder="From where do you come?">
-    <br>
-    <button onclick="nextStep(2)">Proceed</button>
-  </div>
+            li {
+                font-size: 13px;
+                margin-bottom: 12px;
+                font-weight: bold;
+                transform: rotate(6deg);
+            }
 
-  <!-- Step 3: Q&A -->
-  <div class="dialogue hidden" id="step3">
-    <h1>"Oh how interesting! But questions? What might you ask? Curious."</h1>
-    <input type="text" id="q3" placeholder="Your question...">
-    <p id="question-response" class="hidden"></p>
-    <br>
-    <button onclick="questionResponse()">Ask</button>
-    <button id="to-final" class="hidden" onclick="toFinal()">Proceed to Final Question</button>
-  </div>
+            ul {
+                list-style: none;
+                margin: 0;
+                padding: 10px 5px 25px 5px;
+            }
 
-  <!-- Step 4: Final Question -->
-  <div class="dialogue hidden" id="step4">
-    <h2>"Oh?....What dost thou seek in these shadowed cyberrealm? Hmm?"</h2>
-    <input type="text" id="q4" placeholder='Speak! Wali...for I have spoken...'>
-    <br>
-    <button onclick="finalCheck()">Reveal My Destiny</button>
-  </div>
+            li a {
+                color: #fffd0c;
+            }
 
-  <!-- Entry if correct -->
-  <div id="enter-line" class="hidden">
-    <h1>"Is that so?... Then you shallest enterz..."</h1>
-    <p><a href="main.html">✨ Enter the Realm ✨</a></p>
-  </div>
+            li a:hover {
+                color: white;
+            }
 
-  <!-- Rejection -->
-  <div id="rejection-line" class="hidden">
-    <p>"Fie! Your intentions feel... impure. Be gone you thot! For I...I never you...."</p>
-    <button onclick="redirectToBrave()">Leave thy realm… or return with the right answers…</button>
-  </div>
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
 
-  <!-- Background Music -->
-  <audio id="bg-music" loop>
-    <source src="./sounds/sunset.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+            ul img {
+                width: 45px;
+            }
 
-  <script>
-    // Autoplay once user interacts
-    function startAudio() {
-      if (!window.audioStarted) {
-        const audio = document.getElementById("bg-music");
-        audio.play().catch(()=>{});
-        window.audioStarted = true;
-      }
-    }
+            ul img,
+            .badges img {
+                image-rendering: pixelated;
+                image-rendering: crisp-edges;
+            }
 
-    // Welcome back message after rejection
-    document.addEventListener("DOMContentLoaded", () => {
-      if (localStorage.getItem("rejectedVisitor") === "true") {
-        document.getElementById("initial-greeting")
-                .textContent = '"Oh... so you\'ve returned..."';
-      }
-    });
+            .badges img {
+                margin-bottom: 5px;
+                max-width: 88px;
+            }
 
-    // Step transitions for steps 1 & 2
-    function nextStep(step) {
-      startAudio();
-      if (step === 1) {
-        const name = document.getElementById("q1").value.trim();
-        const react = document.getElementById("name-reaction");
-        if (!name) {
-          react.textContent = "A name must be spoken...";
-          react.classList.remove("hidden");
-          return;
-        }
-        react.textContent = `"${name}"... A name most curious...`;
-        react.classList.remove("hidden");
-        setTimeout(() => {
-          document.getElementById("step1").classList.add("hidden");
-          document.getElementById("step2").classList.remove("hidden");
-        }, 1500);
-      } else {
-        // after step2 → show Q&A
-        document.getElementById("step2").classList.add("hidden");
-        document.getElementById("step3").classList.remove("hidden");
-      }
-    }
+            .wider img {
+                width: 60px;
+            }
 
-    // Q&A logic
-    function questionResponse() {
-      startAudio();
-      const q = document.getElementById("q3").value.trim().toLowerCase();
-      const resp = document.getElementById("question-response");
-      let answer;
-      if (q.includes("place")) {
-        answer = "This is a place of the past...Now that those destroyed our future....";
-      } else if (q.includes("who", "what" ,"where")) {
-        answer = "I am the gatekeeper of this cyberrealm, ever watchful. Sha'za Zuk Kysion the name.";
-      } else if (q.includes("help")) {
-        answer = "Ask of origins, purpose, or secrets—then press ‘Proceed’.";
-      } else if (q.includes("music", "song", "sound")) {
-        answer = "The melody you hear stems from the sunset echoes of old nets.";
-      } else {
-        answer = "I know not that. Speak of the realm’s lore or proceed on.";
-      }
-      resp.textContent = answer;
-      resp.classList.remove("hidden");
-      // show proceed-to-final button
-      document.getElementById("to-final").classList.remove("hidden");
-    }
+            .thinner img {
+                width: 40px;
+            }
 
-    function toFinal() {
-      startAudio();
-      document.getElementById("step3").classList.add("hidden");
-      document.getElementById("step4").classList.remove("hidden");
-    }
+            .even-thinner img {
+                width: 35px;
+            }
 
-    // Final acceptance/rejection
-    function finalCheck() {
-      startAudio();
-      const ans = document.getElementById("q4").value.trim().toLowerCase();
-      const allowed = ["refuge","vibez","knownledge","past","truth", "tickles"];
+            .nav-block {
+                background-color: yellow;
+                padding: 5px 0 5px 0;
+                color: black;
+                font-size: 14px;
+                margin-bottom: 35px;
+            }
 
-      document.getElementById("step4").classList.add("hidden");
+            #mood {
+                font-size: 12px;
+            }
 
-      if (allowed.includes(ans)) {
-        // accepted
-        localStorage.removeItem("rejectedVisitor");
-        document.getElementById("rejection-line").classList.add("hidden");
-        document.getElementById("enter-line").classList.remove("hidden");
-      } else {
-        // rejected
-        localStorage.setItem("rejectedVisitor", "true");
-        document.getElementById("enter-line").classList.add("hidden");
-        document.getElementById("rejection-line").classList.remove("hidden");
-      }
-    }
+            #mood img {
+                height: 17px;
+            }
 
-    function redirectToBrave() {
-      window.location.href = "https://search.brave.com";
-    }
-  </script>
+            #hitcounter,
+            #hitcounter a {
+                background-color: black;
+                color: yellow;
+            }
 
-</body>
-</html>
+            #guide {
+                font-size: 13px;
+                margin-bottom: 0px;
+                padding: 0px;
+                color: #d7f3ff;
+            }
+            #guide a {
+                color: #d7f3ff;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="bubbles"></div>
+        <!-- <p id="guide">
+            <a href="frames/guide.html"><img class="twist" src="images/animated-info-sign-image-0012.gif" /></a>
+        </p> -->
+        <ul>
+            <li>
+                 <a href="about.html" target="main"><img class="twist" src="./gifs/wizard.gif" alt="about">about</a>
+            </li>
+
+           <li>
+                 <a href="terminal.html" target="main"><img class="twist" src="./gifs/terminal.gif" alt="terminal">Terminal</a>
+            </li>
+           
+            <li>
+                 <a href="home.html" target="main"><img class="twist" src="./gifs/earth.gif" alt="Home">Home</a>
+            </li>
+
+            <li>
+                 <a href="dreams.html" target="main"><img class="twist" src="./gifs/sleep.gif" alt="Dreams">Dreams</a>
+            </li>
+            <li>
+                 <a href="pics.html" target="main"><img class="twist" src="./gifs/fish.gif" alt="Pics">Pics</a>
+            </li>
+            <li>
+                 <a href="vids.html" target="main"><img class="twist" src="./gifs/film_2.gif" alt="Vids">Vids</a>
+            </li>
+            <li>
+                 <a href="music.html" target="main"><img class="twist" src="./gifs/guitar.gif" alt="Music">Music</a>
+            </li>
+            <li>
+                 <a href="games.html" target="main"><img class="twist" src="./gifs/yellow_guy.gif" alt="Games">Games</a>
+            </li>
+            <li>
+                 <a href="downloads.html" target="main"><img class="twist" src="./gifs/purple_floppy.gif" alt="Downloads">Downloads</a>
+            </li>
+            <li>
+                 <a href="stream.html" target="main"><img class="twist" src="./gifs/stream_2.gif" alt="stream">streams</a>
+            </li>
+            <li>
+                 <a href="faq.html" target="main"><img class="twist" src="./gifs/questions.gif" alt="faq">faq</a>
+            </li>
+            <li>
+                 <a href="help.html" target="main"><img class="twist" src="./gifs/help.gif" alt="help">help</a>
+            </li>
+            <li>
+                 <a href="leave.html" target="main"><img class="twist" src="./gifs/ufo.gif" alt="leave">leave</a>
+            </li>
+            <li>
+                 <a href="guestbook.html"main"><img class="twist" src="./gifs/book.gif" alt="GUEST BOOK">GUEST BOOOK</a>
+            </li>
+        </ul>
+
+        <br>
+
+        <script>
+            let nav = {};
+
+            window.addEventListener("DOMContentLoaded", async () => {
+                nav.audio = {};
+                nav.audio.elevator = new Audio("/audio/elevator.mp3");
+                nav.audio.click = new Audio("/audio/ui/click.mp3");
+                nav.audio.interact = new Audio("/audio/ui/drip.mp3");
+                nav.audio.interact.volume = 0.3;
+
+                nav.audio.context = new AudioContext();
+                nav.audio.track = {};
+                nav.audio.track.elevator = nav.audio.context.createMediaElementSource(nav.audio.elevator);
+                nav.audio.track.elevator.connect(nav.audio.context.destination);
+                nav.audio.track.click = nav.audio.context.createMediaElementSource(nav.audio.click);
+                nav.audio.track.click.connect(nav.audio.context.destination);
+                nav.audio.track.interact = nav.audio.context.createMediaElementSource(nav.audio.interact);
+                nav.audio.track.interact.connect(nav.audio.context.destination);
+
+                nav.hits = document.getElementById("hits-box");
+                nav.links = document.getElementsByTagName("a");
+
+                // Elevator Links
+                for (var i = 0, len = nav.links.length; i < len; i++) {
+                    if(nav.links[i].target != "_blank") {
+                        let url = nav.links[i].href;
+                        nav.links[i].removeAttribute("href");
+                        nav.links[i].onclick = async function () {
+                            nav.audio.elevator.currentTime = 0;
+                            nav.audio.elevator.play();
+                            nav.audio.click.play();
+                            window.open("./loading.html", "main");
+                            await sleep(2050);
+                            window.open(url, "main");
+                        };
+                    }
+                }
+
+                // Hit Counter
+                fetch("https://brain.melonking.net/melon-hits")
+                    .then(function (response) {
+                        return response.text();
+                    })
+                    .then(function (responseText) {
+                        if (responseText != "error") {
+                            nav.hits.innerHTML = '<strong><a target="main" href="https://brain.melonking.net/melon-hits?info=1">' + responseText + " HITS</a></strong>";
+                        }
+                    });
+
+                // Interact Sounds
+                document.addEventListener("mouseover", (e) => {
+                    if (e.target.tagName == "BUTTON" || e.target.tagName == "A") {
+                        nav.audio.interact.play();
+                    }
+                });
+
+                document.addEventListener("click", (e) => {
+                    if (e.target.tagName == "BUTTON" || e.target.tagName == "A") {
+                        nav.audio.click.play();
+                    }
+                });
+            });
+
+            function sleep(ms) {
+                return new Promise((resolve) => setTimeout(resolve, ms));
+            }
+        </script>
+    
+</body></html>
