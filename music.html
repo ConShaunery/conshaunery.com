@@ -1,285 +1,219 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>music</title>
-    <style>
-       body {
-    background-image: url("./gifs/sky2.gif");
-    background-size: 50%;
-    background-repeat: repeat;
-    background-color: black; /* fallback color */
-    color: white;
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 16px;
-  }
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 40px 20px;
-      }
-      h1, h2, h3, h6 {
-        color: white;
-        font-weight: bold;
-        text-align: center;
-      }
-      h5 {
-        color: #ffffff;
-        font-weight: bold;
-        text-align: left;
-      }
-      p {
-        line-height: 1.5;
-        text-align: center;
-      }
-      a {
-        color: #ffffff;
-        text-decoration: none;
-      }
-      a:hover {
-        color: orange;
-      }
-      .retro-player {
-  background-color: #fff;
-  border: 3px solid #000;
-  border-radius: 5px;
-  padding: 10px;
-  margin: 10px;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 16px;
-  color: #000;
-  text-align: center;
-  width: 300px;
-  height: 60px;
-  line-height: 60px;
-}
+<head>
+  <title>music</title>
 
-.retro-player::-webkit-media-controls {
-  display: none !important;
-}
+  <style>
+    body {
+      background-image: url("./gifs/sky2.gif");
+      background-size: 50%;
+      background-repeat: repeat;
+      background-color: black;
+      color: white;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 16px;
+    }
 
-.retro-player::-webkit-media-controls-enclosure {
-  height: 0;
-}
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      text-align: center;
+    }
 
-.retro-player::-webkit-media-controls-overlay-play-button {
-  background-color: #000;
-  border: none;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  color: #fff;
-  font-size: 20px;
-  line-height: 30px;
-  text-align: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+    h1, h2, h3, h6 {
+      color: white;
+      font-weight: bold;
+      text-align: center;
+    }
 
-/* ===== WINAMP PLAYER ===== */
-.winamp {
-  width: 340px;
-  background: #2b2b2b;
-  border: 2px solid #000;
-  box-shadow: inset 0 0 0 2px #555;
-  font-family: "Courier New", monospace;
-  color: #00ff9c;
-  padding: 8px;
-  margin: 20px auto;
-}
+    a {
+      color: #ffffff;
+      text-decoration: none;
+    }
 
-/* DISPLAY */
-.winamp-display {
-  background: #000;
-  border: 1px solid #444;
-  padding: 6px;
-  font-size: 13px;
-  overflow: hidden;
-  white-space: nowrap;
-}
+    a:hover {
+      color: orange;
+    }
 
-.marquee {
-  display: inline-block;
-  padding-left: 100%;
-  animation: marquee 10s linear infinite;
-}
+    /* ===== WINAMP PLAYER ===== */
+    .winamp {
+      width: 340px;
+      background: #2b2b2b;
+      border: 2px solid #000;
+      box-shadow: inset 0 0 0 2px #555;
+      font-family: "Courier New", monospace;
+      color: #00ff9c;
+      padding: 8px;
+      margin: 20px auto;
+    }
 
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
-}
+    .winamp-display {
+      background: #000;
+      border: 1px solid #444;
+      padding: 6px;
+      font-size: 13px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
 
-/* CONTROLS */
-.winamp-controls {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 6px;
-}
+    .marquee {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marquee 10s linear infinite;
+    }
 
-.winamp button {
-  background: #3a3a3a;
-  border: 1px solid #111;
-  color: #00ff9c;
-  font-size: 12px;
-  padding: 4px 8px;
-  cursor: pointer;
-}
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
 
-.winamp button:hover {
-  background: #00ff9c;
-  color: #000;
-}
+    .winamp-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+    }
 
-/* VOLUME */
-.winamp input[type="range"] {
-  flex: 1;
-}
+    .winamp button {
+      background: #3a3a3a;
+      border: 1px solid #111;
+      color: #00ff9c;
+      font-size: 12px;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
 
-/* SPECTRUM */
-.spectrum {
-  display: flex;
-  gap: 2px;
-  height: 20px;
-  margin-top: 6px;
-}
+    .winamp button:hover {
+      background: #00ff9c;
+      color: #000;
+    }
 
-.bar {
-  width: 6px;
-  background: #00ff9c;
-  animation: bounce 1s infinite ease-in-out;
-}
+    .winamp input[type="range"] {
+      flex: 1;
+    }
 
-.bar:nth-child(odd) { animation-delay: .2s; }
-.bar:nth-child(even) { animation-delay: .4s; }
+    .spectrum {
+      display: flex;
+      gap: 2px;
+      height: 20px;
+      margin-top: 6px;
+    }
 
-@keyframes bounce {
-  0% { height: 5px; }
-  50% { height: 20px; }
-  100% { height: 5px; }
-}
+    .bar {
+      width: 6px;
+      background: #00ff9c;
+      animation: bounce 1s infinite ease-in-out;
+    }
 
-/* PLAYLIST */
-.playlist {
-  margin-top: 8px;
-  border-top: 1px solid #444;
-  padding-top: 6px;
-}
+    .bar:nth-child(odd) { animation-delay: .2s; }
+    .bar:nth-child(even) { animation-delay: .4s; }
 
-.playlist div {
-  cursor: pointer;
-  padding: 2px 0;
-}
+    @keyframes bounce {
+      0% { height: 5px; }
+      50% { height: 20px; }
+      100% { height: 5px; }
+    }
 
-.playlist div:hover {
-  b
+    .playlist {
+      margin-top: 8px;
+      border-top: 1px solid #444;
+      padding-top: 6px;
+      text-align: left;
+    }
 
-}
+    .playlist div {
+      cursor: pointer;
+      padding: 4px;
+    }
 
+    .playlist div:hover {
+      background: #00ff9c;
+      color: #000;
+    }
+  </style>
+</head>
 
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <img src ="./gifs/Tunez!.gif">
-      <br>
-      <br>
-      <br>
+<body>
 
+  <div class="container">
+    <img src="./gifs/Tunez!.gif" alt="Tunez">
+    
+    <div class="winamp">
+      <div class="winamp-display">
+        <span class="marquee" id="track-title">
+          alexi murdoch – all of my days
+        </span>
+      </div>
 
-/* WINAMP */
-<div class="winamp">
-  <div class="winamp-display">
-    <span class="marquee" id="track-title">
-      alexi murdoch – all of my days
-    </span>
+      <div class="spectrum">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        <div class="bar"></div><div class="bar"></div>
+      </div>
+
+      <div class="winamp-controls">
+        <button onclick="playTrack()">▶</button>
+        <button onclick="pauseTrack()">■</button>
+        <input type="range" min="0" max="1" step="0.01" value="0.7" onchange="setVolume(this)">
+      </div>
+
+      <audio id="player">
+        <source src="./sounds/music/Alexi Murdoch - All My Days.mp3" type="audio/mpeg">
+      </audio>
+
+      <div class="playlist">
+        <div onclick="loadTrack(this, './sounds/music/Alexi Murdoch - All My Days.mp3')">
+          Alexi Murdoch – All My Days
+        </div>
+        <div onclick="loadTrack(this, './sounds/music/drums_and_riffs_ext_hox.mp3')">
+          Half-Life – Drums and Riffs
+        </div>
+        <div onclick="loadTrack(this, './sounds/music/i_stay_away.mp3')">
+          Alice in Chains – I Stay Away
+        </div>
+        <div onclick="loadTrack(this, './sounds/music/opus_one.mp3')">
+          Tim Carleton – Opus One
+        </div>
+        <div onclick="loadTrack(this, './sounds/music/Collective Soul - Shine.mp3')">
+          Collective Soul – Shine
+        </div>
+        <div onclick="loadTrack(this, './sounds/music/nutshell.mp3')">
+          Alice in Chains – Nutshell
+        </div>
+        <div onclick="loadTrack(this, './sounds/music/Into Dust.mp3')">
+          Mazzy Star – Into Dust
+        </div>
+        <div onclick="loadTrack(this, './sounds/music/The Day The World Went Away (Still).mp3')">
+          Nine Inch Nails – The Day the World Went Away (Still)
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="spectrum">
-    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-    <div class="bar"></div><div class="bar"></div>
-  </div>
+  <script>
+    const audio = document.getElementById("player");
+    const title = document.getElementById("track-title");
 
-  <div class="winamp-controls">
-    <button onclick="play()">▶</button>
-    <button onclick="pause()">■</button>
-    <input type="range" min="0" max="1" step="0.01" value="0.7" onchange="setVolume(this)">
-  </div>
+    function playTrack() {
+      audio.play();
+    }
 
-  <audio id="player">
-    <source src="./sounds/music/Alexi Murdoch - All My Days.mp3" type="audio/mpeg">
-  </audio>
+    function pauseTrack() {
+      audio.pause();
+    }
 
-/* PLAYLIST */
-  <div class="playlist">
-    <div onclick="loadTrack(this, './sounds/music/Alexi Murdoch - All My Days.mp3')">
-      Alexi Murdoch – All My Days
-    </div>
-    <div onclick="loadTrack(this, './sounds/music/drums_and_riffs_ext_hox.mp3')">
-      half-life - drums_and_riffs
-    </div>
-    <div onclick="loadTrack(this, './sounds/music/i_stay_away.mp3')">
-      alice in chains – i stay away
-    </div>
+    function setVolume(slider) {
+      audio.volume = slider.value;
+    }
 
-    <div onclick="loadTrack(this, './sounds/music/opus_one.mp3')">
-      tim carleton - opus one
-    </div>
+    function loadTrack(el, src) {
+      audio.pause();
+      audio.src = src;
+      title.textContent = el.textContent.trim();
+      audio.play();
+    }
+  </script>
 
-    <div onclick="loadTrack(this, './sounds/music/Collective Soul - Shine.mp3')"">
-      collective soul - shine
-    </div>
-
-
-     <div onclick="loadTrack(this, './sounds/music/nutshell.mp3')">
-      alice in chains – nutshell
-    </div>
-
-    <div onclick="loadTrack(this, './sounds/music/Into Dust.mp3')">
-      mazzystar - into dust
-    </div>
-
-  </div>
-</div>
-/* WINAMP */
-
-
-    </div>
-
-<script>
-  const audio = document.getElementById("player");
-  const title = document.getElementById("track-title");
-
-  function play() {
-    audio.play();
-  }
-
-  function pause() {
-    audio.pause();
-  }
-
-  function setVolume(slider) {
-    audio.volume = slider.value;
-  }
-
-  function loadTrack(el, src) {
-    audio.pause();
-    audio.src = src;
-    title.textContent = el.textContent;
-    audio.play();
-  }
-</script>
-
-
-
-  </body>
-  <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12 text-center">
-          
-    </div>
-  </footer>
+</body>
 </html>
