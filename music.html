@@ -76,6 +76,108 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+/* ===== WINAMP PLAYER ===== */
+.winamp {
+  width: 340px;
+  background: #2b2b2b;
+  border: 2px solid #000;
+  box-shadow: inset 0 0 0 2px #555;
+  font-family: "Courier New", monospace;
+  color: #00ff9c;
+  padding: 8px;
+  margin: 20px auto;
+}
+
+/* DISPLAY */
+.winamp-display {
+  background: #000;
+  border: 1px solid #444;
+  padding: 6px;
+  font-size: 13px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 10s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* CONTROLS */
+.winamp-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.winamp button {
+  background: #3a3a3a;
+  border: 1px solid #111;
+  color: #00ff9c;
+  font-size: 12px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.winamp button:hover {
+  background: #00ff9c;
+  color: #000;
+}
+
+/* VOLUME */
+.winamp input[type="range"] {
+  flex: 1;
+}
+
+/* SPECTRUM */
+.spectrum {
+  display: flex;
+  gap: 2px;
+  height: 20px;
+  margin-top: 6px;
+}
+
+.bar {
+  width: 6px;
+  background: #00ff9c;
+  animation: bounce 1s infinite ease-in-out;
+}
+
+.bar:nth-child(odd) { animation-delay: .2s; }
+.bar:nth-child(even) { animation-delay: .4s; }
+
+@keyframes bounce {
+  0% { height: 5px; }
+  50% { height: 20px; }
+  100% { height: 5px; }
+}
+
+/* PLAYLIST */
+.playlist {
+  margin-top: 8px;
+  border-top: 1px solid #444;
+  padding-top: 6px;
+}
+
+.playlist div {
+  cursor: pointer;
+  padding: 2px 0;
+}
+
+.playlist div:hover {
+  b
+
+}
+
+
     </style>
   </head>
   <body>
@@ -84,61 +186,100 @@
       <br>
       <br>
       <br>
-      <h5>alexi murdoch - all of my days (2006)</h5>
-      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/af/Alexi_Murdoch_-_Time_Without_Consequence.JPG/220px-Alexi_Murdoch_-_Time_Without_Consequence.JPG" alt="jar" width="150" height="200" align="left">
-      <br><br><br><br><br><br><br><br><br><br><br><br>
-      <audio controls>
-        <source src="./sounds/music/Alexi Murdoch - All My Days.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-      </audio>
-      <br>
-      <br>
-      <h5>half-life - drums and riffs (1998)</h5>
-      <img src="https://upload.wikimedia.org/wikipedia/en/f/fa/Half-Life_Cover_Art.jpg" alt="half_life" width="150" height="200" align="left">
-      <br><br><br><br><br><br><br><br><br><br><br><br>
-      <audio controls>
-        <source src="./sounds/music/drums_and_riffs_ext_hox.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-      </audio>
-      <br>
-      <br>
-      <h5>tim carleton - opus one (1989)</h5>
-      <img src="https://i.scdn.co/image/ab67616d00001e021258e0205d4bea3e7973935b" alt="Opus One" width="150" height="200" align="left">
-      <br><br><br><br><br><br><br><br><br><br><br><br>
-      <audio controls>
-        <source src="./sounds/music/opus_one.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-      </audio>
-      <br>
-      <br>
-      <h5>alice in chains - i stay away(1993)</h5>
-      <img src="https://upload.wikimedia.org/wikipedia/en/1/15/Alice_in_Chains_Jar_of_Flies.jpg" alt="jar" width="150" height="200" align="left">
-      <br><br><br><br><br><br><br><br><br><br><br><br>
-      <audio controls>
-        <source src="./sounds/music/i_stay_away.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-      </audio>
-      <br>
-      <br>
-      <h5>collective soul - shine(1993)</h5>
-      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/72/Collective_Soul_-_Hints%2C_Allegations%2C_and_Things_Left_Unsaid.jpg/220px-Collective_Soul_-_Hints%2C_Allegations%2C_and_Things_Left_Unsaid.jpg" alt="jar" width="150" height="200" align="left">
-      <br><br><br><br><br><br><br><br><br><br><br><br>
-      <audio controls>
-        <source src="./sounds/music/Collective Soul - Shine.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-      </audio>
-      <br>
-      <br>
-      <br>
+
+
+/* WINAMP */
+<div class="winamp">
+  <div class="winamp-display">
+    <span class="marquee" id="track-title">
+      alexi murdoch – all of my days
+    </span>
+  </div>
+
+  <div class="spectrum">
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div>
+  </div>
+
+  <div class="winamp-controls">
+    <button onclick="play()">▶</button>
+    <button onclick="pause()">■</button>
+    <input type="range" min="0" max="1" step="0.01" value="0.7" onchange="setVolume(this)">
+  </div>
+
+  <audio id="player">
+    <source src="./sounds/music/Alexi Murdoch - All My Days.mp3" type="audio/mpeg">
+  </audio>
+
+/* PLAYLIST */
+  <div class="playlist">
+    <div onclick="loadTrack(this, './sounds/music/Alexi Murdoch - All My Days.mp3')">
+      Alexi Murdoch – All My Days
     </div>
+    <div onclick="loadTrack(this, './sounds/music/drums_and_riffs_ext_hox.mp3')">
+      half-life - drums_and_riffs
+    </div>
+    <div onclick="loadTrack(this, './sounds/music/i_stay_away.mp3')">
+      alice in chains – i stay away
+    </div>
+
+    <div onclick="loadTrack(this, './sounds/music/opus_one.mp3')">
+      tim carleton - opus one
+    </div>
+
+    <div onclick="loadTrack(this, './sounds/music/Collective Soul - Shine.mp3')"">
+      collective soul - shine
+    </div>
+
+
+     <div onclick="loadTrack(this, './sounds/music/nutshell.mp3')">
+      alice in chains – nutshell
+    </div>
+
+    <div onclick="loadTrack(this, './sounds/music/Into Dust.mp3')">
+      mazzystar - into dust
+    </div>
+
+  </div>
+</div>
+/* WINAMP */
+
+
+    </div>
+
+<script>
+  const audio = document.getElementById("player");
+  const title = document.getElementById("track-title");
+
+  function play() {
+    audio.play();
+  }
+
+  function pause() {
+    audio.pause();
+  }
+
+  function setVolume(slider) {
+    audio.volume = slider.value;
+  }
+
+  function loadTrack(el, src) {
+    audio.pause();
+    audio.src = src;
+    title.textContent = el.textContent;
+    audio.play();
+  }
+</script>
+
+
+
   </body>
   <footer>
     <div class="container">
       <div class="row">
         <div class="col-md-12 text-center">
-          <p style="font-size: xx-small;"> 2023 &copy; conshaunery.com | All rights reserved | <a href="LS2.html">LStwoo</a> | <a href="ベイブレード.html">ベイブレード</a> | conshaunery was here <img src="./pictures/conshaun.jpg" alt="logo" width="50" height="50" align="right"></p> <!-- Added "./" before pictures directory to ensure it's correctly referenced -->
-        </div>
-      </div>
+          
     </div>
   </footer>
 </html>
