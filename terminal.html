@@ -2,486 +2,618 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>CS // Retro Terminal</title>
+  <title>CS // TERMINAL</title>
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-
-  <!-- Google Fonts for optional choices -->
   <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
-
   <style>
-  /* ===== Pixel / Retro Font Faces (LOCAL) ===== */
-  @font-face {
-    font-family: 'VGA8';
-    src: url('./fonts/Web437_IBM_3270pc.woff2') format('woff2'),
-         url('./fonts/Web437_IBM_3270pc.woff')   format('woff');
-  }
-  @font-face {
-    font-family: 'VGA8BIOS';
-    src: url('./fonts/Web437_IBM_BIOS.woff2') format('woff2'),
-         url('./fonts/Web437_IBM_BIOS.woff')  format('woff');
-  }
-  @font-face {
-    font-family: 'VGA8CGA';
-    src: url('./fonts/Web437_IBM_CGA.woff2') format('woff2'),
-         url('./fonts/Web437_IBM_CGA.woff')  format('woff');
-  }
 
-  /* ===== Root Variables (orange theme) ===== */
+  @font-face { font-family:'VGA8';     src:url('./fonts/Web437_IBM_3270pc.woff2') format('woff2'),url('./fonts/Web437_IBM_3270pc.woff') format('woff'); }
+  @font-face { font-family:'VGA8BIOS'; src:url('./fonts/Web437_IBM_BIOS.woff2')   format('woff2'),url('./fonts/Web437_IBM_BIOS.woff')   format('woff'); }
+  @font-face { font-family:'VGA8CGA';  src:url('./fonts/Web437_IBM_CGA.woff2')    format('woff2'),url('./fonts/Web437_IBM_CGA.woff')    format('woff'); }
+
+  /* ══ THEMES ══════════════════════════════════════════════════════ */
   :root {
-    --bg: #000;
-    --fg: #ffa500;
-    --accent: #ffa500;
-    --dim: rgba(255,165,0,0.3);
-    --warn: #ffa500;
-    --error: #f33;
-    --font: 'VGA8', monospace;
-    --crt-glow-strength: 0.65;
-    --crt-scanline-opacity: 0.15;
-    --crt-scanline-size: 2px;
-    --crt-flicker-min: 0.65;
-    --crt-flicker-max: 0.9;
-    --crt-vignette-opacity: 0.35;
+    --bg:      #000;
+    --fg:      #ffa500;
+    --accent:  #ffa500;
+    --dim:     rgba(255,165,0,0.35);
+    --dimtxt:  #7a4400;
+    --warn:    #ffdd00;
+    --error:   #ff3333;
+    --border:  #5a2200;
+    --pbg:     #030100;
+    --font:    'VGA8', monospace;
+    --glow:    rgba(255,165,0,0.6);
+    --gloww:   rgba(255,165,0,0.15);
+    --bok:     #ffa500;
+    --bwarn:   #ff6600;
+    --bcrit:   #ff2200;
   }
+  body.t-red    { --fg:#ff4444; --accent:#ff2222; --dimtxt:#7a1111; --border:#5a0000; --pbg:#020000; --glow:rgba(255,40,40,0.6);   --gloww:rgba(255,40,40,0.15);   --bok:#ff3333; --bwarn:#ff6600; --bcrit:#ff0000; }
+  body.t-green  { --fg:#00ff66; --accent:#00ee55; --dimtxt:#1a6633; --border:#003a1a; --pbg:#000502; --glow:rgba(0,255,80,0.55);   --gloww:rgba(0,255,80,0.12);    --bok:#00ff66; --bwarn:#aaff00; --bcrit:#ffff00; }
+  body.t-purple { --fg:#cc88ff; --accent:#bb66ff; --dimtxt:#552277; --border:#3a0055; --pbg:#020005; --glow:rgba(180,100,255,0.6); --gloww:rgba(180,100,255,0.15); --bok:#bb66ff; --bwarn:#ff88ff; --bcrit:#ff44ff; }
 
-  body {
-    background: radial-gradient(circle at 50% 50%, #020702, #000 70%);
-    color: var(--fg);
-    font-family: var(--font);
-    font-size: 18px;
-    margin: 0; padding: 0;
-    height: 100vh;
-    display: flex; flex-direction: column;
-    overflow: hidden;
-    -webkit-font-smoothing: none;
-    text-rendering: optimizeSpeed;
-  }
+  /* ══ BASE ═════════════════════════════════════════════════════════ */
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:100%; height:100%; background:#000; color:var(--fg); font-family:var(--font); font-size:14px; overflow:hidden; -webkit-font-smoothing:none; }
 
-  .crt-frame {
-    position: relative; flex: 1; margin: 10px;
-    border: 3px solid #662200; border-radius: 14px;
-    background: #000;
-    box-shadow:
-      0 0 10px rgba(255,165,0,0.3),
-      0 0 35px rgba(255,165,0,0.12),
-      inset 0 0 18px rgba(255,165,0,0.15),
-      inset 0 0 60px rgba(255,165,0,0.05);
-    overflow: hidden;
-  }
+  /* ══ OUTER SHELL ══════════════════════════════════════════════════ */
+  #shell { width:100%; height:100%; display:flex; flex-direction:column; }
 
-  .crt-inner {
-    position: absolute; inset: 0; padding-top: 34px;
-    display: flex; flex-direction: column;
-    filter: contrast(1.05) saturate(1.15);
-    transform: perspective(1400px) scale(1.0001) translateZ(0);
-  }
-
-  /* Top bar */
+  /* ══ TOPBAR ═══════════════════════════════════════════════════════ */
   #topbar {
-    position: absolute; top: 0; left: 0; right: 0;
-    background: linear-gradient(to bottom, rgba(0,40,0,0.9), rgba(0,0,0,0));
-    padding: 4px 10px 6px; font-size: 12px;
-    display: flex; justify-content: space-between;
-    color: var(--dim); z-index: 10;
-    font-family: var(--font);
+    display:flex; align-items:center; justify-content:space-between;
+    padding:4px 12px; background:#000; border-bottom:1px solid var(--border);
+    flex-shrink:0; font-size:12px; gap:12px;
   }
-  #topbar span { cursor: pointer; }
-  #topbar span:hover { color: var(--accent); text-decoration: underline; }
+  .tb-title { color:var(--accent); text-shadow:0 0 8px var(--glow); font-size:13px; letter-spacing:3px; white-space:nowrap; }
+  .tb-clock { color:var(--dimtxt); font-size:12px; white-space:nowrap; font-family:'VGA8',monospace; }
 
-  /* Terminal pane */
-  #terminal {
-    flex: 1; padding: 16px 14px 90px;
-    overflow-y: auto; white-space: pre-wrap; line-height: 1.3;
-    scrollbar-width: thin;
-  }
-  #terminal::-webkit-scrollbar { width: 8px; }
-  #terminal::-webkit-scrollbar-track { background: #050505; }
-  #terminal::-webkit-scrollbar-thumb { background: rgba(255,165,0,0.5); }
+  /* Theme colour dots */
+  .theme-btns { display:flex; gap:7px; align-items:center; }
+  .theme-btns > span { font-size:10px; color:var(--dimtxt); letter-spacing:1px; }
+  .tbtn { width:13px; height:13px; border-radius:50%; cursor:pointer; border:1px solid rgba(255,255,255,0.15); transition:transform 0.1s; }
+  .tbtn:hover { transform:scale(1.35); border-color:rgba(255,255,255,0.6); }
+  .tbtn.active { border:2px solid #fff; box-shadow:0 0 6px #fff; }
+  .c-orange { background:#ff8800; } .c-red { background:#ff2222; } .c-green { background:#00ff55; } .c-purple { background:#bb66ff; }
 
-  #status {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.92), rgba(0,0,0,0.6));
-    padding: 10px 12px; font-size: 14px;
-    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
-    z-index: 5;
-  }
+  /* ══ THREE COLUMNS ════════════════════════════════════════════════ */
+  #cols { flex:1; display:flex; min-height:0; position:relative; }
 
-  #prompt-line { display: flex; align-items: center; width: 100%; }
-  #ps1 {
-    color: var(--accent); margin-right: 6px;
-    text-shadow: 0 0 4px rgba(255,165,0,0.7);
+  /* ── shared panel ── */
+  .panel { background:var(--pbg); border:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; position:relative; }
+  .ph {
+    padding:4px 9px; background:rgba(0,0,0,0.7); border-bottom:1px solid var(--border);
+    color:var(--accent); font-size:10px; letter-spacing:2px; text-shadow:0 0 6px var(--glow);
+    flex-shrink:0; display:flex; justify-content:space-between; align-items:center;
   }
-  #input {
-    flex: 1; background: var(--bg); color: var(--fg);
-    border: 1px solid var(--accent); font-family: inherit; font-size: 18px;
-    padding: 6px 8px; outline: none; caret-color: var(--accent);
-    box-shadow: 0 0 6px rgba(255,165,0,0.35);
-  }
-  #input:focus { box-shadow: 0 0 10px rgba(255,165,0,0.7); }
+  .ph-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 6px var(--glow); animation:dpulse 1.5s ease-in-out infinite; }
+  @keyframes dpulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
+  .pbody { flex:1; overflow-y:auto; overflow-x:hidden; padding:6px 8px; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
+  .pbody::-webkit-scrollbar { width:4px; } .pbody::-webkit-scrollbar-thumb { background:var(--border); }
 
-  /* Text effects */
-  .line {
-    animation: fadein .15s ease;
-    text-shadow: 0 0 6px rgba(255,165,0,var(--crt-glow-strength));
-  }
-  @keyframes fadein { from { opacity:0 } to { opacity:1 } }
+  /* ══ LEFT PANEL ═══════════════════════════════════════════════════ */
+  #pl { width:215px; min-width:200px; flex-shrink:0; border-right:1px solid var(--border); }
 
-  .dim   { color: var(--dim);   text-shadow: none; }
-  .warn  { color: var(--warn);  text-shadow: none; }
-  .error { color: var(--error); text-shadow: none; }
-  .ok    { color: var(--accent); }
+  .s-sect { margin-bottom:10px; }
+  .s-lbl  { font-size:9px; color:var(--dimtxt); letter-spacing:1px; margin-bottom:3px; text-transform:uppercase; }
+  .s-row  { display:flex; justify-content:space-between; align-items:center; margin-bottom:3px; }
+  .s-name { font-size:11px; color:var(--fg); }
+  .s-val  { font-size:11px; color:var(--accent); text-shadow:0 0 4px var(--glow); min-width:44px; text-align:right; }
 
-  .progressbar {
-    width: 100%; height: 12px; margin: 4px 0 6px; position: relative;
-    border: 1px solid var(--accent);
-    box-shadow: 0 0 6px rgba(255,165,0,0.6);
-  }
-  .progressbar span {
-    display: block; height: 100%; width: 0; background: var(--accent);
-    box-shadow: 0 0 8px rgba(255,165,0,0.9);
-    animation: grow 3.5s linear forwards;
-  }
-  @keyframes grow { to { width: 100%; } }
+  .bw { width:100%; height:6px; background:rgba(255,255,255,0.04); border:1px solid var(--border); margin-bottom:5px; overflow:hidden; }
+  .bf { height:100%; width:0%; background:var(--bok); box-shadow:0 0 5px var(--glow); transition:width 0.9s ease, background 0.3s; }
+  .bf::after { content:''; position:absolute; top:0; right:0; bottom:0; width:3px; background:rgba(255,255,255,0.4); filter:blur(1px); }
+  .bf.warn { background:var(--bwarn); } .bf.crit { background:var(--bcrit); animation:bflash 0.45s step-end infinite; }
+  @keyframes bflash { 50%{opacity:0.2} }
 
-  /* Overlays */
-  .scanlines, .vignette, .sweep {
-    position: absolute; inset: 0; pointer-events: none;
-  }
-  .scanlines {
-    background:
-      repeating-linear-gradient(
-        to bottom,
-        rgba(255,165,0,var(--crt-scanline-opacity)) 0,
-        rgba(255,165,0,var(--crt-scanline-opacity)) var(--crt-scanline-size),
-        rgba(255,165,0,0) calc(var(--crt-scanline-size)*2)
-      );
-    mix-blend-mode: multiply;
-    animation: scanFlicker 4s linear infinite;
-    z-index: 20;
-  }
-  @keyframes scanFlicker { 0%,100%{opacity:0.9;}50%{opacity:0.75;} }
-  .vignette {
-    background:
-      radial-gradient(circle at center,
-        rgba(0,0,0,0) 55%,
-        rgba(0,0,0,var(--crt-vignette-opacity)) 100%
-      );
-    mix-blend-mode: multiply; z-index: 21;
-  }
-  .sweep::before {
-    content: ''; position: absolute; left:0; right:0; top:-40%; height:40%;
-    background: linear-gradient(to bottom,
-      rgba(255,255,255,0.08),
-      rgba(255,255,255,0) 80%
-    );
-    animation: sweep 6.5s linear infinite;
-    filter: blur(2px); z-index: 22;
-  }
-  @keyframes sweep {
-    0%   { transform: translateY(0);   opacity:0.3; }
-    75%  { transform: translateY(220%);opacity:0;   }
-    100% { transform: translateY(220%);opacity:0;   }
-  }
+  canvas.sp { width:100%; height:26px; display:block; margin-bottom:5px; }
+  .divider  { height:1px; background:var(--border); margin:7px 0; opacity:0.45; }
 
-  .crt-frame.crt-active {
-    animation: frameFlicker 2.7s steps(60,end) infinite;
-  }
-  @keyframes frameFlicker {
-    0%   { filter: brightness(var(--crt-flicker-min)); }
-    50%  { filter: brightness(var(--crt-flicker-max)); }
-    100% { filter: brightness(var(--crt-flicker-min)); }
-  }
+  .net-tbl { width:100%; font-size:10px; border-collapse:collapse; }
+  .net-tbl td { padding:2px 3px; } .net-tbl td:last-child { color:var(--accent); text-align:right; text-shadow:0 0 3px var(--glow); }
+  .net-tbl tr:nth-child(odd) td { background:rgba(255,255,255,0.02); }
 
-  /* Themes */
-  .theme-phosphor { }
-  .theme-amber    { --fg:#ffcf7d; --accent:#ffa200; --dim:#995b10; }
-  .theme-magenta  { --fg:#ff9bff; --accent:#ff44ff; --dim:#b646b6; }
-  .theme-light    { --bg:#f5f5f5; --fg:#222; --accent:#0050b3; --dim:#666; }
+  /* ══ CENTER PANEL ═════════════════════════════════════════════════ */
+  #pc { flex:1; min-width:0; }
 
-  /* Orbit + bobbing (unchanged) */
-  .orbit-container { position: relative; width:100px; height:100px; margin:0 auto; }
-  .orbit { position:absolute; top:0; left:50%; transform-origin:0 50px; animation:spin 4s linear infinite; }
-  .bobbing { animation:bob 2s infinite ease-in-out; }
-  @keyframes spin { 0%{transform:rotate(0) translateX(50px);}100%{transform:rotate(360deg) translateX(50px) rotate(-360deg);} }
-  @keyframes bob  { 0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);} }
+  .crt-sl { position:absolute; inset:0; pointer-events:none; z-index:20;
+    background:repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0, rgba(0,0,0,0) 1px, rgba(0,0,0,0.2) 1px, rgba(0,0,0,0.2) 2px);
+    animation:slfl 5s linear infinite; }
+  @keyframes slfl { 0%,100%{opacity:0.9} 50%{opacity:0.65} }
+  .crt-vg { position:absolute; inset:0; pointer-events:none; z-index:21;
+    background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.6) 100%); }
+  .crt-sw { position:absolute; left:0; right:0; top:-35%; height:35%; pointer-events:none; z-index:22;
+    background:linear-gradient(to bottom, rgba(255,255,255,0.05), transparent 80%);
+    animation:swmv 7s linear infinite; filter:blur(1px); }
+  @keyframes swmv { 0%{top:-35%;opacity:0.4} 80%{top:120%;opacity:0} 100%{top:120%;opacity:0} }
+
+  #terminal { flex:1; padding:10px 12px 4px; overflow-y:auto; overflow-x:hidden; white-space:pre-wrap; line-height:1.4; font-size:14px; position:relative; z-index:5; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
+  #terminal::-webkit-scrollbar { width:4px; } #terminal::-webkit-scrollbar-thumb { background:var(--border); }
+  .line { animation:fadein 0.12s ease; text-shadow:0 0 5px var(--glow); word-break:break-all; }
+  @keyframes fadein { from{opacity:0} to{opacity:1} }
+  .dim   { color:var(--dimtxt); text-shadow:none; }
+  .warn  { color:var(--warn);  text-shadow:0 0 5px rgba(255,220,0,0.5); }
+  .error { color:var(--error); text-shadow:0 0 5px rgba(255,50,50,0.5); }
+  .ok    { color:var(--accent); }
+  .progressbar { width:100%; height:9px; margin:3px 0; border:1px solid var(--accent); box-shadow:0 0 6px var(--gloww); overflow:hidden; }
+  .progressbar span { display:block; height:100%; width:0%; background:var(--accent); animation:grow 3.5s linear forwards; }
+  @keyframes grow { to{width:100%} }
+
+  #ia { padding:7px 12px; border-top:1px solid var(--border); background:rgba(0,0,0,0.75); display:flex; align-items:center; gap:7px; flex-shrink:0; position:relative; z-index:5; }
+  #ps1 { color:var(--accent); text-shadow:0 0 5px var(--glow); white-space:nowrap; font-size:14px; }
+  #input { flex:1; background:transparent; color:var(--fg); font-family:var(--font); font-size:14px; border:none; outline:none; caret-color:var(--accent); text-shadow:0 0 4px var(--glow); }
+  #input::placeholder { color:var(--dimtxt); }
+
+  /* ══ RIGHT PANEL ══════════════════════════════════════════════════ */
+  #pr { width:255px; min-width:235px; flex-shrink:0; border-left:1px solid var(--border); }
+  #pr .pbody { padding:0; display:flex; flex-direction:column; }
+
+  .rs { padding:6px 8px; flex-shrink:0; }
+  .rsh { font-size:9px; color:var(--dimtxt); letter-spacing:1px; text-transform:uppercase; border-bottom:1px solid var(--border); padding-bottom:3px; margin-bottom:4px; }
+
+  .pt { width:100%; font-size:10px; border-collapse:collapse; }
+  .pt th { color:var(--dimtxt); font-size:9px; text-align:left; padding:1px 3px; border-bottom:1px solid var(--border); font-weight:normal; }
+  .pt td { padding:2px 3px; color:var(--fg); }
+  .pt td:nth-child(3), .pt td:nth-child(4) { color:var(--accent); text-align:right; text-shadow:0 0 3px var(--glow); }
+  .pt tr:hover td { background:rgba(255,255,255,0.03); }
+  .pn { max-width:100px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .ps { font-size:9px; padding:1px 3px; border-radius:2px; }
+  .ps.run { background:rgba(0,200,80,0.15);  color:#00dd55; }
+  .ps.slp { background:rgba(80,80,80,0.12);  color:#555; }
+  .ps.zzz { background:rgba(255,150,0,0.10); color:#aa6600; }
+
+  #lf { flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; scrollbar-width:thin; scrollbar-color:var(--border) transparent; padding:4px 8px 6px; }
+  #lf::-webkit-scrollbar { width:4px; } #lf::-webkit-scrollbar-thumb { background:var(--border); }
+  .lh { font-size:9px; color:var(--dimtxt); letter-spacing:1px; text-transform:uppercase; border-bottom:1px solid var(--border); padding-bottom:3px; margin-bottom:4px; display:flex; justify-content:space-between; }
+  .le { font-size:10px; line-height:1.55; padding:2px 0; border-bottom:1px dotted rgba(255,255,255,0.04); animation:fadein 0.2s ease; word-break:break-all; }
+  .lt { color:var(--dimtxt); margin-right:4px; }
+  .le.log-ok   .lm { color:var(--accent); } .le.log-warn .lm { color:var(--warn); }
+  .le.log-err  .lm { color:var(--error); } .le.log-info .lm { color:var(--fg); }
+  .le.log-sys  .lm { color:var(--dimtxt); }
+
+  /* Whole frame glow */
+  #cols { box-shadow:0 0 25px var(--gloww), inset 0 0 60px rgba(0,0,0,0.3); }
+
   </style>
 </head>
+<body class="t-orange">
+<div id="shell">
 
-<body class="theme-phosphor">
-  <div class="crt-frame crt-active" id="crtFrame">
-    <div class="scanlines"></div>
-    <div class="vignette"></div>
-    <div class="sweep"></div>
+  <!-- TOPBAR -->
+  <div id="topbar">
+    <div class="tb-title">▌ CS // TERMINAL v0.4 ▐</div>
+    <div class="theme-btns">
+      <span>COLOUR:</span>
+      <div class="tbtn c-orange active" data-theme="orange" title="Orange"></div>
+      <div class="tbtn c-red"           data-theme="red"    title="Red"></div>
+      <div class="tbtn c-green"         data-theme="green"  title="Green"></div>
+      <div class="tbtn c-purple"        data-theme="purple" title="Purple"></div>
+    </div>
+    <div class="tb-clock" id="tb-clock">00:00:00</div>
+  </div>
 
-    <div class="crt-inner">
-      <div id="topbar">
-        <div>CS TERMINAL v0.3</div>
-        <div>
-          <span data-theme="phosphor">phosphor</span> • 
-          <span data-theme="amber">amber</span> • 
-          <span data-theme="magenta">magenta</span> • 
-          <span data-theme="light">light</span>
+  <!-- THREE COLUMNS -->
+  <div id="cols">
+
+    <!-- LEFT: STATS -->
+    <div class="panel" id="pl">
+      <div class="ph"><span>SYSTEM STATS</span><span class="ph-dot"></span></div>
+      <div class="pbody">
+
+        <div class="s-sect">
+          <div class="s-lbl">CPU</div>
+          <div class="s-row"><span class="s-name">Core 0</span><span class="s-val" id="c0v">0%</span></div>
+          <div class="bw"><div class="bf" id="c0b"></div></div>
+          <div class="s-row"><span class="s-name">Core 1</span><span class="s-val" id="c1v">0%</span></div>
+          <div class="bw"><div class="bf" id="c1b"></div></div>
+          <div class="s-row"><span class="s-name">Core 2</span><span class="s-val" id="c2v">0%</span></div>
+          <div class="bw"><div class="bf" id="c2b"></div></div>
+          <div class="s-row"><span class="s-name">Core 3</span><span class="s-val" id="c3v">0%</span></div>
+          <div class="bw"><div class="bf" id="c3b"></div></div>
+          <canvas class="sp" id="sp-cpu"></canvas>
         </div>
+
+        <div class="divider"></div>
+
+        <div class="s-sect">
+          <div class="s-lbl">MEMORY</div>
+          <div class="s-row"><span class="s-name">RAM</span><span class="s-val" id="ramv">0%</span></div>
+          <div class="bw"><div class="bf" id="ramb"></div></div>
+          <div class="s-row"><span class="s-name">Swap</span><span class="s-val" id="swapv">0%</span></div>
+          <div class="bw"><div class="bf" id="swapb"></div></div>
+          <div class="s-row"><span class="s-name">Cache</span><span class="s-val" id="cachev">0 MB</span></div>
+          <canvas class="sp" id="sp-ram"></canvas>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="s-sect">
+          <div class="s-lbl">GPU</div>
+          <div class="s-row"><span class="s-name">Load</span><span class="s-val" id="gpuv">0%</span></div>
+          <div class="bw"><div class="bf" id="gpub"></div></div>
+          <div class="s-row"><span class="s-name">VRAM</span><span class="s-val" id="vramv">0%</span></div>
+          <div class="bw"><div class="bf" id="vramb"></div></div>
+          <div class="s-row"><span class="s-name">Temp</span><span class="s-val" id="gtemp">0°C</span></div>
+          <canvas class="sp" id="sp-gpu"></canvas>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="s-sect">
+          <div class="s-lbl">DISK</div>
+          <div class="s-row"><span class="s-name">Read</span><span class="s-val" id="dskr">0 MB/s</span></div>
+          <div class="s-row"><span class="s-name">Write</span><span class="s-val" id="dskw">0 MB/s</span></div>
+          <div class="s-row"><span class="s-name">Usage</span><span class="s-val" id="dsku">0%</span></div>
+          <div class="bw"><div class="bf" id="dskb"></div></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="s-sect">
+          <div class="s-lbl">NETWORK</div>
+          <canvas class="sp" id="sp-net"></canvas>
+          <table class="net-tbl">
+            <tr><td>↑ TX</td>      <td id="ntx">0 KB/s</td></tr>
+            <tr><td>↓ RX</td>      <td id="nrx">0 KB/s</td></tr>
+            <tr><td>Pkts TX</td>   <td id="ptx">0</td></tr>
+            <tr><td>Pkts RX</td>   <td id="prx">0</td></tr>
+            <tr><td>Errors</td>    <td id="nerr" style="color:#ff3333">0</td></tr>
+            <tr><td>Dropped</td>   <td id="ndrp" style="color:#ff8800">0</td></tr>
+            <tr><td>Ping</td>      <td id="nping">0 ms</td></tr>
+          </table>
+        </div>
+
       </div>
+    </div>
 
+    <!-- CENTER: TERMINAL -->
+    <div class="panel" id="pc">
+      <div class="ph"><span>TERMINAL</span><span id="cstat" style="font-size:9px;letter-spacing:1px;color:var(--dimtxt)">READY</span></div>
+      <div class="crt-sl"></div>
+      <div class="crt-vg"></div>
+      <div class="crt-sw"></div>
       <div id="terminal" aria-live="polite"></div>
+      <div id="ia">
+        <span id="ps1">guest@cs:~$</span>
+        <input id="input" autocomplete="off" spellcheck="false" autofocus placeholder="type 'help'">
+      </div>
+    </div>
 
-      <div id="status">
-        <div id="prompt-line">
-          <span id="ps1">guest@cs:~$</span>
-          <input id="input" autocomplete="off" spellcheck="false" autofocus placeholder="type 'help'">
+    <!-- RIGHT: PROCESSES + LOGS -->
+    <div class="panel" id="pr">
+      <div class="ph"><span>PROCESSES / LOGS</span><span class="ph-dot"></span></div>
+      <div class="pbody">
+        <div class="rs">
+          <div class="rsh">ACTIVE PROCESSES</div>
+          <table class="pt">
+            <thead><tr><th>PID</th><th>NAME</th><th>CPU</th><th>MEM</th><th>ST</th></tr></thead>
+            <tbody id="ptbody"></tbody>
+          </table>
+        </div>
+        <div id="lf">
+          <div class="lh"><span>SYSTEM LOG</span><span id="lcnt" style="font-size:9px">0 entries</span></div>
+          <div id="lentries"></div>
         </div>
       </div>
     </div>
+
   </div>
+</div>
 
-  <!-- background audio -->
-  <audio id="bg-audio" autoplay loop>
-    <source src="./sounds/demos.mp3" type="audio/mpeg">
-  </audio>
+<audio id="bg-audio" autoplay loop>
+  <source src="./sounds/demos.mp3" type="audio/mpeg">
+</audio>
 
-  <script>
-  (() => {
-    const term      = document.getElementById('terminal');
-    const input     = document.getElementById('input');
-    const ps1       = document.getElementById('ps1');
-    const crtFrame  = document.getElementById('crtFrame');
-    const bgAudio   = document.getElementById('bg-audio');
-    const VARS      = JSON.parse(localStorage.getItem('cs_terminal_vars_v1')  || '{}');
-    const PREFS     = JSON.parse(localStorage.getItem('cs_terminal_prefs_v1') || '{}');
-    let history     = [], historyIndex = -1;
-    let typewriter  = PREFS.typewriter || false;
-    let username    = VARS.username   || 'guest';
-    let crtOn       = PREFS.crt       !== false;
+<script>
+(() => {
+  const term    = document.getElementById('terminal');
+  const input   = document.getElementById('input');
+  const ps1El   = document.getElementById('ps1');
+  const bgAudio = document.getElementById('bg-audio');
+  let PREFS = {}; try { PREFS = JSON.parse(localStorage.getItem('cs_prefs_v2')||'{}'); } catch(e){}
+  let VARS  = {}; try { VARS  = JSON.parse(localStorage.getItem('cs_vars_v1') ||'{}'); } catch(e){}
+  const save = (k,v) => { try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} };
 
-    if (PREFS.fontFamily) {
-      document.documentElement.style.setProperty('--font', PREFS.fontFamily);
-    }
-    applyCRTState();
-    updatePrompt();
-    showBanner();
+  let cmdHist = [], histIdx = -1;
+  let typewriter = PREFS.typewriter || false;
+  let username   = VARS.username    || 'guest';
+  const updatePrompt = () => { ps1El.textContent = username + '@cs:~$'; };
+  updatePrompt();
 
-    function save(key,val){
-      localStorage.setItem(key, JSON.stringify(val));
-    }
-    function updatePrompt(){
-      ps1.textContent = username + "@cs:~$";
-    }
-    function showBanner(){
-      writeLine("/*==============================================*/", 'dim');
-      writeLine("  CONSHAUNERY RETRO TERMINAL + CRT MODE", 'ok');
-      writeLine("  Type 'help' for commands. 'font list' to view fonts.", 'dim');
-      writeLine("/*==============================================*/\n", 'dim');
-      if (PREFS.showMotd !== false) {
-        writeLine("MOTD: Welcome back, wanderer of the cyberverse.\n(Type 'motd off' to hide this banner.)", 'warn');
-      }
-    }
-    function writeLine(txt='', cls='', opt={}){
-      const line = document.createElement('div');
-      line.className = 'line ' + (cls || '');
-      if (typewriter && !opt.instant) {
-        typeWrite(line, txt, 0);
-      } else {
-        line.textContent = txt;
-      }
-      term.appendChild(line);
-      term.scrollTop = term.scrollHeight;
-    }
-    function typeWrite(node, text, i){
-      const chunk = 2 + Math.floor(Math.random()*3);
-      node.textContent = text.slice(0, i + chunk);
-      if (i + chunk < text.length) {
-        setTimeout(()=> typeWrite(node, text, i+chunk), 12 + Math.random()*40);
-      }
-    }
-    function applyCRTState(){
-      crtOn ? crtFrame.classList.add('crt-active') : crtFrame.classList.remove('crt-active');
-    }
+  /* ── THEME ────────────────────────────────────────────────────── */
+  let curTheme = PREFS.theme || 'orange';
+  function applyTheme(t) {
+    document.body.className = 't-' + t;
+    document.querySelectorAll('.tbtn').forEach(b => b.classList.toggle('active', b.dataset.theme === t));
+    curTheme = t; PREFS.theme = t; save('cs_prefs_v2', PREFS);
+  }
+  document.querySelectorAll('.tbtn').forEach(b => b.addEventListener('click', () => applyTheme(b.dataset.theme)));
+  applyTheme(curTheme);
 
-    const COMMANDS = {
-      help(){
-        writeLine("Commands:");
-        writeLine(Object.keys(COMMANDS).sort().join('  '));
-        writeLine("\nHighlights: load stillalive | defrag | scan | probe | hack | font list | theme <name> | crt on/off | typewriter on/off");
-      },
-      about(){ writeLine("Retro terminal with orange CRT vibes."); },
-      clear(){ term.innerHTML = ''; }, cls(){ this.clear(); },
-      time(){ writeLine(new Date().toString()); },
-      echo(a){ writeLine(a.join(' ')); },
-      whoami(){ writeLine(username); },
+  /* ── CLOCK ────────────────────────────────────────────────────── */
+  const clkEl = document.getElementById('tb-clock');
+  setInterval(() => {
+    const n = new Date();
+    clkEl.textContent = [n.getHours(),n.getMinutes(),n.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':');
+  }, 1000);
 
-      defrag(){
-        writeLine("Defragmenting virtual disk…", 'dim');
-        setTimeout(()=>{
-          const img = document.createElement('img');
-          img.src = "./gifs/defrag.gif";
-          img.alt = "Defragmentation running";
-          img.style.maxWidth = "100%";
-          term.appendChild(img);
-          writeLine("Defragmentation complete.", 'ok');
-        }, 800);
-      },
+  /* ── SPARKLINES ──────────────────────────────────────────────── */
+  const spData = { cpu:[], ram:[], gpu:[], net:[] };
+  const SP_MAX = 42;
 
-      load(args){
-        if (args[0] && args[0].toLowerCase()==='stillalive') {
-          bgAudio.pause();
-          const audio = new Audio('./sounds/music/stillalive.mp3');
-          audio.play().catch(()=>{ writeLine('🔈 Autoplay blocked; press any key.', 'warn'); });
-          writeLine('Playing “Still Alive”…', 'ok');
-          // schedule a few sample lyrics
-          const lyrics = [
-            [0.0,   "This was a triumph."],
-            [5.0,   "I’m making a note here: HUGE success."],
-            [10.0,  "It’s hard to overstate my satisfaction."],
-            [18.0,  "Aperture Science:..."],
-            [21.0,  " We do what we must..."]
-            [23.5,  "...because..."],
-            [24.0,  "we can."]
-            [27.0,  "For the good of all of us."]
-            [28.5,  "Except the ones who are dead."]
-          ];
-          if (this._timeouts) this._timeouts.forEach(clearTimeout);
-          this._timeouts = [];
-          lyrics.forEach(([t, line]) => {
-            this._timeouts.push(setTimeout(()=> writeLine(line), t*1000));
-          });
-          audio.addEventListener('ended', () => {
-            bgAudio.currentTime = 0;
-            bgAudio.play().catch(()=>{});
-            writeLine('+++ Background track resumed +++', 'ok');
-          });
-        } else {
-          writeLine("Usage: load stillalive", 'warn');
-        }
-      },
+  function pushSp(k, v) { spData[k].push(v); if (spData[k].length > SP_MAX) spData[k].shift(); }
 
-      scan(){
-        writeLine("Scanning nodes...");
-        setTimeout(()=> writeLine("Found: GATEWAY-7  LATENCY:42ms  STATUS:OPEN",'ok'),500);
-        setTimeout(()=> writeLine("Found: 107.89.420.67  LATENCY:72ms  STATUS:OPEN",'ok'),800);
-        setTimeout(()=> writeLine("Found: ARCHIVE-69  LATENCY:88ms  STATUS:LOCKED",'warn'),900);
-        setTimeout(()=> writeLine("Found: 28.73.125.01  LATENCY:72ms  STATUS:OPEN",'ok'),1100);
-        setTimeout(()=> writeLine("Found: RELAY-X3   LATENCY:17ms  STATUS:OPEN",'ok'),1300);
-      },
-
-      probe(a){
-        const tgt = a[0] || 'ARCHIVE-Ω';
-        writeLine(`Sending probes to ${tgt}...`, 'dim');
-        const bar = document.createElement('div');
-        bar.className = 'progressbar';
-        bar.innerHTML = '<span></span>';
-        term.appendChild(bar);
-        setTimeout(()=> writeLine("Ejecting from local diskdrive...", 'dim'), 3500);
-        setTimeout(()=> writeLine("ACCESS GRANTED: "+tgt,'ok'), 4500);
-      },
-
-      hack(a){
-        const tgt = a[0] || 'ARCHIVE-Ω';
-        writeLine(`Initiating intrusion on ${tgt}...`, 'dim');
-        const bar = document.createElement('div');
-        bar.className = 'progressbar';
-        bar.innerHTML = '<span></span>';
-        term.appendChild(bar);
-        setTimeout(()=> writeLine("Bypassing ICE...",'dim'),900);
-        setTimeout(()=> writeLine("Injecting payload...",'dim'),2100);
-        setTimeout(()=> writeLine("Harvesting fragments...",'dim'),3000);
-        setTimeout(()=> writeLine("ACCESS GRANTED: "+tgt,'ok'),3600);
-      },
-
-      font(a){
-        if (!a.length||a[0]==='list'){
-          writeLine("Fonts: vga bios cga vt323 press courier");
-          return;
-        }
-        const pick = a[0].toLowerCase(), map = {
-          vga:   "'VGA8', monospace",
-          bios:  "'VGA8BIOS', monospace",
-          cga:   "'VGA8CGA', monospace",
-          vt323: "'VT323', monospace",
-          press: "'Press Start 2P', monospace",
-          courier:"'Courier New', monospace"
-        };
-        if (!map[pick]) { writeLine("Unknown font. Try: font list",'warn'); return; }
-        document.documentElement.style.setProperty('--font', map[pick]);
-        PREFS.fontFamily = map[pick]; save('cs_terminal_prefs_v1', PREFS);
-        writeLine("Font switched: "+pick,'ok');
-        if (pick==='press'){ input.style.fontSize='14px'; }
-        else { input.style.fontSize='18px'; }
-      },
-
-      theme(a){
-        if (!a.length){ writeLine("Themes: phosphor, amber, magenta, light"); return; }
-        const t = a[0].toLowerCase();
-        document.body.classList.remove('theme-phosphor','theme-amber','theme-magenta','theme-light');
-        document.body.classList.add('theme-'+t);
-        PREFS.theme = t; save('cs_terminal_prefs_v1', PREFS);
-        writeLine("Theme switched: "+t,'ok');
-      },
-
-      crt(a){
-        if (!a.length){ writeLine("crt is "+(crtOn?"ON":"OFF")); return; }
-        if (a[0]==='off') crtOn=false;
-        else if (a[0]==='on') crtOn=true;
-        else { writeLine("Usage: crt on|off",'warn'); return; }
-        PREFS.crt = crtOn; save('cs_terminal_prefs_v1', PREFS);
-        applyCRTState();
-        writeLine("CRT "+(crtOn?"enabled":"disabled"),'ok');
-      },
-
-      typewriter(a){
-        if (!a.length){ writeLine("typewriter is "+(typewriter?"ON":"OFF")); return; }
-        if (a[0]==='on'){ typewriter=true; PREFS.typewriter=true; save('cs_terminal_prefs_v1',PREFS); writeLine("Typewriter ON"); }
-        else if (a[0]==='off'){ typewriter=false; PREFS.typewriter=false; save('cs_terminal_prefs_v1',PREFS); writeLine("Typewriter OFF"); }
-        else writeLine("Usage: typewriter on|off",'warn');
-      },
-
-      echo(a){ writeLine(a.join(' ')); },
-      whoami(){ writeLine(username); },
-
-      save(){ 
-        save('cs_terminal_vars_v1', VARS);
-        save('cs_terminal_prefs_v1', PREFS);
-        writeLine("State saved.", 'ok');
-      }
-    };
-
-    if (PREFS.theme) COMMANDS.theme([PREFS.theme]);
-
-    input.addEventListener('keydown', e=>{
-      if (e.key==='Enter'){
-        const raw = input.value; input.value='';
-        if (!raw.trim()) return;
-        history.unshift(raw); historyIndex=-1;
-        process(raw);
-      }
-      if (e.ctrlKey && e.key==='c'){
-        writeLine("^C", 'warn'); input.value='';
-      }
-      if (e.key==='ArrowUp'|| e.key==='ArrowDown'){
-        e.preventDefault();
-        historyIndex = (e.key==='ArrowUp')
-          ? Math.min(historyIndex+1, history.length-1)
-          : Math.max(historyIndex-1, -1);
-        input.value = historyIndex>=0 ? history[historyIndex] : '';
-      }
+  function drawSp(id, data) {
+    const cv = document.getElementById(id); if (!cv) return;
+    const ctx = cv.getContext('2d');
+    cv.width = cv.offsetWidth || cv.parentElement.clientWidth;
+    cv.height = cv.offsetHeight || 26;
+    const W = cv.width, H = cv.height;
+    ctx.clearRect(0,0,W,H);
+    if (data.length < 2) return;
+    const col = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ffa500';
+    const mx = Math.max(100, ...data);
+    ctx.beginPath();
+    data.forEach((v,i) => {
+      const x = (i/(SP_MAX-1))*W, y = H-(v/mx)*H;
+      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
     });
+    ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.shadowColor = col; ctx.shadowBlur = 5; ctx.stroke();
+    ctx.shadowBlur = 0;
+    const last = (data.length-1)/(SP_MAX-1)*W;
+    ctx.lineTo(last, H); ctx.lineTo(0, H); ctx.closePath();
+    ctx.globalAlpha = 0.1; ctx.fillStyle = col; ctx.fill(); ctx.globalAlpha = 1;
+  }
 
-    function process(line){
-      writeLine(ps1.textContent+" "+line, 'dim', { instant:true });
-      const parts = line.trim().split(/\s+/);
-      const cmd   = parts.shift().toLowerCase();
-      if (COMMANDS[cmd]) {
-        try { COMMANDS[cmd](parts); }
-        catch(err){ writeLine("Runtime error: "+err.message, 'error'); }
-      } else {
-        writeLine("Command not found: "+cmd, 'error');
-      }
+  /* ── LIVE STATS ──────────────────────────────────────────────── */
+  let pktTx=0, pktRx=0, netErr=0, netDrp=0;
+  const S = { cpu:[45,30,60,25], ram:55, swap:12, cache:1240, gpu:42, vram:38, gtemp:58, dr:2.1, dw:0.8, du:64, ntx:120, nrx:340, ping:22 };
+  const walk = (v,mn,mx,s) => Math.max(mn, Math.min(mx, v+(Math.random()-0.5)*s));
+
+  function setBar(id, pct) {
+    const el = document.getElementById(id); if (!el) return;
+    el.style.width = pct+'%';
+    el.classList.toggle('warn', pct>65 && pct<=85);
+    el.classList.toggle('crit', pct>85);
+  }
+  function stxt(id,t){ const el=document.getElementById(id); if(el) el.textContent=t; }
+
+  function updateStats() {
+    S.cpu = S.cpu.map(v=>Math.round(walk(v,5,98,9)));
+    S.cpu.forEach((v,i) => { stxt('c'+i+'v', v+'%'); setBar('c'+i+'b', v); });
+    pushSp('cpu', Math.round(S.cpu.reduce((a,b)=>a+b,0)/4));
+    drawSp('sp-cpu', spData.cpu);
+
+    S.ram=walk(S.ram,20,90,3); S.swap=walk(S.swap,0,40,2); S.cache=Math.round(walk(S.cache,800,2400,60));
+    stxt('ramv',Math.round(S.ram)+'%'); stxt('swapv',Math.round(S.swap)+'%'); stxt('cachev',S.cache+' MB');
+    setBar('ramb',Math.round(S.ram)); setBar('swapb',Math.round(S.swap));
+    pushSp('ram',Math.round(S.ram)); drawSp('sp-ram',spData.ram);
+
+    S.gpu=walk(S.gpu,10,98,7); S.vram=walk(S.vram,20,95,4); S.gtemp=walk(S.gtemp,40,94,2);
+    stxt('gpuv',Math.round(S.gpu)+'%'); stxt('vramv',Math.round(S.vram)+'%'); stxt('gtemp',Math.round(S.gtemp)+'°C');
+    setBar('gpub',Math.round(S.gpu)); setBar('vramb',Math.round(S.vram));
+    pushSp('gpu',Math.round(S.gpu)); drawSp('sp-gpu',spData.gpu);
+
+    S.dr=walk(S.dr,0,120,9); S.dw=walk(S.dw,0,80,6); S.du=walk(S.du,20,90,1);
+    stxt('dskr',S.dr.toFixed(1)+' MB/s'); stxt('dskw',S.dw.toFixed(1)+' MB/s'); stxt('dsku',Math.round(S.du)+'%');
+    setBar('dskb',Math.round(S.du));
+
+    S.ntx=walk(S.ntx,10,900,70); S.nrx=walk(S.nrx,10,1200,90); S.ping=walk(S.ping,4,180,12);
+    pktTx+=Math.floor(Math.random()*14); pktRx+=Math.floor(Math.random()*20);
+    if (Math.random()<0.04) netErr++; if (Math.random()<0.02) netDrp++;
+    stxt('ntx', S.ntx>1000 ? (S.ntx/1000).toFixed(1)+' MB/s' : Math.round(S.ntx)+' KB/s');
+    stxt('nrx', S.nrx>1000 ? (S.nrx/1000).toFixed(1)+' MB/s' : Math.round(S.nrx)+' KB/s');
+    stxt('ptx',pktTx.toLocaleString()); stxt('prx',pktRx.toLocaleString());
+    stxt('nerr',netErr); stxt('ndrp',netDrp); stxt('nping',Math.round(S.ping)+' ms');
+    pushSp('net',Math.round((S.ntx+S.nrx)/20)); drawSp('sp-net',spData.net);
+  }
+  setInterval(updateStats, 1200); updateStats();
+
+  /* ── PROCESSES ───────────────────────────────────────────────── */
+  const PROCS = [
+    {pid:1,   name:'init',          cpu:0.1, mem:0.3, st:'run'},
+    {pid:48,  name:'kernel_thread', cpu:0.3, mem:0.1, st:'slp'},
+    {pid:112, name:'syslogd',       cpu:0.2, mem:0.4, st:'slp'},
+    {pid:247, name:'networkd',      cpu:0.7, mem:1.1, st:'run'},
+    {pid:388, name:'cron',          cpu:0.1, mem:0.2, st:'slp'},
+    {pid:501, name:'cs_daemon',     cpu:1.2, mem:2.4, st:'run'},
+    {pid:612, name:'audio_server',  cpu:0.9, mem:1.8, st:'run'},
+    {pid:744, name:'wm_compositor', cpu:2.1, mem:4.2, st:'run'},
+    {pid:820, name:'file_indexer',  cpu:0.0, mem:0.8, st:'zzz'},
+    {pid:955, name:'ntp_sync',      cpu:0.1, mem:0.3, st:'slp'},
+    {pid:1138,name:'renderer',      cpu:5.4, mem:8.6, st:'run'},
+    {pid:1277,name:'terminal',      cpu:0.6, mem:1.1, st:'run'},
+  ];
+
+  function updateProcs() {
+    PROCS.forEach(p => { if (p.st==='run') { p.cpu=Math.max(0,Math.min(30,p.cpu+(Math.random()-0.5)*1.4)); p.mem=Math.max(0.1,p.mem+(Math.random()-0.5)*0.3); } });
+    document.getElementById('ptbody').innerHTML =
+      [...PROCS].sort((a,b)=>b.cpu-a.cpu).map(p =>
+        `<tr><td>${p.pid}</td><td class="pn">${p.name}</td><td>${p.cpu.toFixed(1)}</td><td>${p.mem.toFixed(1)}</td><td><span class="ps ${p.st}">${p.st}</span></td></tr>`
+      ).join('');
+  }
+  setInterval(updateProcs, 1800); updateProcs();
+
+  /* ── LOG FEED ────────────────────────────────────────────────── */
+  const LOG_POOL = [
+    ['ok',   'CONN established → 107.89.{r}.{r}'],
+    ['info', 'packet batch flushed ({r} pkts)'],
+    ['ok',   'checkpoint written to /var/cs/state'],
+    ['warn', 'high latency detected: {r}ms'],
+    ['info', 'heartbeat OK — uptime {r}h {r}m'],
+    ['ok',   'auth token refreshed'],
+    ['sys',  'GC cycle: freed {r}MB'],
+    ['err',  'socket timeout on port {r}'],
+    ['info', 'cache evicted: {r} entries'],
+    ['warn', 'CPU core {r} throttling'],
+    ['ok',   'disk flush: {r} blocks written'],
+    ['info', 'dns resolved: node-{r}.local'],
+    ['sys',  'IRQ balance adjusted'],
+    ['err',  'dropped {r} packets (queue full)'],
+    ['ok',   'tls handshake complete'],
+    ['info', 'sync delta={r}ms'],
+    ['warn', 'swap usage exceeded threshold'],
+    ['sys',  'watchdog ping OK'],
+    ['info', 'fs check: {r} inodes free'],
+    ['ok',   'backup snapshot {r} committed'],
+  ];
+  let logCnt = 0;
+  const lentEl = document.getElementById('lentries');
+  const lcntEl = document.getElementById('lcnt');
+
+  function addLog() {
+    const pool = LOG_POOL[Math.floor(Math.random()*LOG_POOL.length)];
+    const msg  = pool[1].replace(/\{r\}/g, ()=>Math.floor(Math.random()*250));
+    const n = new Date();
+    const ts = [n.getHours(),n.getMinutes(),n.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':');
+    const e = document.createElement('div');
+    e.className = 'le log-'+pool[0];
+    e.innerHTML = `<span class="lt">[${ts}]</span><span class="lm">${msg}</span>`;
+    lentEl.appendChild(e);
+    while (lentEl.children.length > 80) lentEl.removeChild(lentEl.firstChild);
+    document.getElementById('lf').scrollTop = 999999;
+    lcntEl.textContent = (++logCnt) + ' entries';
+  }
+  for (let i=0;i<12;i++) setTimeout(addLog, i*160);
+  setInterval(addLog, 1700);
+
+  /* ── WRITE LINE ──────────────────────────────────────────────── */
+  function writeLine(txt, cls, opt) {
+    opt = opt||{};
+    const d = document.createElement('div');
+    d.className = 'line '+(cls||'');
+    if (typewriter && !opt.instant) typeWrite(d, txt, 0);
+    else d.textContent = txt;
+    term.appendChild(d); term.scrollTop = term.scrollHeight;
+    return d;
+  }
+  function typeWrite(node, text, i) {
+    const chunk = 2+Math.floor(Math.random()*3);
+    node.textContent = text.slice(0, i+chunk);
+    if (i+chunk < text.length) setTimeout(()=>typeWrite(node,text,i+chunk), 10+Math.random()*35);
+  }
+
+  /* ── BANNER ──────────────────────────────────────────────────── */
+  function showBanner() {
+    writeLine('/*================================================*/', 'dim');
+    writeLine('  CONSHAUNERY TERMINAL  v0.4  //  3-PANEL MODE',       'ok');
+    writeLine('  Type  help  for available commands.',                  'dim');
+    writeLine('/*================================================*/\n', 'dim');
+  }
+  showBanner();
+
+  /* ── COMMANDS ────────────────────────────────────────────────── */
+  const CMD = {
+    help() {
+      writeLine('Available commands:', 'ok');
+      writeLine(Object.keys(CMD).sort().join('  '));
+      writeLine('\nload stillalive | defrag | scan | probe | hack | ps');
+      writeLine('font list | theme <n> | typewriter on/off | clear');
+    },
+    about()  { writeLine('CS Terminal v0.4 — 3-panel retro system monitor.'); },
+    clear()  { term.innerHTML=''; },
+    cls()    { CMD.clear(); },
+    time()   { writeLine(new Date().toString()); },
+    whoami() { writeLine(username); },
+    echo(a)  { writeLine(a.join(' ')); },
+
+    uptime() {
+      const s=Math.floor(performance.now()/1000);
+      writeLine(`Up: ${Math.floor(s/3600)}h ${Math.floor((s%3600)/60)}m ${s%60}s`, 'ok');
+    },
+
+    ping(a) {
+      const h=a[0]||'gateway.cs';
+      writeLine(`Pinging ${h}...`,'dim');
+      [1,2,3,4].forEach((n,i)=>setTimeout(()=>{
+        const ms=5+Math.floor(Math.random()*120);
+        writeLine(`Reply from ${h}: bytes=32 time=${ms}ms TTL=64`,'ok');
+        if(n===4) writeLine(`4 sent, 4 received, 0% loss`,'dim');
+      }, i*600+300));
+    },
+
+    scan() {
+      writeLine('Scanning network...','dim');
+      [['GATEWAY-7','42ms','OPEN'],['107.89.42.67','72ms','OPEN'],['ARCHIVE-69','88ms','LOCKED'],['28.73.125.01','55ms','OPEN'],['RELAY-X3','17ms','OPEN']]
+        .forEach(([n,l,s],i)=>setTimeout(()=>writeLine(`  ${n.padEnd(18)} LAT:${l.padEnd(6)} ${s}`, s==='LOCKED'?'warn':'ok'), i*300+400));
+    },
+
+    probe(a) {
+      const tgt=a[0]||'ARCHIVE-Ω';
+      writeLine(`Probing ${tgt}...`,'dim');
+      const b=document.createElement('div'); b.className='progressbar'; b.innerHTML='<span></span>'; term.appendChild(b); term.scrollTop=term.scrollHeight;
+      setTimeout(()=>writeLine('Mapping surface...','dim'),1400);
+      setTimeout(()=>writeLine('ACCESS GRANTED: '+tgt,'ok'),3800);
+    },
+
+    hack(a) {
+      const tgt=a[0]||'ARCHIVE-Ω';
+      writeLine(`Initiating intrusion: ${tgt}...`,'dim');
+      const b=document.createElement('div'); b.className='progressbar'; b.innerHTML='<span></span>'; term.appendChild(b); term.scrollTop=term.scrollHeight;
+      setTimeout(()=>writeLine('Bypassing ICE...','dim'),900);
+      setTimeout(()=>writeLine('Injecting payload...','dim'),2100);
+      setTimeout(()=>writeLine('Harvesting...','dim'),3000);
+      setTimeout(()=>writeLine('ACCESS GRANTED: '+tgt,'ok'),3600);
+    },
+
+    defrag() {
+      writeLine('Defragmenting virtual disk…','dim');
+      setTimeout(()=>{
+        const img=document.createElement('img');
+        img.src='./gifs/defrag.gif'; img.alt='Defrag'; img.style.cssText='max-width:100%;display:block;margin:4px 0;';
+        term.appendChild(img); writeLine('Defragmentation complete.','ok'); term.scrollTop=term.scrollHeight;
+      },800);
+    },
+
+    load(args) {
+      if (args[0]&&args[0].toLowerCase()==='stillalive') {
+        bgAudio.pause();
+        const a=new Audio('./sounds/music/stillalive.mp3');
+        a.play().catch(()=>writeLine('Autoplay blocked.','warn'));
+        writeLine('Playing "Still Alive"…','ok');
+        [[0,"This was a triumph."],[5,"I'm making a note here: HUGE success."],[10,"It's hard to overstate my satisfaction."],[18,"Aperture Science..."],[21,"We do what we must..."],[23.5,"...because..."],[24,"we can."]]
+          .forEach(([t,l])=>setTimeout(()=>writeLine(l),t*1000));
+        a.addEventListener('ended',()=>{ bgAudio.currentTime=0; bgAudio.play().catch(()=>{}); writeLine('+++ Background track resumed +++','ok'); });
+      } else writeLine('Usage: load stillalive','warn');
+    },
+
+    ps() {
+      writeLine('PID    NAME               CPU%   MEM%   STATUS','dim');
+      writeLine('─'.repeat(50),'dim');
+      [...PROCS].sort((a,b)=>b.cpu-a.cpu).forEach(p=>
+        writeLine(String(p.pid).padEnd(7)+p.name.padEnd(19)+p.cpu.toFixed(1).padStart(5)+'  '+p.mem.toFixed(1).padStart(5)+'  '+p.st));
+    },
+
+    theme(a) {
+      if (!a.length) { writeLine('Themes: orange  red  green  purple','dim'); return; }
+      const t=a[0].toLowerCase();
+      if (!['orange','red','green','purple'].includes(t)) { writeLine('Unknown theme.','warn'); return; }
+      applyTheme(t); writeLine('Theme: '+t,'ok');
+    },
+
+    font(a) {
+      if (!a.length||a[0]==='list') { writeLine('Fonts: vga bios cga vt323 press courier'); return; }
+      const map={vga:"'VGA8',monospace",bios:"'VGA8BIOS',monospace",cga:"'VGA8CGA',monospace",vt323:"'VT323',monospace",press:"'Press Start 2P',monospace",courier:"'Courier New',monospace"};
+      if (!map[a[0]]) { writeLine('Unknown font.','warn'); return; }
+      document.documentElement.style.setProperty('--font',map[a[0]]);
+      PREFS.font=map[a[0]]; save('cs_prefs_v2',PREFS); writeLine('Font: '+a[0],'ok');
+    },
+
+    typewriter(a) {
+      if (!a.length) { writeLine('typewriter is '+(typewriter?'ON':'OFF')); return; }
+      typewriter=a[0]==='on'; PREFS.typewriter=typewriter; save('cs_prefs_v2',PREFS);
+      writeLine('Typewriter '+(typewriter?'ON':'OFF'),'ok');
+    },
+
+    save() { save('cs_prefs_v2',PREFS); save('cs_vars_v1',VARS); writeLine('Saved.','ok'); }
+  };
+
+  /* ── INPUT ───────────────────────────────────────────────────── */
+  if (PREFS.font) document.documentElement.style.setProperty('--font',PREFS.font);
+
+  input.addEventListener('keydown', e => {
+    if (e.key==='Enter') {
+      const raw=input.value.trim(); input.value='';
+      if (!raw) return;
+      cmdHist.unshift(raw); histIdx=-1;
+      writeLine(ps1El.textContent+' '+raw,'dim',{instant:true});
+      const parts=raw.split(/\s+/); const cmd=parts.shift().toLowerCase();
+      if (CMD[cmd]) { try{CMD[cmd](parts);}catch(err){writeLine('Error: '+err.message,'error');} }
+      else writeLine('Command not found: '+cmd,'error');
     }
+    if (e.ctrlKey&&e.key==='c') { writeLine('^C','warn'); input.value=''; }
+    if (e.key==='ArrowUp'||e.key==='ArrowDown') {
+      e.preventDefault();
+      histIdx=e.key==='ArrowUp'?Math.min(histIdx+1,cmdHist.length-1):Math.max(histIdx-1,-1);
+      input.value=histIdx>=0?cmdHist[histIdx]:'';
+    }
+  });
 
-    // theme buttons
-    document.querySelectorAll('#topbar [data-theme]').forEach(el=>
-      el.addEventListener('click', ()=>COMMANDS.theme([el.dataset.theme]))
-    );
-  })();
-  </script>
+  document.addEventListener('click', ()=>input.focus());
+  input.focus();
+
+})();
+</script>
 </body>
 </html>
