@@ -1,110 +1,564 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <title>conshaunery.com</title>
-  <link rel="stylesheet" href="animations.css">
-     <!-- Favicon: -->
-  <link rel="icon" href="./icons/favicon.ico" type="image/x-icon">
-  <style>
-    body {
-      background-image: url("./gifs/planet.gif");
-      background-size: 90%;
-      background-position: center;
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>home — conshaunery.com</title>
+<style type="text/css">
 
-      background-color: rgb(39, 8, 153);
-      color: white;
-      font-family: Helvetica, Arial, sans-serif;
-      font-size: 16px;
-      margin: 0;
-      padding: 0;
-    }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 40px 20px;
-      text-align: center;
-    }
+  html, body {
+    width: 100%; height: 100%;
+    background: #000008;
+    overflow: hidden;
+    font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
+    color: #ffffff;
+  }
 
-    a {
-      color: #ffffff;
-      text-decoration: none;
-    }
+  .page {
+    display: flex;
+    flex-direction: column;
+    width: 100%; height: 100%;
+  }
 
-    a:hover {
-      color: rgb(36, 9, 34);
-    }
+  /* ── TOP BANNER ── */
+  .top-banner {
+    background: linear-gradient(180deg, #000000, #080018, #000000);
+    border-bottom: 2px solid #6600cc;
+    padding: 0;
+    line-height: 0;
+    font-size: 0;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .top-banner img {
+    max-height: 300px;
+    width: auto;
+    display: block;
+  }
+  .top-banner::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(180,100,255,0.06), transparent);
+    animation: sweep 3s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes sweep { to { left: 140%; } }
 
-    .portal img {
-      width: 200px;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 100%;
-    }
+  /* ── ANIMATED GIF-STYLE TITLE ── */
+  .gif-frame {
+    display: inline-block;
+    border: 2px solid #6600cc;
+    box-shadow: 0 0 0 1px #000, 0 0 0 2px #9933ff, 0 0 14px rgba(153,51,255,0.5), inset 0 0 12px rgba(0,0,30,0.8);
+    padding: 5px 20px 7px;
+    position: relative;
+    background: linear-gradient(180deg, #0a0020, #04000f);
+    overflow: hidden;
+  }
+  .gif-frame::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(90deg, #ff0000,#ff8800,#ffff00,#00ff88,#00ccff,#cc00ff,#ff0000);
+    background-size: 300% 100%;
+    animation: rb-chase 1.8s linear infinite;
+    z-index: 0;
+  }
+  .gif-frame::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: linear-gradient(180deg, #0a0020, #04000f);
+    z-index: 1;
+  }
+  @keyframes rb-chase { 0%{background-position:0% 0} 100%{background-position:300% 0} }
 
-    .orbit-container {
-      position: relative;
-      width: 200px;
-      height: 200px;
-      margin: 0 auto;
-    }
+  .gif-frame .corner {
+    position: absolute; z-index: 3; font-size: 10px; color: #ffff00;
+    animation: star-spin 2s linear infinite;
+  }
+  .gif-frame .corner.tl { top: 3px;  left:  4px; }
+  .gif-frame .corner.tr { top: 3px;  right: 4px; animation-direction: reverse; }
+  .gif-frame .corner.bl { bottom: 3px; left:  4px; animation-delay: -1s; }
+  .gif-frame .corner.br { bottom: 3px; right: 4px; animation-direction: reverse; animation-delay: -0.5s; }
+  @keyframes star-spin { to { transform: rotate(360deg); } }
 
-    .orbit {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform-origin: -50px center;
-      animation: spin 6s linear infinite;
-    }
+  .gif-letters {
+    position: relative; z-index: 2;
+    font-family: "Impact", "Arial Black", sans-serif;
+    font-size: 28px; letter-spacing: 8px; text-transform: uppercase; display: block;
+    animation: letter-cycle 4s ease-in-out infinite;
+  }
+  @keyframes letter-cycle {
+    0%   { color: #ffff00; text-shadow: 0 0 10px #ffaa00, 2px 2px 0 #660000; }
+    25%  { color: #ff88ff; text-shadow: 0 0 10px #cc00cc, 2px 2px 0 #440044; }
+    50%  { color: #00ffff; text-shadow: 0 0 10px #0088ff, 2px 2px 0 #002244; }
+    75%  { color: #88ff88; text-shadow: 0 0 10px #00cc44, 2px 2px 0 #003311; }
+    100% { color: #ffff00; text-shadow: 0 0 10px #ffaa00, 2px 2px 0 #660000; }
+  }
 
-    @keyframes spin {
-      0%   { transform: rotate(0deg) translateX(80px) rotate(0deg); }
-      100% { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
-    }
+  .gif-sub {
+    position: relative; z-index: 2;
+    font-size: 9px; letter-spacing: 3px; color: #aaaacc; display: block; margin-top: 2px;
+    animation: sub-blink 2.5s step-end infinite;
+  }
+  @keyframes sub-blink { 0%,85%,100%{opacity:1} 86%,99%{opacity:0} }
 
-    .bobbing {
-      animation: bob 2s ease-in-out infinite;
-    }
+  /* ── GALAXY CANVAS ── */
+  .galaxy-wrap {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+  }
 
-    @keyframes bob {
-      0%   { transform: translateY(0); }
-      50%  { transform: translateY(-10px); }
-      100% { transform: translateY(0); }
-    }
+  #c {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    display: block;
+    cursor: crosshair;
+  }
 
-    .orbit img {
-      width: 48px;
-      height: 48px;
-      object-fit: contain;
-    }
-  </style>
+  /* ── TOOLTIP ── */
+  #tooltip {
+    position: fixed;
+    display: none;
+    background: #000022;
+    border: 1px solid #6633cc;
+    padding: 7px 12px;
+    font-size: 11px;
+    color: #ccccff;
+    pointer-events: none;
+    z-index: 100;
+    font-family: "Courier New", monospace;
+    box-shadow: 0 0 14px rgba(100,50,200,0.6);
+    max-width: 210px;
+    line-height: 1.7;
+  }
+  #tooltip .tt-name { color: #ffff00; font-size: 12px; font-weight: bold; }
+  #tooltip .tt-sub  { color: #8888cc; font-size: 10px; }
+  #tooltip .tt-hint { color: #00ffcc; font-size: 9px; margin-top: 3px; }
+
+  /* ── MODAL ── */
+  #mo {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,20,0.88);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  #mo.open { display: flex; }
+
+  #mb {
+    background: #000022;
+    border: 2px outset #9933ff;
+    padding: 22px 26px;
+    max-width: 340px; width: 90%;
+    font-family: "Courier New", monospace;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 0 50px rgba(100,0,200,0.6);
+  }
+  .m-dot {
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    border: 2px solid rgba(255,255,255,0.2);
+  }
+  .m-name { font-size: 20px; color: #ffff00; font-family: "Impact",Arial; letter-spacing: 5px; margin-bottom: 8px; }
+  .m-desc { font-size: 11px; color: #aaaacc; line-height: 1.8; margin-bottom: 14px; }
+  .m-link {
+    display: inline-block;
+    background: linear-gradient(180deg,#6600cc,#330066);
+    border: 2px outset #cc66ff;
+    color: #ffff00;
+    font-family: "Comic Sans MS",Arial;
+    font-size: 12px; font-weight: bold;
+    padding: 5px 18px;
+    cursor: pointer; text-decoration: none; letter-spacing: 1px;
+  }
+  .m-link:hover { background: linear-gradient(180deg,#9933ff,#440099); }
+  #mc {
+    position: absolute; top: 7px; right: 12px;
+    color: #666699; cursor: pointer;
+    font-size: 16px; font-family: Arial;
+  }
+  #mc:hover { color: #ff6666; }
+  .m-coming { color: #ff6666; font-size: 10px; margin-top: 8px; font-style: italic; }
+
+</style>
 </head>
 <body>
-  <div class="container">
-    <img src="./gifs/ConShaunery.com_fancy.gif" alt="[CS]">
-    <br><br>
-
-    <audio autoplay loop>
-      <source src="./sounds/illumination-siddhartha-corsus.mp3" type="audio/mpeg">
+  <audio autoplay loop>
+        <source src="./sounds/illumination-siddhartha-corsus.mp3" type="audio/mpeg">
       Your browser does not support the audio element.
-    </audio>
+      </audio>
 
-    <!-- Orbiting Icons -->
-    <div class="orbit-container">
-      <div class="orbit"><img class="bobbing" src="./pictures/2.png" alt="icon 1"></div>
-      <div class="orbit" style="animation-delay: 0.5s;"><img class="bobbing" src="./pictures/3.png" alt="icon 2"></div>
-      <div class="orbit" style="animation-delay: 1s;"><img class="bobbing" src="./pictures/4.png" alt="icon 3"></div>
-      <div class="orbit" style="animation-delay: 1.5s;"><img class="bobbing" src="./pictures/5.png" alt="icon 4"></div>
-    </div>
+<div class="page">
 
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-
-    
-    </div>
+  <div class="top-banner">
+    <img src="./gifs/ConShaunery.com_fancy.gif" alt="conshaunery.com">
   </div>
 
-  <footer>
-  
-  </footer>
+  <div class="galaxy-wrap" id="galaxy">
+    <canvas id="c"></canvas>
+  </div>
+
+</div>
+
+<!-- TOOLTIP -->
+<div id="tooltip">
+  <div class="tt-name" id="tt-name"></div>
+  <div class="tt-sub"  id="tt-sub"></div>
+  <div class="tt-hint">[ click to enter ]</div>
+</div>
+
+<script type="text/javascript">
+
+// ── NODE DATA ─────────────────────────────────────────────────────────
+var nodes = [
+  { id:"terminal.html", name:"terminal.html", color:"#aaaaaa", glow:"#cccccc", orbit:78,  speed:0.013, angle:0.8,  r:9,  desc:"The fastest world. My skateboarding & speed page!!",          link:"mercury.html", ready:false },
+  { id:"pics.html",   name:"pics.html",   color:"#ddcc55", glow:"#ffee77", orbit:122, speed:0.009, angle:2.1,  r:12, desc:"Brightest in the sky. My music & guitar page!!",              link:"venus.html",   ready:false },
+  { id:"about.html",   name:"about.html",   color:"#2288ee", glow:"#55aaff", orbit:168, speed:0.007, angle:4.5,  r:13, desc:"Home world. My about-me page — photos, bio, and cool stuff!!", link:"earth.html",   ready:true  },
+  { id:"dreams.html",    name:"dreams.html",    color:"#cc3311", glow:"#ff5533", orbit:212, speed:0.006, angle:1.2,  r:11, desc:"The red node. Movies, gaming, Quake II and Half-Life!!",       link:"mars.html",    ready:false },
+  { id:"vids.html", name:"vids.html", color:"#cc9933", glow:"#eebb55", orbit:266, speed:0.004, angle:3.3,  r:19, desc:"Biggest node. My huge cool-links and web-rings page!!",        link:"jupiter.html", ready:false },
+  { id:"streams.html",  name:"streams.html",  color:"#bbaa66", glow:"#ddcc88", orbit:318, speed:0.003, angle:5.1,  r:16, desc:"Lord of the rings. Downloads — wallpapers, midis, skins!!",    link:"saturn.html",  ready:false },
+  { id:"faq.html",  name:"faq.html",  color:"#55cccc", glow:"#77eeee", orbit:366, speed:0.002, angle:0.3,  r:14, desc:"The sideways world. Science & space facts page!!",             link:"uranus.html",  ready:false },
+  { id:"downloads.html", name:"downloads.html", color:"#2244ee", glow:"#4466ff", orbit:412, speed:0.0015,angle:2.8,  r:13, desc:"Deep blue mystery. My art & creative writing page!!",         link:"neptune.html", ready:false },
+  { id:"leave", name:"leave",color:"#bb33ee", glow:"#dd66ff", orbit:460, speed:0.001, angle:1.9,  r:11, desc:"SECRET NODE!! Nobody knows what lurks here... IF YOU DARE!!", link:"planetx.html", ready:false }
+];
+
+// ── CANVAS ────────────────────────────────────────────────────────────
+var canvas = document.getElementById('c');
+var ctx    = canvas.getContext('2d');
+var W, H, cx, cy;
+var stars  = [];
+var hovered = -1;
+var dashOffset = 0;
+
+function resize() {
+  var wrap = document.getElementById('galaxy');
+  W = canvas.width  = wrap.offsetWidth;
+  H = canvas.height = wrap.offsetHeight;
+  cx = W / 2;
+  cy = H / 2;
+  buildStars();
+}
+
+// ── STARS ─────────────────────────────────────────────────────────────
+function buildStars() {
+  stars = [];
+  for (var i = 0; i < 280; i++) {
+    stars.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.4 + 0.2,
+      ph: Math.random() * Math.PI * 2,
+      sp: Math.random() * 0.009 + 0.003
+    });
+  }
+}
+
+function drawStars() {
+  for (var i = 0; i < stars.length; i++) {
+    var s = stars[i];
+    s.ph += s.sp;
+    var a = 0.25 + 0.7 * (0.5 + 0.5 * Math.sin(s.ph));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(200,210,255,' + a.toFixed(2) + ')';
+    ctx.fill();
+  }
+}
+
+function drawNebula(x, y, r, col) {
+  var g = ctx.createRadialGradient(x, y, 0, x, y, r);
+  g.addColorStop(0, col);
+  g.addColorStop(1, 'transparent');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function nodePos(n) {
+  return {
+    x: cx + Math.cos(n.angle) * n.orbit,
+    y: cy + Math.sin(n.angle) * n.orbit * 0.43
+  };
+}
+
+// ── FRAME ─────────────────────────────────────────────────────────────
+var last = 0;
+function frame(ts) {
+  var dt = Math.min(ts - last, 50);
+  last = ts;
+
+  for (var i = 0; i < nodes.length; i++) {
+    nodes[i].angle += nodes[i].speed * (dt / 16);
+  }
+  dashOffset -= 0.4;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#000008';
+  ctx.fillRect(0, 0, W, H);
+
+  drawNebula(cx * 0.45, cy * 0.65, 230, 'rgba(55,0,110,0.13)');
+  drawNebula(cx * 1.55, cy * 1.25, 190, 'rgba(0,15,100,0.10)');
+  drawNebula(cx * 0.75, cy * 1.55, 170, 'rgba(80,0,35,0.09)');
+
+  drawStars();
+
+  // Orbit ellipses
+  for (var i = 0; i < nodes.length; i++) {
+    var n   = nodes[i];
+    var hot = (i === hovered);
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, n.orbit, n.orbit * 0.43, 0, 0, Math.PI * 2);
+    ctx.strokeStyle = hot ? 'rgba(180,110,255,0.32)' : 'rgba(70,35,130,0.18)';
+    ctx.lineWidth   = hot ? 1.2 : 0.7;
+    ctx.setLineDash([3, 7]);
+    ctx.lineDashOffset = dashOffset * (i % 2 === 0 ? 1 : -1);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.lineDashOffset = 0;
+  }
+
+  // Connector lines
+  for (var i = 0; i < nodes.length; i++) {
+    var n   = nodes[i];
+    var p   = nodePos(n);
+    var hot = (i === hovered);
+
+    ctx.shadowBlur = 0;
+
+    if (hot) {
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(p.x, p.y);
+      ctx.strokeStyle = 'rgba(180,110,255,0.25)';
+      ctx.lineWidth   = 5;
+      ctx.shadowColor = n.glow;
+      ctx.shadowBlur  = 12;
+      ctx.stroke();
+      ctx.shadowBlur  = 0;
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(p.x, p.y);
+    ctx.strokeStyle = hot ? 'rgba(200,150,255,0.7)' : 'rgba(90,55,160,0.35)';
+    ctx.lineWidth   = hot ? 1.5 : 1;
+    ctx.stroke();
+
+    // Tick dots along line
+    var pts = [0.25, 0.5, 0.75];
+    for (var j = 0; j < pts.length; j++) {
+      var tx = cx + (p.x - cx) * pts[j];
+      var ty = cy + (p.y - cy) * pts[j];
+      ctx.beginPath();
+      ctx.arc(tx, ty, j === 1 ? (hot ? 2.5 : 1.8) : 1.2, 0, Math.PI * 2);
+      ctx.fillStyle = hot
+        ? (j === 1 ? 'rgba(220,170,255,0.9)' : 'rgba(200,160,255,0.6)')
+        : (j === 1 ? 'rgba(110,70,180,0.5)'  : 'rgba(90,55,150,0.35)');
+      ctx.shadowColor = hot ? n.glow : 'transparent';
+      ctx.shadowBlur  = hot && j === 1 ? 6 : 0;
+      ctx.fill();
+      ctx.shadowBlur  = 0;
+    }
+  }
+
+  // Nodes
+  for (var i = 0; i < nodes.length; i++) {
+    var n   = nodes[i];
+    var p   = nodePos(n);
+    var hot = (i === hovered);
+    var nr  = hot ? n.r * 1.4 : n.r;
+
+    // Halo
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, nr + (hot ? 9 : 5), 0, Math.PI * 2);
+    ctx.strokeStyle = hexAlpha(n.glow, hot ? 0.6 : 0.18);
+    ctx.lineWidth   = hot ? 1.5 : 0.8;
+    ctx.shadowColor = n.glow;
+    ctx.shadowBlur  = hot ? 28 : 10;
+    ctx.stroke();
+    ctx.shadowBlur  = 0;
+
+    if (hot) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, nr + 17, 0, Math.PI * 2);
+      ctx.strokeStyle = hexAlpha(n.glow, 0.15);
+      ctx.lineWidth   = 1;
+      ctx.stroke();
+    }
+
+    // Fill
+    var gr = ctx.createRadialGradient(p.x - nr*0.35, p.y - nr*0.35, nr*0.08, p.x, p.y, nr);
+    gr.addColorStop(0, lighten(n.color, 0.55));
+    gr.addColorStop(0.45, n.color);
+    gr.addColorStop(1, darken(n.color, 0.45));
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, nr, 0, Math.PI * 2);
+    ctx.fillStyle   = gr;
+    ctx.shadowColor = n.glow;
+    ctx.shadowBlur  = hot ? 22 : 8;
+    ctx.fill();
+    ctx.shadowBlur  = 0;
+
+    // Border
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, nr, 0, Math.PI * 2);
+    ctx.strokeStyle = hot ? n.glow : 'rgba(255,255,255,0.18)';
+    ctx.lineWidth   = hot ? 2 : 1;
+    ctx.stroke();
+
+    // Specular highlight
+    ctx.beginPath();
+    ctx.arc(p.x - nr*0.28, p.y - nr*0.28, nr*0.22, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,255,' + (hot ? 0.22 : 0.10) + ')';
+    ctx.fill();
+
+    // Label
+    ctx.font        = hot ? 'bold 10px "Courier New"' : '9px "Courier New"';
+    ctx.textAlign   = 'center';
+    ctx.fillStyle   = hot ? '#ffffff' : '#9999cc';
+    ctx.shadowColor = hot ? n.glow : 'transparent';
+    ctx.shadowBlur  = hot ? 8 : 0;
+    ctx.fillText(n.name.toUpperCase(), p.x, p.y + nr + 15);
+    ctx.shadowBlur  = 0;
+  }
+
+  drawHub();
+  requestAnimationFrame(frame);
+}
+
+function drawHub() {
+  var t     = Date.now() / 1000;
+  var pulse = 30 + 3.5 * Math.sin(t * 2.2);
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, pulse + 10, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(255,210,50,0.07)';
+  ctx.lineWidth   = 1;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, pulse + 4, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(255,190,20,0.20)';
+  ctx.lineWidth   = 1.5;
+  ctx.stroke();
+
+  var g = ctx.createRadialGradient(cx - 9, cy - 9, 2, cx, cy, 26);
+  g.addColorStop(0,   '#ffffff');
+  g.addColorStop(0.25,'#fff0aa');
+  g.addColorStop(0.6, '#ff9900');
+  g.addColorStop(1,   '#cc4400');
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, 26, 0, Math.PI * 2);
+  ctx.fillStyle   = g;
+  ctx.shadowColor = '#ffcc00';
+  ctx.shadowBlur  = 45;
+  ctx.fill();
+  ctx.shadowBlur  = 0;
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, 26, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(255,225,100,0.65)';
+  ctx.lineWidth   = 2;
+  ctx.stroke();
+
+  ctx.font        = 'bold 9px "Courier New"';
+  ctx.textAlign   = 'center';
+  ctx.fillStyle   = '#ffee88';
+  ctx.shadowColor = '#ff8800';
+  ctx.shadowBlur  = 7;
+  ctx.fillText('home.html', cx, cy + 41);
+  ctx.shadowBlur  = 0;
+}
+
+// ── COLOUR UTILS ──────────────────────────────────────────────────────
+function hexToRgb(h) {
+  return [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+}
+function lighten(h,a){ var c=hexToRgb(h); return 'rgb('+Math.min(255,c[0]+(a*255)|0)+','+Math.min(255,c[1]+(a*255)|0)+','+Math.min(255,c[2]+(a*255)|0)+')'; }
+function darken(h,a) { var c=hexToRgb(h); return 'rgb('+(c[0]*a|0)+','+(c[1]*a|0)+','+(c[2]*a|0)+')'; }
+function hexAlpha(h,a){ var c=hexToRgb(h); return 'rgba('+c[0]+','+c[1]+','+c[2]+','+a+')'; }
+
+// ── HIT TEST ──────────────────────────────────────────────────────────
+function hitNode(mx, my) {
+  for (var i = 0; i < nodes.length; i++) {
+    var p  = nodePos(nodes[i]);
+    var dx = mx - p.x, dy = my - p.y;
+    if (dx*dx + dy*dy <= (nodes[i].r + 9) * (nodes[i].r + 9)) return i;
+  }
+  return -1;
+}
+
+// ── MOUSE ─────────────────────────────────────────────────────────────
+var tt     = document.getElementById('tooltip');
+var ttName = document.getElementById('tt-name');
+var ttSub  = document.getElementById('tt-sub');
+
+canvas.addEventListener('mousemove', function(e) {
+  var r   = canvas.getBoundingClientRect();
+  var mx  = e.clientX - r.left;
+  var my  = e.clientY - r.top;
+  var idx = hitNode(mx, my);
+  hovered = idx;
+
+  var dx = mx - cx, dy = my - cy;
+  canvas.style.cursor = (idx >= 0 || dx*dx + dy*dy <= 900) ? 'pointer' : 'crosshair';
+
+  if (idx >= 0) {
+    var n = nodes[idx];
+    ttName.textContent = n.name.toUpperCase();
+    ttSub.textContent  = n.desc.substring(0, 58) + '...';
+    tt.style.display   = 'block';
+    var tx = e.clientX + 18, ty = e.clientY + 14;
+    if (tx + 215 > window.innerWidth) tx = e.clientX - 225;
+    tt.style.left = tx + 'px';
+    tt.style.top  = ty + 'px';
+  } else {
+    tt.style.display = 'none';
+  }
+});
+
+canvas.addEventListener('mouseleave', function() {
+  hovered = -1;
+  tt.style.display = 'none';
+});
+
+canvas.addEventListener('click', function(e) {
+  var r  = canvas.getBoundingClientRect();
+  var mx = e.clientX - r.left, my = e.clientY - r.top;
+  var dx = mx - cx, dy = my - cy;
+  if (dx*dx + dy*dy <= 900) { sunClick(); return; }
+  var idx = hitNode(mx, my);
+  if (idx >= 0) {
+    tt.style.display = 'none';
+    window.location.href = nodes[idx].id;
+  }
+});
+
+function sunClick() {
+  alert('☀ SOL — HOME BASE ☀\n\nCenter of the galaxy.\nClick any node to explore conshaunery.com!!');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────
+window.addEventListener('load', function() { resize(); requestAnimationFrame(frame); });
+window.addEventListener('resize', resize);
+
+</script>
 </body>
 </html>
