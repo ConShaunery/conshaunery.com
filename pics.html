@@ -1,236 +1,524 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-  <head>
-    <title>conshaunery.com/pics</title>
-    <style>
-      body {
-        background-image: url("./gifs/sky.gif");
-        background-size: 50%;
-        background-repeat: repeat;
-        background-color: black;
-        color: white;
-        font-family: Helvetica, Arial, sans-serif;
-        font-size: 16px;
-        margin: 0;
-      }
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>pics — conshaunery.com</title>
+<style type="text/css">
 
-      .container {
-        max-width: 1000px;
-        margin: 0 auto;
-        padding: 40px 20px;
-      }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-      header {
-        text-align: center;
-      }
+  html, body {
+    background: #000008;
+    color: #ffffff;
+    font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
+    font-size: 15px;
+    min-height: 100%;
+  }
 
-      header h1 {
-        font-size: 3rem;
-        margin-bottom: 10px;
-      }
+  /* ── STARFIELD ── */
+  #stars {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(80,0,120,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 70%, rgba(0,30,80,0.18) 0%, transparent 60%),
+      #000008;
+  }
 
-      nav a {
-        color: orange;
-        text-decoration: none;
-        margin: 0 8px;
-      }
+  /* ── RAINBOW BAR ── */
+  .rainbow-bar {
+    height: 5px;
+    background: linear-gradient(90deg, #ff0000,#ff8800,#ffff00,#00ff88,#00ccff,#cc00ff,#ff0088,#ff0000);
+    background-size: 200% 100%;
+    animation: rb 3s linear infinite;
+    position: sticky; top: 0; z-index: 100;
+  }
+  @keyframes rb { 0%{background-position:0% 0} 100%{background-position:200% 0} }
 
-      nav a:hover {
-        color: white;
-      }
+  /* ── WRAPPER ── */
+  .wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+    position: relative; z-index: 1;
+  }
 
-      section {
-        margin: 60px 0;
-      }
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 28px 0 10px;
+    border-bottom: 2px solid #6600cc;
+    margin-bottom: 32px;
+    position: relative;
+  }
 
-      section h3 {
-        text-align: center;
-        margin-bottom: 20px;
-        font-weight: bold;
-      }
+  header img { max-width: 100%; max-height: 120px; display: inline-block; }
 
-      .gallery {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 15px;
-        justify-items: center;
-      }
+  .header-sub {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: #8888cc;
+    margin-top: 6px;
+    animation: blink 2.8s step-end infinite;
+  }
+  @keyframes blink { 0%,85%,100%{opacity:1} 86%,99%{opacity:0} }
 
-      .gallery img {
-        width: 100%;
-        height: auto;
-        border-radius: 10px;
-      }
+  /* ── NAV ── */
+  nav {
+    text-align: center;
+    margin: 12px 0 30px;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  nav a {
+    color: #ff8800;
+    text-decoration: none;
+    margin: 0 8px;
+    text-shadow: 0 0 6px rgba(255,136,0,0.5);
+  }
+  nav a:hover { color: #ffffff; text-decoration: underline; }
+  nav span { color: #440066; }
 
-      p {
-        text-align: center;
-        line-height: 1.5;
-      }
+  /* ── SECTION ── */
+  section {
+    margin: 0 0 40px;
+    border: 1px solid #330055;
+    background: rgba(10,0,20,0.6);
+    box-shadow: 0 0 18px rgba(100,0,180,0.12), inset 0 0 30px rgba(0,0,10,0.4);
+    position: relative;
+  }
 
-      footer {
-        text-align: right;
-        margin-top: 40px;
-      }
+  /* Section header strip */
+  .sec-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 14px;
+    background: linear-gradient(90deg, #1a0033, #0d001a);
+    border-bottom: 1px solid #440066;
+  }
 
-      footer img {
-        width: 50px;
-        height: 50px;
-      }
-    </style>
-  </head>
+  .sec-title {
+    font-family: "Impact", "Arial Black", sans-serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: #ffff00;
+    text-shadow: 0 0 8px rgba(255,220,0,0.6), 1px 1px 0 #440000;
+    text-transform: uppercase;
+  }
 
-  <body>
-    <audio autoplay loop>
-      <source src="./sounds/limerance.mp3" type="audio/mpeg" />
-      Your browser does not support the audio element.
-    </audio>
+  .sec-stars { color: #cc66ff; font-size: 11px; letter-spacing: 2px; }
 
-    <div class="container">
-      <header>
-        <img src ="./gifs/Pics!.gif">
-      </header>
+  .sec-note {
+    font-size: 11px;
+    color: #9988bb;
+    font-style: italic;
+    padding: 6px 14px 0;
+    text-align: center;
+  }
+
+  /* Gallery grid */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .gallery.single { grid-template-columns: 1fr; max-width: 600px; margin: 0 auto; }
+
+  .img-wrap {
+    position: relative;
+    border: 2px solid #330055;
+    overflow: hidden;
+    background: #000;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .img-wrap:hover {
+    border-color: #9933ff;
+    box-shadow: 0 0 16px rgba(150,50,255,0.5);
+  }
+  .img-wrap img {
+    width: 100%; height: 220px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s, filter 0.3s;
+    filter: brightness(0.88) saturate(1.1);
+  }
+  .gallery.single .img-wrap img { height: auto; max-height: 480px; object-fit: contain; }
+  .img-wrap:hover img {
+    transform: scale(1.04);
+    filter: brightness(1.0) saturate(1.3);
+  }
+
+  /* Corner decoration on hover */
+  .img-wrap::before, .img-wrap::after {
+    content: '★';
+    position: absolute;
+    top: 4px; font-size: 9px;
+    color: #ffff00;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 5;
+    text-shadow: 0 0 4px #ff8800;
+  }
+  .img-wrap::before { left: 5px; }
+  .img-wrap::after  { right: 5px; }
+  .img-wrap:hover::before, .img-wrap:hover::after { opacity: 1; }
+
+  /* ── LIGHTBOX ── */
+  #lb {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,15,0.93);
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  #lb.open { display: flex; }
+  #lb img {
+    max-width: 90vw;
+    max-height: 88vh;
+    border: 2px solid #6600cc;
+    box-shadow: 0 0 50px rgba(120,0,220,0.6), 0 0 100px rgba(80,0,160,0.3);
+    cursor: default;
+  }
+  #lb-close {
+    position: fixed; top: 16px; right: 22px;
+    font-size: 26px; color: #9966cc; cursor: pointer;
+    font-family: Arial; z-index: 501;
+    text-shadow: 0 0 8px #6600cc;
+  }
+  #lb-close:hover { color: #ff6666; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    border-top: 2px solid #330055;
+    padding: 22px 0 10px;
+    margin-top: 10px;
+  }
+  footer .ft-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; flex-wrap: wrap;
+  }
+  footer img { width: 54px; height: 54px; border: 2px solid #440066; border-radius: 50%; }
+  footer p {
+    font-size: 10px; color: #666688; letter-spacing: 2px;
+    margin-top: 10px;
+  }
+  .ft-sig {
+    font-size: 11px; color: #8866aa;
+    text-shadow: 0 0 6px rgba(150,80,200,0.4);
+  }
+
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<div class="rainbow-bar"></div>
+
+<div class="wrap">
+
+  <header>
+    <img src="./gifs/Pics!.gif" alt="PICS">
+    <div class="header-sub">~ photographs &amp; imagery from the void ~</div>
+  </header>
 
 
-      <section>
-        <h3>February 2026</h3>
-        <div class="gallery">
-          <img src="./pictures/gas.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/pools.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/pools_2.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/rainbow_road.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/sea.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/sea_2.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/waterfall.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/fish.jpg" alt="Here some liminal warmth for ya" />
-        </div>
-      </section>
 
-
-      <section>
-        <h3>January 2026</h3>
-        <div class="gallery">
-          <img src="./pictures/pink_skies1.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/pink_skies2.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/pink_skies3.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/pink_skies4.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/pink_skies5.jpg" alt="Here some liminal warmth for ya" />
-        </div>
-      </section>
-
-
-      <section>
-        <h3>October 2025</h3>
-        <div class="gallery">
-          <img src="./pictures/tree.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/gas.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/pool.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/apartment.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/colours.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/house.jpg" alt="Here some liminal warmth for ya" />
-          <img src="./pictures/colours3.jpg" alt="Here some liminal warmth for ya" />
-        </div>
-      </section>
-
-      <section>
-        <h3>June 2025</h3>
-        <div class="gallery">
-          <img src="./pictures/break-room.jpg" alt="" />
-          <img src="./pictures/chill_boy.jpg" alt="" />
-          <img src="./pictures/lamb.jpg" alt="" />
-          <img src="./pictures/yerba.jpg" alt="" />
-        </div>
-      </section>
-
-      <section>
-        <h3>December 31, 2024</h3>
-        <p>You will be missed</p>
-        <div class="gallery">
-          <img src="./pictures/monk.png" alt="rip you will be missed" />
-        </div>
-      </section>
-
-      <section>
-        <h3>September 2024</h3>
-        <div class="gallery">
-          <img src="./pictures/night_solar1.jpg" alt="" />
-          <img src="./pictures/night_solar2.jpg" alt="" />
-        </div>
-      </section>
-
-      <section>
-        <h3>June 2024</h3>
-        <div class="gallery">
-          <img src="./pictures/june_1.jpg" alt="" />
-          <img src="./pictures/june_2.jpg" alt="" />
-          <img src="./pictures/june_3.jpg" alt="" />
-          <img src="./pictures/night_june1.jpg" alt="" />
-          <img src="./pictures/bathroom.jpg" alt="" />
-        </div>
-      </section>
-
-      <section>
-        <h3>April 2024</h3>
-        <div class="gallery">
-          <img src="./pictures/homestead.jpg" alt="" />
-          <img src="./pictures/bro_door.jpg" alt="" />
-          <img src="./pictures/door.jpg" alt="" />
-        </div>
-      </section>
-
-      <section>
-        <h3>December 2023</h3>
-        <p style="font-size: small;">i took this too! lol!</p>
-        <div class="gallery">
-          <img src="./pictures/liminal_dark.png" alt="here some liminal depression" />
-        </div>
-      </section>
-
-      <section>
-        <h3>October 2023</h3>
-        <p style="font-size: small;">i took this lol</p>
-        <div class="gallery">
-          <img src="./pictures/porterhouse.jpg" alt="" />
-        </div>
-      </section>
-
-      <section>
-        <h3>June 2023</h3>
-        <p style="font-size: small;">brewtiful</p>
-        <div class="gallery">
-          <img src="./pictures/album_2023.jpg" alt="" />
-        </div>
-      </section>
-
-      <section>
-        <h3>May 2023</h3>
-        <p style="font-size: small;">this some cool ai shtuf</p>
-        <div class="gallery">
-          <img src="./pictures/ai_road1.jpg" alt="" />
-          <img src="./pictures/ai_sail1.jpg" alt="" />
-          <img src="./pictures/ai_blckmesa1.jpg" alt="" />
-          <img src="./pictures/ai_backyard1.jpg" alt="" />
-          <img src="./pictures/ai_liminalindoor1.jpg" alt="" />
-          <img src="./pictures/ai_indoorcob1.jpg" alt="" />
-          <img src="./pictures/ai_indoorcob2.jpg" alt="" />
-          <img src="./pictures/ai_indoorcob3.jpg" alt="" />
-        </div>
-      </section>
-
-      <section>
-        <h3>March 2023</h3>
-        <p style="font-size: small;"><i>"...blushes.."</i> sorrwy no feet pics uWu</p>
-        <div class="gallery">
-          <img src="./pictures/pic1.jpg" alt="" />
-          <img src="./pictures/pic2.jpg" alt="" />
-          <img src="./pictures/pic3.jpg" alt="" />
-          <img src="./pictures/pic4.jpg" alt="" />
-        </div>
-      </section>
-
-      <footer>
-        <p style="font-size: small;">conshaunery was here.</p>
-        <img src="./pictures/conshaun.jpg" alt="Here some liminal warmth for ya" />
-      </footer>
+  <!-- MARCH 2026 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-title">March 2026</span>
+      <span class="sec-stars">★ ★ ★</span>
     </div>
-  </body>
+    <div class="gallery single">
+      <div class="img-wrap"><img src="./pictures/night.jpg" alt="liminal night"></div>
+    </div>
+  </section>
+
+
+  <!-- FEBRUARY 2026 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-title">February 2026</span>
+      <span class="sec-stars">★ ★ ★</span>
+    </div>
+    <div class="gallery">
+      <div class="img-wrap"><img src="./pictures/gas.jpg" alt="gas"></div>
+      <div class="img-wrap"><img src="./pictures/pools.jpg" alt="pools"></div>
+      <div class="img-wrap"><img src="./pictures/pools_2.jpg" alt="pools 2"></div>
+      <div class="img-wrap"><img src="./pictures/rainbow_road.jpg" alt="rainbow road"></div>
+      <div class="img-wrap"><img src="./pictures/sea.jpg" alt="sea"></div>
+      <div class="img-wrap"><img src="./pictures/sea_2.jpg" alt="sea 2"></div>
+      <div class="img-wrap"><img src="./pictures/waterfall.jpg" alt="waterfall"></div>
+      <div class="img-wrap"><img src="./pictures/fish.jpg" alt="fish"></div>
+    </div>
+  </section>
+
+
+  <!-- JANUARY 2026 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-title">January 2026</span>
+      <span class="sec-stars">★ ★ ★</span>
+    </div>
+    <div class="gallery">
+      <div class="img-wrap"><img src="./pictures/pink_skies1.jpg" alt="pink skies"></div>
+      <div class="img-wrap"><img src="./pictures/pink_skies2.jpg" alt="pink skies 2"></div>
+      <div class="img-wrap"><img src="./pictures/pink_skies3.jpg" alt="pink skies 3"></div>
+      <div class="img-wrap"><img src="./pictures/pink_skies4.jpg" alt="pink skies 4"></div>
+      <div class="img-wrap"><img src="./pictures/pink_skies5.jpg" alt="pink skies 5"></div>
+    </div>
+  </section>
+
+
+  <!-- OCTOBER 2025 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-title">October 2025</span>
+      <span class="sec-stars">★ ★ ★</span>
+    </div>
+    <div class="gallery">
+      <div class="img-wrap"><img src="./pictures/tree.jpg" alt="tree"></div>
+      <div class="img-wrap"><img src="./pictures/gas.jpg" alt="gas"></div>
+      <div class="img-wrap"><img src="./pictures/pool.jpg" alt="pool"></div>
+      <div class="img-wrap"><img src="./pictures/apartment.jpg" alt="apartment"></div>
+      <div class="img-wrap"><img src="./pictures/colours.jpg" alt="colours"></div>
+      <div class="img-wrap"><img src="./pictures/house.jpg" alt="house"></div>
+      <div class="img-wrap"><img src="./pictures/colours3.jpg" alt="colours 3"></div>
+    </div>
+  </section>
+
+
+  <!-- JUNE 2025 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-title">June 2025</span>
+      <span class="sec-stars">★ ★ ★</span>
+    </div>
+    <div class="gallery">
+      <div class="img-wrap"><img src="./pictures/break-room.jpg" alt="break room"></div>
+      <div class="img-wrap"><img src="./pictures/chill_boy.jpg" alt="chill boy"></div>
+      <div class="img-wrap"><img src="./pictures/lamb.jpg" alt="lamb"></div>
+      <div class="img-wrap"><img src="./pictures/yerba.jpg" alt="yerba"></div>
+    </div>
+  </section>
+
+
+  <!-- DECEMBER 31 2024 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-title">December 31, 2024</span>
+      <span class="sec-stars">★ ★ ★</span>
+    </div>
+    <div class="sec-note">you will be missed</div>
+    <div class="gallery single">
+      <div class="img-wrap"><img src="./pictures/monk.png" alt="rip you will be missed"></div>
+    </div>
+  </section>
+
+
+  <!-- SEPTEMBER 2024 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-title">September 2024</span>
+      <span class="sec-stars">★ ★ ★</span>
+    </div>
+    <div class="gallery">
+      <div class="img-wrap"><img src="./pictures/night_solar1.jpg" alt="night solar 1"></div>
+      <div class="img-wrap"><img src="./pictures/night_solar2.jpg" alt="night solar 2"></div>
+    </div>
+  </section>
+
+
+  <!-- JUNE 2024 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-title">June 2024</span>
+      <span class="sec-stars">★ ★ ★</span>
+    </div>
+    <div class="gallery">
+      <div class="img-wrap"><img src="./pictures/june_1.jpg" alt="june 1"></div>
+      <div class="img-wrap"><img src="./pictures/june_2.jpg" alt="june 2"></div>
+      <div class="img-wrap"><img src="./pictures/june_3.jpg" alt="june 3"></div>
+      <div class="img-wrap"><img src="./pictures/night_june1.jpg" alt="night june"></div>
+      <div class="img-wrap"><img src="./pictures/bathroom.jpg" alt="bathroom"></div>
+    </div>
+  </section>
+
+
+  <!-- APRIL 2024 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-title">April 2024</span>
+      <span class="sec-stars">★ ★ ★</span>
+    </div>
+    <div class="gallery">
+      <div class="img-wrap"><img src="./pictures/homestead.jpg" alt="homestead"></div>
+      <div class="img-wrap"><img src="./pictures/bro_door.jpg" alt="door 1"></div>
+      <div class="img-wrap"><img src="./pictures/door.jpg" alt="door 2"></div>
+    </div>
+  </section>
+
+
+  <!-- DECEMBER 2023 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-title">December 2023</span>
+      <span class="sec-stars">★ ★ ★</span>
+    </div>
+    <div class="sec-note">i took this too! lol!</div>
+    <div class="gallery single">
+      <div class="img-wrap"><img src="./pictures/liminal_dark.png" alt="liminal dark"></div>
+    </div>
+  </section>
+
+
+  <!-- OCTOBER 2023 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-title">October 2023</span>
+      <span class="sec-stars">★ ★ ★</span>
+    </div>
+    <div class="sec-note">i took this lol</div>
+    <div class="gallery single">
+      <div class="img-wrap"><img src="./pictures/porterhouse.jpg" alt="porterhouse"></div>
+    </div>
+  </section>
+
+
+  <!-- JUNE 2023 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-title">June 2023</span>
+      <span class="sec-stars">★ ★ ★</span>
+    </div>
+    <div class="sec-note">brewtiful</div>
+    <div class="gallery single">
+      <div class="img-wrap"><img src="./pictures/album_2023.jpg" alt="album 2023"></div>
+    </div>
+  </section>
+
+
+  <!-- MAY 2023 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-title">May 2023</span>
+      <span class="sec-stars">★ ★ ★</span>
+    </div>
+    <div class="sec-note">this some cool ai shtuf</div>
+    <div class="gallery">
+      <div class="img-wrap"><img src="./pictures/ai_road1.jpg" alt="ai road"></div>
+      <div class="img-wrap"><img src="./pictures/ai_sail1.jpg" alt="ai sail"></div>
+      <div class="img-wrap"><img src="./pictures/ai_blckmesa1.jpg" alt="ai black mesa"></div>
+      <div class="img-wrap"><img src="./pictures/ai_backyard1.jpg" alt="ai backyard"></div>
+      <div class="img-wrap"><img src="./pictures/ai_liminalindoor1.jpg" alt="ai liminal indoor"></div>
+      <div class="img-wrap"><img src="./pictures/ai_indoorcob1.jpg" alt="ai indoor 1"></div>
+      <div class="img-wrap"><img src="./pictures/ai_indoorcob2.jpg" alt="ai indoor 2"></div>
+      <div class="img-wrap"><img src="./pictures/ai_indoorcob3.jpg" alt="ai indoor 3"></div>
+    </div>
+  </section>
+
+
+  <!-- MARCH 2023 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-title">March 2023</span>
+      <span class="sec-stars">★ ★ ★</span>
+    </div>
+    <div class="sec-note"><i>"...blushes.."</i> sorrwy no feet pics uWu</div>
+    <div class="gallery">
+      <div class="img-wrap"><img src="./pictures/pic1.jpg" alt="pic 1"></div>
+      <div class="img-wrap"><img src="./pictures/pic2.jpg" alt="pic 2"></div>
+      <div class="img-wrap"><img src="./pictures/pic3.jpg" alt="pic 3"></div>
+      <div class="img-wrap"><img src="./pictures/pic4.jpg" alt="pic 4"></div>
+    </div>
+  </section>
+
+
+  <footer>
+    <div class="ft-row">
+  
+    </div>
+    <p>conshaunery.com | some pics are mine but most aren't so idk</p>
+  </footer>
+
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lb">
+  <span id="lb-close" onclick="closeLb()">✕</span>
+  <img id="lb-img" src="" alt="">
+</div>
+
+<audio autoplay loop>
+  <source src="./sounds/limerance.mp3" type="audio/mpeg">
+</audio>
+
+<script type="text/javascript">
+  // Lightbox
+  var lbEl    = document.getElementById('lb');
+  var lbImg   = document.getElementById('lb-img');
+
+  document.querySelectorAll('.img-wrap img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+      lbEl.className = 'open';
+    });
+  });
+
+  function closeLb() { lbEl.className = ''; lbImg.src = ''; }
+  lbEl.addEventListener('click', function(e) { if (e.target === lbEl) closeLb(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLb(); });
+
+  // Twinkling stars background
+  (function() {
+    var canvas = document.createElement('canvas');
+    canvas.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:0;';
+    document.body.insertBefore(canvas, document.body.firstChild);
+    var ctx = canvas.getContext('2d');
+    var stars = [];
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+      stars = [];
+      for (var i = 0; i < 220; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.3 + 0.2,
+          ph: Math.random() * Math.PI * 2,
+          sp: Math.random() * 0.008 + 0.003
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      var t = Date.now() / 1000;
+      for (var i = 0; i < stars.length; i++) {
+        var s = stars[i];
+        var a = 0.25 + 0.65 * ((Math.sin(t * s.sp * 120 + s.ph) + 1) / 2);
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(200,180,255,' + a.toFixed(2) + ')';
+        ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    draw();
+  })();
+</script>
+
+</body>
 </html>
