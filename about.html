@@ -1,125 +1,233 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <title>conshaunery.com</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>about — conshaunery.com</title>
+<style type="text/css">
 
-  <style>
-    body {
-      background-color: #493370;
-      color: white;
-      font-family: Helvetica, Arial, sans-serif;
-      font-size: 16px;
-      margin: 0;
-      padding: 0;
-    }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    h1, h2, h3, h6 {
-      color: white;
-      font-weight: bold;
-      text-align: center;
-    }
+  html, body {
+    background: #000008;
+    color: #ffffff;
+    font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
+    font-size: 15px;
+    min-height: 100%;
+  }
 
-    p {
-      line-height: 1.5;
-      text-align: left;
-    }
+  /* ── RAINBOW BAR ── */
+  .rainbow-bar {
+    height: 5px;
+    background: linear-gradient(90deg,#ff0000,#ff8800,#ffff00,#00ff88,#00ccff,#cc00ff,#ff0088,#ff0000);
+    background-size: 200% 100%;
+    animation: rb 3s linear infinite;
+    position: sticky; top: 0; z-index: 100;
+  }
+  @keyframes rb { 0%{background-position:0% 0} 100%{background-position:200% 0} }
 
-    a {
-      color: orange;
-      text-decoration: none;
-      margin: 0 10px;
-    }
+  /* ── SECRET BUTTON ── */
+  #secret-button {
+    position: fixed; top: 15px; left: 15px;
+    display: none; z-index: 9999;
+  }
+  #secret-button img {
+    width: 64px; height: auto; cursor: pointer;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 0 6px rgba(64,255,58,0.8));
+  }
+  #secret-button img:hover { filter: drop-shadow(0 0 14px rgba(64,255,58,1)); }
 
-    a:hover {
-      color: white;
-    }
+  /* ── WRAPPER ── */
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 20px 70px;
+    position: relative; z-index: 1;
+  }
 
-    .info-box {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 24px 32px;
-      background: rgba(0, 0, 0, 0.5);
-      border: 2px solid rgb(64, 255, 58);
-      border-radius: 14px;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
-      text-align: center;
-    }
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 26px 0 10px;
+    border-bottom: 2px solid #6600cc;
+    margin-bottom: 28px;
+  }
+  header img { max-width: 100%; max-height: 130px; display: inline-block; }
+  .header-sub {
+    font-size: 10px; letter-spacing: 3px; color: #8888cc; margin-top: 5px;
+    animation: blink 2.8s step-end infinite;
+  }
+  @keyframes blink { 0%,85%,100%{opacity:1} 86%,99%{opacity:0} }
 
-    /* SECRET BUTTON */
-    #secret-button {
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      display: none;
-      z-index: 9999;
-    }
+  /* ── INFO BOX ── */
+  .info-box {
+    border: 1px solid #330055;
+    background: rgba(10,0,20,0.6);
+    box-shadow: 0 0 18px rgba(100,0,180,0.12), inset 0 0 30px rgba(0,0,10,0.4);
+  }
 
-    #secret-button img {
-      width: 64px;
-      height: auto;
-      cursor: pointer;
-      image-rendering: pixelated;
-      filter: drop-shadow(0 0 6px rgba(64,255,58,0.8));
-    }
+  .box-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 7px 14px;
+    background: linear-gradient(90deg, #1a0033, #0d001a);
+    border-bottom: 1px solid #440066;
+  }
+  .box-title {
+    font-family: "Impact", "Arial Black", sans-serif;
+    font-size: 13px; letter-spacing: 4px; text-transform: uppercase;
+    color: #ffff00; text-shadow: 0 0 8px rgba(255,220,0,0.6), 1px 1px 0 #440000;
+  }
+  .box-stars { color: #cc66ff; font-size: 11px; letter-spacing: 2px; }
 
-    #secret-button img:hover {
-      filter: drop-shadow(0 0 12px rgba(64,255,58,1));
-    }
-  </style>
+  .box-body {
+    padding: 22px 28px 28px;
+    text-align: center;
+  }
+
+  .box-body h1 {
+    font-size: 18px; line-height: 1.4; margin-bottom: 18px;
+    color: #ffff00; text-shadow: 0 0 10px rgba(255,220,0,0.5);
+    font-family: "Impact", "Arial Black", sans-serif;
+    letter-spacing: 2px;
+  }
+
+  .box-body p {
+    font-size: 14px; line-height: 1.7; color: #ccbbdd;
+    text-align: left; margin-bottom: 14px;
+  }
+
+  /* ── PHOTO ROW ── */
+  .photo-row {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    justify-content: center; margin: 20px 0;
+  }
+  .photo-row img {
+    width: 200px; height: 200px; object-fit: cover;
+    border: 2px solid #330055;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .photo-row img:hover {
+    border-color: #9933ff;
+    box-shadow: 0 0 16px rgba(150,50,255,0.5);
+  }
+
+  /* ── LINKS SECTION ── */
+  .links-head {
+    font-family: "Impact", "Arial Black", sans-serif;
+    font-size: 12px; letter-spacing: 3px; color: #cc88ff;
+    text-shadow: 0 0 6px rgba(180,80,255,0.5);
+    margin: 22px 0 10px;
+    text-transform: uppercase;
+  }
+
+  .link-list { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+
+  .link-list a {
+    color: #ff8800; text-decoration: none;
+    border: 1px solid #552200;
+    padding: 5px 14px;
+    font-size: 12px; letter-spacing: 1px;
+    background: rgba(80,30,0,0.2);
+    text-shadow: 0 0 5px rgba(255,136,0,0.5);
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .link-list a:hover {
+    color: #fff; background: rgba(130,50,0,0.4); border-color: #ff8800;
+    box-shadow: 0 0 10px rgba(255,136,0,0.3);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; border-top: 2px solid #330055;
+    padding: 18px 0 10px; margin-top: 30px;
+  }
+  footer p { font-size: 10px; color: #554477; letter-spacing: 2px; }
+
+</style>
 </head>
-
 <body>
 
-  <!-- SECRET BUTTON -->
-  <a id="secret-button" href="under_construct.html">
-    <img src="./gifs/time.gif" alt="Secret Entry">
-  </a>
+<div class="rainbow-bar"></div>
 
-  <!-- MUSIC -->
-  <audio autoplay loop>
-    <source src="./sounds/music/monkeyball.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+<!-- SECRET BUTTON -->
+<a id="secret-button" href="under_construct.html">
+  <img src="./gifs/time.gif" alt="Secret Entry">
+</a>
 
-  <!-- IMAGE -->
-  <div style="text-align: center; margin-top: 40px;">
-    <img src="./gifs/abootme.gif" alt="About me animation">
-  </div>
+<audio autoplay loop>
+  <source src="./sounds/music/monkeyball.mp3" type="audio/mpeg">
+</audio>
 
-  <!-- INFO BOX -->
+<div class="wrap">
+
+  <header>
+    <img src="./gifs/abootme.gif" alt="About Me">
+    <div class="header-sub">~ the man. the myth. the legend ~</div>
+  </header>
+
   <div class="info-box">
-    <h1>its the man. the myth. the legends. Yur boy Conshaunery</h1>
-    <p>Hey guys! It ur boy ConShaunery back at it again with this crazy online interwebbing adeventure!</p>
-    <p>But who am i? r U sure u wanna know? My story isn't for the faint of heart...It all started when I was a wee young lad in the year 2023.
-       I waas bored at work and suddenly created this.</p>
+    <div class="box-head">
+      <span class="box-title">About Me</span>
+      <span class="box-stars">&#9733; &#9733; &#9733;</span>
+    </div>
+    <div class="box-body">
 
-<img src="./pictures/no.jpeg" alt="no" width="300" height="300"  align="center">
-<img src="./pictures/virgin.jpeg" alt="oil" width="300" height="300"  align="center">
-<img src="./pictures/blankie.jpg" alt="oil" width="300" height="300"  align="center">
+      <h1>its the man. the myth. the legends. Yur boy Conshaunery</h1>
 
-    <h3>links</h3>
-    <a href="https://www.bitview.net/user/ConShaunery" target="_blank">BitView</a>
-    <a href="https://spacehey.com/profile?id=1863486" target="_blank">SpaceHey</a>
+      <p>Hey guys! It ur boy ConShaunery back at it again with this crazy online interwebbing adeventure!</p>
+      <p>But who am i? r U sure u wanna know? My story isn't for the faint of heart...It all started when I was a wee young lad in the year 2023.
+         I waas bored at work and suddenly created this.</p>
+
+      <div class="photo-row">
+        <img src="./pictures/no.jpeg" alt="no">
+        <img src="./pictures/virgin.jpeg" alt="oil">
+        <img src="./pictures/blankie.jpg" alt="blankie">
+      </div>
+
+      <div class="links-head">links</div>
+      <div class="link-list">
+        <a href="https://www.bitview.net/user/ConShaunery" target="_blank">&#9654; BitView</a>
+        <a href="https://spacehey.com/profile?id=1863486" target="_blank">&#9654; SpaceHey</a>
+      </div>
+
+    </div>
   </div>
 
-  <!-- TIME LOGIC -->
-  <script>
-    (function () {
-      const now = new Date();
+  <footer>
+    <p>conshaunery was here.</p>
+  </footer>
 
-      const allowedDay = 1; // Monday
-      const startHour = 0;  // 12 AM
-      const endHour = 1;    // 1 AM
+</div>
 
-      if (
-        now.getDay() === allowedDay &&
-        now.getHours() >= startHour &&
-        now.getHours() < endHour
-      ) {
-        document.getElementById("secret-button").style.display = "block";
-      }
-    })();
-  </script>
+<script type="text/javascript">
+  /* Twinkling stars */
+  (function() {
+    var cv = document.createElement('canvas');
+    cv.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:0;';
+    document.body.insertBefore(cv, document.body.firstChild);
+    var ctx = cv.getContext('2d'), stars = [];
+    function resize() {
+      cv.width=window.innerWidth; cv.height=window.innerHeight; stars=[];
+      for(var i=0;i<200;i++) stars.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.3+0.2,ph:Math.random()*Math.PI*2,sp:Math.random()*0.008+0.003});
+    }
+    function draw() {
+      ctx.clearRect(0,0,cv.width,cv.height);
+      var t=Date.now()/1000;
+      for(var i=0;i<stars.length;i++){var s=stars[i],a=0.2+0.65*((Math.sin(t*s.sp*120+s.ph)+1)/2);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(200,180,255,'+a.toFixed(2)+')';ctx.fill();}
+      requestAnimationFrame(draw);
+    }
+    window.addEventListener('resize',resize); resize(); draw();
+  })();
 
+  /* Secret button time logic */
+  (function() {
+    var now = new Date();
+    if (now.getDay()===1 && now.getHours()>=0 && now.getHours()<1) {
+      document.getElementById('secret-button').style.display = 'block';
+    }
+  })();
+</script>
+
+<script src="./transition.js"></script>
 </body>
 </html>
