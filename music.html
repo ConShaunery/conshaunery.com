@@ -1,219 +1,495 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <title>music</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>music — conshaunery.com</title>
+<style type="text/css">
 
-  <style>
-    body {
-      background-image: url("./gifs/sky2.gif");
-      background-size: 50%;
-      background-repeat: repeat;
-      background-color: black;
-      color: white;
-      font-family: Helvetica, Arial, sans-serif;
-      font-size: 16px;
-    }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 40px 20px;
-      text-align: center;
-    }
+  html, body {
+    background: #000008;
+    color: #ffffff;
+    font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
+    font-size: 15px;
+    min-height: 100%;
+  }
 
-    h1, h2, h3, h6 {
-      color: white;
-      font-weight: bold;
-      text-align: center;
-    }
+  .rainbow-bar {
+    height: 5px;
+    background: linear-gradient(90deg,#ff0000,#ff8800,#ffff00,#00ff88,#00ccff,#cc00ff,#ff0088,#ff0000);
+    background-size: 200% 100%;
+    animation: rb 3s linear infinite;
+    position: sticky; top: 0; z-index: 100;
+  }
+  @keyframes rb { 0%{background-position:0% 0} 100%{background-position:200% 0} }
 
-    a {
-      color: #ffffff;
-      text-decoration: none;
-    }
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 20px 70px;
+    position: relative; z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-    a:hover {
-      color: orange;
-    }
+  header {
+    text-align: center;
+    padding: 26px 0 10px;
+    border-bottom: 2px solid #6600cc;
+    margin-bottom: 32px;
+    width: 100%;
+  }
+  header img { max-width: 100%; max-height: 130px; display: inline-block; }
+  .header-sub {
+    font-size: 10px; letter-spacing: 3px; color: #8888cc; margin-top: 5px;
+    animation: blink 2.8s step-end infinite;
+  }
+  @keyframes blink { 0%,85%,100%{opacity:1} 86%,99%{opacity:0} }
 
-    /* ===== WINAMP PLAYER ===== */
-    .winamp {
-      width: 340px;
-      background: #2b2b2b;
-      border: 2px solid #000;
-      box-shadow: inset 0 0 0 2px #555;
-      font-family: "Courier New", monospace;
-      color: #00ff9c;
-      padding: 8px;
-      margin: 20px auto;
-    }
+  /* ══════════════════════════════════════════
+     WINAMP SHELL
+  ══════════════════════════════════════════ */
+  #winamp {
+    width: 320px;
+    user-select: none;
+    font-family: "Arial", sans-serif;
+    font-size: 11px;
+    filter: drop-shadow(0 0 22px rgba(0,200,100,0.35));
+  }
 
-    .winamp-display {
-      background: #000;
-      border: 1px solid #444;
-      padding: 6px;
-      font-size: 13px;
-      overflow: hidden;
-      white-space: nowrap;
-    }
+  /* ── TITLE BAR ── */
+  .wa-titlebar {
+    height: 20px;
+    background: linear-gradient(90deg, #1f1f1f 0%, #3a3a3a 40%, #1f1f1f 100%);
+    border: 1px solid #555;
+    border-bottom: none;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 4px;
+    cursor: move;
+  }
+  .wa-titlebar-text {
+    color: #00ff9c;
+    font-size: 10px; font-weight: bold; letter-spacing: 2px;
+    text-shadow: 0 0 6px #00ff9c;
+  }
+  .wa-titlebtn {
+    width: 12px; height: 12px; background: #3a3a3a;
+    border: 1px solid #666; font-size: 7px; line-height: 12px;
+    text-align: center; cursor: pointer; color: #aaa;
+    display: inline-block;
+  }
+  .wa-titlebtn:hover { background: #555; color: #fff; }
+  .wa-titlebtngrp { display: flex; gap: 2px; }
 
-    .marquee {
-      display: inline-block;
-      padding-left: 100%;
-      animation: marquee 10s linear infinite;
-    }
+  /* ── MAIN PANEL ── */
+  .wa-main {
+    background: #252525;
+    border: 2px solid #111;
+    border-top: none;
+    box-shadow: inset 0 0 0 1px #444, inset 0 0 0 2px #1a1a1a;
+    padding: 6px;
+  }
 
-    @keyframes marquee {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-100%); }
-    }
+  /* ── DISPLAY ── */
+  .wa-display {
+    background: #000;
+    border: 1px solid #333;
+    height: 26px;
+    padding: 0 6px;
+    display: flex; align-items: center; gap: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .wa-time {
+    color: #00ff9c;
+    font-size: 18px; font-family: "Courier New", monospace;
+    text-shadow: 0 0 8px #00ff9c;
+    letter-spacing: 2px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .wa-ticker-wrap {
+    flex: 1; overflow: hidden; height: 100%;
+    display: flex; align-items: center;
+  }
+  .wa-ticker {
+    display: inline-block;
+    white-space: nowrap;
+    color: #00ff9c;
+    font-size: 10px;
+    text-shadow: 0 0 5px #00cc80;
+    animation: wa-scroll 14s linear infinite;
+    letter-spacing: 1px;
+  }
+  @keyframes wa-scroll {
+    0%   { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
 
-    .winamp-controls {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 6px;
-    }
+  /* ── SPECTRUM ── */
+  .wa-spectrum {
+    display: flex; gap: 2px; align-items: flex-end;
+    height: 24px; background: #000;
+    border: 1px solid #333; border-top: none;
+    padding: 2px 4px 2px;
+    overflow: hidden;
+  }
+  .wa-bar {
+    width: 8px; background: #00ff9c;
+    box-shadow: 0 0 4px #00ff9c;
+    animation: wa-bounce 0.7s ease-in-out infinite alternate;
+    flex-shrink: 0;
+  }
+  .wa-bar:nth-child(1)  { animation-duration: 0.55s; }
+  .wa-bar:nth-child(2)  { animation-duration: 0.70s; animation-delay: 0.05s; }
+  .wa-bar:nth-child(3)  { animation-duration: 0.50s; animation-delay: 0.10s; }
+  .wa-bar:nth-child(4)  { animation-duration: 0.80s; animation-delay: 0.03s; }
+  .wa-bar:nth-child(5)  { animation-duration: 0.60s; animation-delay: 0.15s; }
+  .wa-bar:nth-child(6)  { animation-duration: 0.45s; animation-delay: 0.08s; }
+  .wa-bar:nth-child(7)  { animation-duration: 0.75s; animation-delay: 0.12s; }
+  .wa-bar:nth-child(8)  { animation-duration: 0.65s; animation-delay: 0.02s; }
+  .wa-bar:nth-child(9)  { animation-duration: 0.58s; animation-delay: 0.18s; }
+  .wa-bar:nth-child(10) { animation-duration: 0.48s; animation-delay: 0.06s; }
+  .wa-bar:nth-child(11) { animation-duration: 0.72s; animation-delay: 0.14s; }
+  .wa-bar:nth-child(12) { animation-duration: 0.53s; animation-delay: 0.09s; }
+  .wa-bar.paused { animation-play-state: paused; height: 3px !important; }
 
-    .winamp button {
-      background: #3a3a3a;
-      border: 1px solid #111;
-      color: #00ff9c;
-      font-size: 12px;
-      padding: 4px 8px;
-      cursor: pointer;
-    }
+  @keyframes wa-bounce {
+    from { height: 3px; }
+    to   { height: 22px; }
+  }
 
-    .winamp button:hover {
-      background: #00ff9c;
-      color: #000;
-    }
+  /* ── SEEK BAR ── */
+  .wa-seekrow {
+    background: #000;
+    border: 1px solid #333; border-top: none;
+    padding: 3px 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .wa-seekrow span { color: #666; font-size: 9px; flex-shrink: 0; }
+  .wa-seek {
+    flex: 1; height: 6px; cursor: pointer;
+    -webkit-appearance: none; appearance: none;
+    background: #1a1a1a; outline: none; border: none;
+  }
+  .wa-seek::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 8px; height: 12px;
+    background: #00ff9c; cursor: pointer;
+    box-shadow: 0 0 4px #00ff9c;
+  }
+  .wa-seek::-webkit-slider-runnable-track {
+    height: 4px; background: linear-gradient(90deg, #00ff9c var(--seek-pct, 0%), #1a1a1a var(--seek-pct, 0%));
+  }
 
-    .winamp input[type="range"] {
-      flex: 1;
-    }
+  /* ── CONTROLS ── */
+  .wa-controls {
+    display: flex; align-items: center; gap: 4px;
+    margin-top: 5px;
+  }
+  .wa-btn {
+    background: linear-gradient(180deg, #4a4a4a, #2a2a2a);
+    border: 1px solid #111; border-top-color: #666; border-left-color: #666;
+    color: #ccc; font-size: 10px; font-weight: bold;
+    padding: 3px 8px; cursor: pointer; min-width: 26px;
+    text-align: center; letter-spacing: 1px;
+    transition: background 0.1s;
+    font-family: "Wingdings", "Arial", sans-serif;
+  }
+  .wa-btn:hover { background: linear-gradient(180deg, #5a5a5a, #3a3a3a); color: #fff; }
+  .wa-btn:active { border-top-color: #111; border-left-color: #111; border-bottom-color: #666; border-right-color: #666; }
+  .wa-btn.playing { color: #00ff9c; text-shadow: 0 0 6px #00ff9c; }
 
-    .spectrum {
-      display: flex;
-      gap: 2px;
-      height: 20px;
-      margin-top: 6px;
-    }
+  .wa-vol-wrap { flex: 1; display: flex; align-items: center; gap: 5px; margin-left: 4px; }
+  .wa-vol-wrap span { font-size: 9px; color: #666; }
+  .wa-vol {
+    flex: 1; height: 6px; cursor: pointer;
+    -webkit-appearance: none; appearance: none;
+    background: #1a1a1a; outline: none; border: none;
+  }
+  .wa-vol::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 8px; height: 12px;
+    background: #888; cursor: pointer;
+  }
+  .wa-vol::-webkit-slider-runnable-track { height: 4px; background: #333; }
 
-    .bar {
-      width: 6px;
-      background: #00ff9c;
-      animation: bounce 1s infinite ease-in-out;
-    }
+  /* ── DIVIDER ── */
+  .wa-div {
+    height: 2px;
+    background: linear-gradient(90deg, #111, #444, #111);
+    margin: 5px 0;
+    border-top: 1px solid #111;
+    border-bottom: 1px solid #555;
+  }
 
-    .bar:nth-child(odd) { animation-delay: .2s; }
-    .bar:nth-child(even) { animation-delay: .4s; }
+  /* ══════════════════════════════════════════
+     PLAYLIST PANEL
+  ══════════════════════════════════════════ */
+  #wa-playlist {
+    width: 320px;
+    margin-top: 1px;
+    filter: drop-shadow(0 0 22px rgba(0,200,100,0.25));
+  }
 
-    @keyframes bounce {
-      0% { height: 5px; }
-      50% { height: 20px; }
-      100% { height: 5px; }
-    }
+  .wa-pl-titlebar {
+    height: 18px;
+    background: linear-gradient(90deg, #1f1f1f, #3a3a3a 40%, #1f1f1f);
+    border: 1px solid #555; border-bottom: none;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5px;
+  }
+  .wa-pl-titlebar-text { color: #00ff9c; font-size: 9px; font-weight: bold; letter-spacing: 2px; text-shadow: 0 0 5px #00ff9c; }
 
-    .playlist {
-      margin-top: 8px;
-      border-top: 1px solid #444;
-      padding-top: 6px;
-      text-align: left;
-    }
+  .wa-pl-body {
+    background: #000;
+    border: 2px solid #111;
+    border-top: none;
+    box-shadow: inset 0 0 0 1px #2a2a2a;
+    max-height: 220px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #00ff9c #111;
+  }
+  .wa-pl-body::-webkit-scrollbar { width: 8px; }
+  .wa-pl-body::-webkit-scrollbar-track { background: #111; }
+  .wa-pl-body::-webkit-scrollbar-thumb { background: #00bb70; }
 
-    .playlist div {
-      cursor: pointer;
-      padding: 4px;
-    }
+  .wa-track {
+    padding: 4px 8px;
+    font-size: 10px; color: #00bb70;
+    cursor: pointer; letter-spacing: 0.5px;
+    display: flex; gap: 6px; align-items: center;
+    border-bottom: 1px solid #0a0a0a;
+    transition: background 0.1s;
+  }
+  .wa-track:hover { background: #002211; color: #00ff9c; }
+  .wa-track.active { background: #003322; color: #00ff9c; text-shadow: 0 0 5px #00ff9c; }
+  .wa-track .tn { color: #335544; flex-shrink: 0; font-size: 9px; min-width: 16px; }
 
-    .playlist div:hover {
-      background: #00ff9c;
-      color: #000;
-    }
-  </style>
+  footer { text-align: center; border-top: 2px solid #330055; padding: 18px 0 10px; margin-top: 30px; width: 100%; }
+  footer p { font-size: 10px; color: #554477; letter-spacing: 2px; }
+
+</style>
 </head>
-
 <body>
 
-  <div class="container">
-    <img src="./gifs/Tunez!.gif" alt="Tunez">
-    
-    <div class="winamp">
-      <div class="winamp-display">
-        <span class="marquee" id="track-title">
-          alexi murdoch – all of my days
-        </span>
+<div class="rainbow-bar"></div>
+
+<div class="wrap">
+
+  <header>
+    <img src="./gifs/Tunez!.gif" alt="TUNEZ">
+    <div class="header-sub">~ the jukebox dimension ~</div>
+  </header>
+
+  <!-- ══ WINAMP ══ -->
+  <div id="winamp">
+
+    <div class="wa-titlebar">
+      <span class="wa-titlebar-text">WINAMP</span>
+      <div class="wa-titlebtngrp">
+        <span class="wa-titlebtn">_</span>
+        <span class="wa-titlebtn">&#9633;</span>
+        <span class="wa-titlebtn" style="color:#f66;">&#10005;</span>
+      </div>
+    </div>
+
+    <div class="wa-main">
+
+      <!-- Display -->
+      <div class="wa-display">
+        <span class="wa-time" id="wa-time">0:00</span>
+        <div class="wa-ticker-wrap">
+          <span class="wa-ticker" id="wa-ticker">Alexi Murdoch &ndash; All My Days &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </div>
       </div>
 
-      <div class="spectrum">
-        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-        <div class="bar"></div><div class="bar"></div>
+      <!-- Spectrum -->
+      <div class="wa-spectrum" id="wa-spectrum">
+        <div class="wa-bar paused"></div><div class="wa-bar paused"></div>
+        <div class="wa-bar paused"></div><div class="wa-bar paused"></div>
+        <div class="wa-bar paused"></div><div class="wa-bar paused"></div>
+        <div class="wa-bar paused"></div><div class="wa-bar paused"></div>
+        <div class="wa-bar paused"></div><div class="wa-bar paused"></div>
+        <div class="wa-bar paused"></div><div class="wa-bar paused"></div>
       </div>
 
-      <div class="winamp-controls">
-        <button onclick="playTrack()">▶</button>
-        <button onclick="pauseTrack()">■</button>
-        <input type="range" min="0" max="1" step="0.01" value="0.7" onchange="setVolume(this)">
+      <!-- Seek -->
+      <div class="wa-seekrow">
+        <span id="wa-cur">0:00</span>
+        <input type="range" class="wa-seek" id="wa-seek" min="0" max="100" value="0" step="0.1">
+        <span id="wa-dur">0:00</span>
       </div>
 
-      <audio id="player">
-        <source src="./sounds/music/Alexi Murdoch - All My Days.mp3" type="audio/mpeg">
-      </audio>
+      <div class="wa-div"></div>
 
-      <div class="playlist">
-        <div onclick="loadTrack(this, './sounds/music/Alexi Murdoch - All My Days.mp3')">
-          Alexi Murdoch – All My Days
-        </div>
-        <div onclick="loadTrack(this, './sounds/music/drums_and_riffs_ext_hox.mp3')">
-          Half-Life – Drums and Riffs
-        </div>
-        <div onclick="loadTrack(this, './sounds/music/i_stay_away.mp3')">
-          Alice in Chains – I Stay Away
-        </div>
-        <div onclick="loadTrack(this, './sounds/music/opus_one.mp3')">
-          Tim Carleton – Opus One
-        </div>
-        <div onclick="loadTrack(this, './sounds/music/Collective Soul - Shine.mp3')">
-          Collective Soul – Shine
-        </div>
-        <div onclick="loadTrack(this, './sounds/music/nutshell.mp3')">
-          Alice in Chains – Nutshell
-        </div>
-        <div onclick="loadTrack(this, './sounds/music/Into Dust.mp3')">
-          Mazzy Star – Into Dust
-        </div>
-        <div onclick="loadTrack(this, './sounds/music/The Day The World Went Away (Still).mp3')">
-          Nine Inch Nails – The Day the World Went Away (Still)
+      <!-- Controls -->
+      <div class="wa-controls">
+        <button class="wa-btn" onclick="prevTrack()" title="Prev">&#9664;&#9664;</button>
+        <button class="wa-btn" id="wa-play-btn" onclick="togglePlay()" title="Play">&#9654;</button>
+        <button class="wa-btn" onclick="stopTrack()" title="Stop">&#9632;</button>
+        <button class="wa-btn" onclick="nextTrack()" title="Next">&#9654;&#9654;</button>
+        <div class="wa-vol-wrap">
+          <span>VOL</span>
+          <input type="range" class="wa-vol" id="wa-vol" min="0" max="1" step="0.01" value="0.7">
         </div>
       </div>
+
     </div>
   </div>
 
-  <script>
-    const audio = document.getElementById("player");
-    const title = document.getElementById("track-title");
+  <!-- ══ PLAYLIST ══ -->
+  <div id="wa-playlist">
+    <div class="wa-pl-titlebar">
+      <span class="wa-pl-titlebar-text">WINAMP PLAYLIST EDITOR</span>
+      <span class="wa-titlebtn" style="color:#aaa;font-size:7px;">&#10005;</span>
+    </div>
+    <div class="wa-pl-body" id="wa-pl-body"></div>
+  </div>
 
-    function playTrack() {
-      audio.play();
-    }
+  <audio id="wa-audio"></audio>
 
-    function pauseTrack() {
-      audio.pause();
-    }
+  <footer>
+    <p>conshaunery was here.</p>
+  </footer>
 
-    function setVolume(slider) {
-      audio.volume = slider.value;
-    }
+</div>
 
-    function loadTrack(el, src) {
-      audio.pause();
-      audio.src = src;
-      title.textContent = el.textContent.trim();
-      audio.play();
-    }
-  </script>
+<script type="text/javascript">
 
+/* ── STARFIELD ── */
+(function() {
+  var cv = document.createElement('canvas');
+  cv.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:0;';
+  document.body.insertBefore(cv, document.body.firstChild);
+  var ctx = cv.getContext('2d'), stars = [];
+  function resize() {
+    cv.width=window.innerWidth; cv.height=window.innerHeight; stars=[];
+    for(var i=0;i<200;i++) stars.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.3+0.2,ph:Math.random()*Math.PI*2,sp:Math.random()*0.008+0.003});
+  }
+  function draw() {
+    ctx.clearRect(0,0,cv.width,cv.height);
+    var t=Date.now()/1000;
+    for(var i=0;i<stars.length;i++){var s=stars[i],a=0.2+0.65*((Math.sin(t*s.sp*120+s.ph)+1)/2);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(200,180,255,'+a.toFixed(2)+')';ctx.fill();}
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',resize); resize(); draw();
+})();
+
+/* ── PLAYLIST DATA ── */
+var TRACKS = [
+  { title: 'Alexi Murdoch \u2013 All My Days',                          src: './sounds/music/Alexi Murdoch - All My Days.mp3' },
+  { title: 'Half-Life \u2013 Drums and Riffs',                           src: './sounds/music/drums_and_riffs_ext_hox.mp3' },
+  { title: 'Alice in Chains \u2013 I Stay Away',                         src: './sounds/music/i_stay_away.mp3' },
+  { title: 'Tim Carleton \u2013 Opus One',                               src: './sounds/music/opus_one.mp3' },
+  { title: 'Collective Soul \u2013 Shine',                                src: './sounds/music/Collective Soul - Shine.mp3' },
+  { title: 'Alice in Chains \u2013 Nutshell',                            src: './sounds/music/nutshell.mp3' },
+  { title: 'Mazzy Star \u2013 Into Dust',                                src: './sounds/music/Into Dust.mp3' },
+  { title: 'Nine Inch Nails \u2013 The Day the World Went Away (Still)', src: './sounds/music/The Day The World Went Away (Still).mp3' },
+];
+
+var audio     = document.getElementById('wa-audio');
+var tickerEl  = document.getElementById('wa-ticker');
+var timeEl    = document.getElementById('wa-time');
+var curEl     = document.getElementById('wa-cur');
+var durEl     = document.getElementById('wa-dur');
+var seekEl    = document.getElementById('wa-seek');
+var volEl     = document.getElementById('wa-vol');
+var playBtn   = document.getElementById('wa-play-btn');
+var bars      = document.querySelectorAll('.wa-bar');
+var plBody    = document.getElementById('wa-pl-body');
+
+var curIdx    = 0;
+var seeking   = false;
+
+/* Build playlist */
+TRACKS.forEach(function(t, i) {
+  var row = document.createElement('div');
+  row.className = 'wa-track' + (i === 0 ? ' active' : '');
+  row.innerHTML = '<span class="tn">' + (i+1) + '</span>' + t.title;
+  row.addEventListener('click', function() { loadIdx(i); audio.play(); });
+  plBody.appendChild(row);
+});
+
+function loadIdx(i) {
+  curIdx = i;
+  audio.src = TRACKS[i].src;
+  tickerEl.textContent = TRACKS[i].title + '       ';
+  document.querySelectorAll('.wa-track').forEach(function(r, ri) {
+    r.classList.toggle('active', ri === i);
+  });
+  audio.load();
+}
+
+function fmt(s) {
+  s = Math.floor(s || 0);
+  return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+}
+
+/* Sync UI */
+audio.addEventListener('timeupdate', function() {
+  if (seeking) return;
+  timeEl.textContent = fmt(audio.currentTime);
+  curEl.textContent  = fmt(audio.currentTime);
+  if (audio.duration) {
+    var pct = (audio.currentTime / audio.duration) * 100;
+    seekEl.value = pct;
+    seekEl.style.setProperty('--seek-pct', pct + '%');
+  }
+});
+audio.addEventListener('loadedmetadata', function() {
+  durEl.textContent = fmt(audio.duration);
+});
+audio.addEventListener('ended', function() { nextTrack(); audio.play(); });
+
+audio.addEventListener('play',  function() {
+  playBtn.textContent = '\u25AE\u25AE';
+  playBtn.classList.add('playing');
+  bars.forEach(function(b){ b.classList.remove('paused'); });
+});
+audio.addEventListener('pause', function() {
+  playBtn.textContent = '\u25BA';
+  playBtn.classList.remove('playing');
+  bars.forEach(function(b){ b.classList.add('paused'); });
+});
+
+seekEl.addEventListener('mousedown', function(){ seeking = true; });
+seekEl.addEventListener('input', function() {
+  if (audio.duration) {
+    var t = (this.value / 100) * audio.duration;
+    curEl.textContent = fmt(t);
+    this.style.setProperty('--seek-pct', this.value + '%');
+  }
+});
+seekEl.addEventListener('change', function() {
+  if (audio.duration) audio.currentTime = (this.value / 100) * audio.duration;
+  seeking = false;
+});
+volEl.addEventListener('input', function() { audio.volume = this.value; });
+
+function togglePlay() {
+  if (audio.paused) {
+    if (!audio.src) loadIdx(0);
+    audio.play();
+  } else {
+    audio.pause();
+  }
+}
+function stopTrack()  { audio.pause(); audio.currentTime = 0; }
+function prevTrack()  { loadIdx((curIdx - 1 + TRACKS.length) % TRACKS.length); audio.play(); }
+function nextTrack()  { loadIdx((curIdx + 1) % TRACKS.length); }
+
+/* Init */
+loadIdx(0);
+audio.volume = 0.7;
+
+document.addEventListener('click', function(){
+  if (audio.paused && audio.src) {}
+}, { once: true });
+
+</script>
+
+<script src="./transition.js"></script>
 </body>
 </html>
