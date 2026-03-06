@@ -1,332 +1,316 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>conshaunery.com — Dreams</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" href="./icons/favicon.ico" />
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>dreams — conshaunery.com</title>
+<style type="text/css">
 
-  <style>
-    :root{
-      --fg:#fff;
-      --accent: orange;
-      --bg:#000;
-      --card-bg: rgba(0,0,0,0.45);
-      --card-border: rgba(255,255,255,0.15);
-      --maxw: 900px;
-    }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body{
-      margin:0;
-      color:var(--fg);
-      font:16px/1.6 Helvetica, Arial, sans-serif;
-      background:
-        url("./gifs/dusk.gif") repeat center top / 100%,
-        var(--bg);
-      min-height:100svh;
-      display:flex;
-      flex-direction:column;
-    }
+  html, body {
+    background: #000008;
+    color: #ffffff;
+    font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
+    font-size: 15px;
+    min-height: 100%;
+  }
 
-    a{ color:var(--accent); text-decoration:none; }
-    a:hover{ color:#fff; }
+  .rainbow-bar {
+    height: 5px;
+    background: linear-gradient(90deg,#ff0000,#ff8800,#ffff00,#00ff88,#00ccff,#cc00ff,#ff0088,#ff0000);
+    background-size: 200% 100%;
+    animation: rb 3s linear infinite;
+    position: sticky; top: 0; z-index: 100;
+  }
+  @keyframes rb { 0%{background-position:0% 0} 100%{background-position:200% 0} }
 
-    header{
-      text-align:center;
-      padding:32px 16px 8px;
-    }
-    .brand{
-      font-size:42px;
-      letter-spacing:2px;
-      margin:0;
-    }
-    nav{
-      margin-top:8px;
-      font-weight:bold;
-    }
-    nav a{ margin:0 8px; }
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 20px 70px;
+    position: relative; z-index: 1;
+  }
 
-    main{
-      width:100%;
-      max-width:var(--maxw);
-      margin: 0 auto;
-      padding: 24px 16px 80px;
-      box-sizing:border-box;
-    }
+  header {
+    text-align: center;
+    padding: 26px 0 10px;
+    border-bottom: 2px solid #6600cc;
+    margin-bottom: 20px;
+  }
+  header img { max-width: 100%; max-height: 130px; display: inline-block; }
+  .header-sub {
+    font-size: 10px; letter-spacing: 3px; color: #8888cc; margin-top: 5px;
+    animation: blink 2.8s step-end infinite;
+  }
+  @keyframes blink { 0%,85%,100%{opacity:1} 86%,99%{opacity:0} }
 
-    .audio-bar{
-      position:sticky;
-      top:0;
-      display:flex;
-      justify-content:center;
-      gap:12px;
-      padding:8px 12px;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.25));
-      backdrop-filter: blur(4px);
-      border-bottom:1px solid var(--card-border);
-      z-index:5;
-    }
+  /* ── AUDIO BAR ── */
+  .audio-bar {
+    position: sticky; top: 5px; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 14px;
+    background: rgba(8,0,18,0.92);
+    border: 1px solid #330055;
+    box-shadow: 0 0 16px rgba(100,0,180,0.3);
+    margin-bottom: 20px;
+    backdrop-filter: blur(4px);
+  }
+  .audio-bar strong {
+    font-size: 11px; letter-spacing: 3px; color: #cc88ff;
+    text-shadow: 0 0 6px rgba(180,80,255,0.5);
+    text-transform: uppercase;
+  }
+  #toggle-audio {
+    background: #0a0018; color: #cc88ff;
+    border: 1px solid #550088; padding: 4px 12px;
+    font-size: 11px; letter-spacing: 1px; cursor: pointer;
+    font-family: "Comic Sans MS", Arial, sans-serif;
+    box-shadow: 0 0 8px rgba(150,50,255,0.3);
+    transition: background 0.2s, border-color 0.2s;
+  }
+  #toggle-audio:hover { background: #1a0033; border-color: #cc66ff; }
 
-    .entries{
-      display:grid;
-      gap:18px;
-    }
+  /* ── ENTRIES ── */
+  .entries { display: grid; gap: 14px; }
 
-    article.entry{
-      background: var(--card-bg);
-      border:1px solid var(--card-border);
-      border-radius:12px;
-      padding:16px 18px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-    }
+  article.entry {
+    background: rgba(10,0,20,0.6);
+    border: 1px solid #330055;
+    box-shadow: 0 0 14px rgba(100,0,180,0.08);
+    position: relative;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  article.entry:hover {
+    border-color: #550088;
+    box-shadow: 0 0 20px rgba(100,0,180,0.2);
+  }
 
-    .entry header{
-      padding:0;
-      margin:0 0 6px 0;
-      text-align:left;
-    }
+  /* Entry header bar */
+  .entry-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 14px;
+    background: linear-gradient(90deg, #1a0033, #0d001a);
+    border-bottom: 1px solid #440066;
+  }
+  .entry-date {
+    font-family: "Courier New", monospace;
+    font-size: 11px; color: #cc88ff;
+    text-shadow: 0 0 5px rgba(180,80,255,0.5);
+    letter-spacing: 1px;
+  }
+  .entry-dot { width: 6px; height: 6px; border-radius: 50%; background: #9933ff; box-shadow: 0 0 6px #9933ff; }
 
-    .entry h3{
-      margin:0;
-      font-size:18px;
-      letter-spacing:0.5px;
-      display:flex;
-      align-items:baseline;
-      gap:10px;
-      font-weight:700;
-    }
+  .entry-body { padding: 14px 18px; }
+  .entry-body p {
+    font-size: 14px; line-height: 1.75; color: #ccbbdd;
+    margin-bottom: 10px;
+  }
+  .entry-body p:last-child { margin-bottom: 0; }
 
-    .entry time{
-      font-size:13px;
-      color: rgba(255,255,255,0.75);
-    }
+  /* Separator lines like ############ */
+  .entry-body p:last-child { color: #443355; font-size: 11px; }
 
-    .entry p{
-      margin:10px 0;
-    }
+  footer {
+    text-align: center; border-top: 2px solid #330055;
+    padding: 18px 0 10px; margin-top: 10px;
+  }
+  footer p { font-size: 10px; color: #554477; letter-spacing: 2px; }
 
-    footer{
-      margin-top:auto;
-      padding:16px 0 32px;
-      color:#ddd;
-    }
-    .footer-inner{
-      width:100%;
-      max-width:var(--maxw);
-      margin:0 auto;
-      padding:0 16px;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      box-sizing:border-box;
-    }
-    .footer-inner img{
-      width:50px; height:50px; border-radius:50%;
-      margin-left:auto;
-    }
-
-    /* Small screens */
-    @media (max-width:520px){
-      .brand{ font-size:34px; }
-      nav{ font-size:14px; }
-    }
-  </style>
+</style>
 </head>
 <body>
+
+<div class="rainbow-bar"></div>
+
+<audio id="bg" autoplay loop playsinline muted>
+  <source src="./sounds/Enchanted Nights Ambience - Enchanted Mushroom Forest Night Ambience.ogg" type="audio/ogg">
+</audio>
+
+<div class="wrap">
+
   <header>
-      <div style="text-align: center;">
-        <img src="./gifs/Dreamz_fancy.gif" alt="Download animation">
-      </div>   
+    <img src="./gifs/Dreamz_fancy.gif" alt="Dreams">
+    <div class="header-sub">~ transmissions from the subconscious ~</div>
   </header>
 
-  <main>
-    <!-- sticky audio controls -->
-    <div class="audio-bar">
-      <strong>dreams journalz</strong>
-      <button id="toggle-audio">Mute</button>
-    </div>
+  <div class="audio-bar">
+    <strong>&#9790; dreams journalz</strong>
+    <button id="toggle-audio">Unmute</button>
+  </div>
 
-    <!-- background ambience -->
-    <!-- NOTE: your file is .ogg, so use the correct MIME type -->
-    <audio id="bg" autoplay loop playsinline muted>
-      <source src="./sounds/Enchanted Nights Ambience - Enchanted Mushroom Forest Night Ambience.ogg" type="audio/ogg" />
-    </audio>
+  <div class="entries">
 
-    <section class="entries">
+    <!-- August 7, 2025 -->
+    <article class="entry">
+      <div class="entry-head"><span class="entry-date">August 7, 2025</span><span class="entry-dot"></span></div>
+      <div class="entry-body">
+        <p>I was with a large friends group. Supernatural cast? We were from Russia? Eating at a local Viking restaurant or bar. I remember large beers.</p>
+        <p>We were enjoying ourselves. Laughing. Eating. Then comes in military to arrest us. No. We sprung to action. Turns out we're basically mutants. Super Powers and stuff.</p>
+        <p>I could control water. I remember controlling a ball of water to encase a soldier's head. He was drowning.</p>
+        <p>When the others dealt with their soldiers I felt bad. Let him go. He fainted. We were all walking out — more soldiers outside. I just remembered we all got into a formation outside. Dream kinda cuts.</p>
+        <p>Seeing videos and news segments of captured local CCTV camera of me. Dream changes. Slightly.</p>
+        <p>Night. Rainy. City. Was sorta like Batman Vigilante. Entered some Tower in City. I was there to eliminate Putin. I did it. Fled the scene.</p>
+        <p>Remember CCTV videos again. Remember running with a running group to blend in. Ran to the river or lake. It was cold. Hid evidence somewhere below a pier.</p>
+        <p>My dad finds me. Dad is Bryan Cranston. "What the hell are you doing son?" He says as I'm in the water soaking wet. He seems very suspicious of me. I've acted strangely lately.</p>
+        <p>"I went running. I try running now. Clear my mind..." I say.</p>
+        <p>Bryan: "Why the hell are you in the lake when it's freezing cold!?"</p>
+        <p>Me: "Its hard to run. I get hot and sweaty. Thinking about jumping in that lake pushes me forward..."</p>
+        <p>Bryan: "Son I'm so sorry for doubting you...it must have been hard when your mother died...(he was no longer suspicious).....I just thought something had happened after they saved Putin..."</p>
+        <p>Me: "S-saved Putin?"</p>
+        <p>Bryan: "Some...sick...criminal tried killing Putin but he's fine..."</p>
+        <p>My heart sank. Felt like I was gonna faint. I vaguely remember that I had a Girlfriend I hadn't been talking to and avoiding. Then I woke up.</p>
+      </div>
+    </article>
 
-      <!-- August 7, 2025 -->
-       <article class="entry">
-<p>I was with a large friends group. Supernatural cast? We were from Russia? Eating at a local Viking restaurant or bar. I remember large beers 🍺</p>
-<p>We were enjoying ourselves. Laughing. Eating. Then comes in military to arrest us. No. We sprung to action. Turns out we're basically mutants. Super Powers and stuff </p>
-<p> I could control water. I remember control a ball of water to encase a soldier head. He was drowning.</p>
-<p> When the others dealt with there soldiers I felt bad. Let him go. He fainted.We were all walking out more soldiers outside? I just remembered we all got into a formation outside. Dream kinda cuts.</p>
-<p>Seeing videos and news segment of capture local CCTV camera of me? Dream changes. Slightly. </p>
-<p>Night. Rainy. City. Was sorta like Batman Vigilante. Entered some Tower in City. I was there to eliminate Putin. I did it. Fled the scene.</p>
-
-<p>Remember CCTV videos again. Remember running with a running group to blend in. Ran to the river or lake. It was cold. Hide evidence somewhere below a pier. </p>
-
-<p>My dad finds me. Dad is Bryan Cranston. "What the hell are you doing son?" He says as I'm in the water soaking wet. He seems very suspicious of me. I've acted strangely lately. </p>
-
-<p>"I went running. I try running now. Clear my mind..." I say. </p>
-
-<p>Bryan: "Why the hell are you in the lake when it's freezing cold!?'</p>
-
-<p>Me: "Its hard to run. I get hot and sweaty. Thinking about jumping in that lake pushes me forward..."</p>
-
-<p>Bryan: "Son I'm so sorry for doubting [you...it](http://you...it) must have been hard when your mother died...(he was no longer suspesious).....I just thought something had happened after they saved Putin..."</p>
-
-<p>Me: "S-saved Putin?"</p>
-
-<p>Bryan: "Some...sick... criminal tried killing Putin but he's fine..."</p>
-
-<p>Me: My heart sank. Felt like I was gonna faint. I vaguely remember that I had a Girlfriend I hadn't been talking to and avoiding.</p>
-
-<p>Then I woke up.</p>
-
-       </article>
-
-      <!-- July 19, 2025 -->
-      <article class="entry">
-        <header>
-          <h3>July 19, 2025 <time datetime="2025-07-19">— posted</time></h3>
-        </header>
-        <p>I dreamnt I had awoken back in time sometime durning the Civil War.</p>
-        <p>I quickly reconginze I was still at my home town near the river. I remember the water looked more clear.</p>
-        <p>I had noticed someone was being rascist or something to someone. Made me mad got involved and eventually chased by Confederate military and the rest of the town.</p>
+    <!-- July 19, 2025 -->
+    <article class="entry">
+      <div class="entry-head"><span class="entry-date">July 19, 2025</span><span class="entry-dot"></span></div>
+      <div class="entry-body">
+        <p>I dreamnt I had awoken back in time sometime during the Civil War.</p>
+        <p>I quickly recognized I was still at my home town near the river. I remember the water looked more clear.</p>
+        <p>I had noticed someone was being racist or something to someone. Made me mad — got involved and eventually chased by Confederate military and the rest of the town.</p>
         <p>The tech in this time felt off and clashed with different more modern times. Had to jump a modern chain-link fence.</p>
-        <p>Dean Norris the actor was apparently the head Leader in the area. The chased me through the woods and up a hill to a quary. I jumped into the water filled quarry and in it was a hidden pipe system.</p>
-        <p>I was sucked down into the pipe which lead through some caverns but in reallity it was a septic water way. GROSS!!. I specifically remember seeing myself covered in shit but I was running from my life I new I had to suck it up.</p>
-        <p>I came out the other side found a weridly modern base with cameras that I had to infiltrated located in the mountian. It was dark at this point before eventually the sun rose again.</p>
-        <p>The base came under attack. A dragon. There was a large Plasma-Gauss cannon That I had use trying to defeat the dragon. As it took damage it's skin began to crack. My vison began to white out blinded by something. I woke up. Never knowing if I achieved victory.</p>
+        <p>Dean Norris the actor was apparently the head Leader in the area. They chased me through the woods and up a hill to a quarry. I jumped into the water filled quarry and in it was a hidden pipe system.</p>
+        <p>I was sucked down into the pipe which lead through some caverns but in reality it was a septic water way. GROSS!! I specifically remember seeing myself covered in shit but I was running for my life I knew I had to suck it up.</p>
+        <p>I came out the other side found a weirdly modern base with cameras that I had to infiltrate located in the mountain. It was dark at this point before eventually the sun rose again.</p>
+        <p>The base came under attack. A dragon. There was a large Plasma-Gauss cannon that I had to use trying to defeat the dragon. As it took damage its skin began to crack. My vision began to white out blinded by something. I woke up. Never knowing if I achieved victory.</p>
         <p>####################end############################</p>
-      </article>
+      </div>
+    </article>
 
-      <!-- January 19, 2025 -->
-      <article class="entry">
-        <header>
-          <h3>January 19, 2025 <time datetime="2025-01-19">— posted</time></h3>
-        </header>
+    <!-- January 19, 2025 -->
+    <article class="entry">
+      <div class="entry-head"><span class="entry-date">January 19, 2025</span><span class="entry-dot"></span></div>
+      <div class="entry-body">
         <p>I was spiderman (my usual) swinging through the city at night with rain falling down. The city, visually, felt like the one from the Matrix. Lots of green lighting, maybe some gold, and white.</p>
-        <p>I could vagually hear the roars of godzilla in the distance as I swung around a building. But suddenly everything went white, I woke up on a strange alien spaceship.</p>
-        <p>I walked, sometimes crawled around on the walls, confused as to where I was. Eventually in the halls of the ship I saw to women going into different rooms. "W-Where am I?" I said.</p>
-        <p>They gave me an odd stare and ignored me. I felt a panic and I found someone else. "Where am I!?" I said. "We're abord a ship." said the person. "What?" I glanced at the 3D-holgraphic map on the wall showing a portion of the Galaxy. "W-What the hell!? I have to get home!"</p>
-        <p>"Home? Where is home?" They said. "Earth!! I need to get back to Earth!" I demanded. "Earth?" They said confused. An AI in the computer on the wall that presented the 3D-Galactic map spoke. "Earth might be the acient homeworld of the lost sub-spieces known as: "Solis sapiens", the planet today is known as "Solisterra III". It said.</p>
-        <p>The map then presented a path. It had left Earth thousand and thousand of years ago and has been traveling to another solar system. At this point I realized the people I've been talking to weren't my humans but a more advance human race from another planet that must have colonized much of the Galaxy.</p>
-        <p>I began to panic has the reality set in. I was the only one left from my Earth. Everyone I've ever known was gone. I can remember hyperventilating for a moment the asking: "Wait? How do you all know English?". "What's English? You mean Primispeak?" The person said.</p>
+        <p>I could vaguely hear the roars of godzilla in the distance as I swung around a building. But suddenly everything went white, I woke up on a strange alien spaceship.</p>
+        <p>I walked, sometimes crawled around on the walls, confused as to where I was. Eventually in the halls of the ship I saw two women going into different rooms. "W-Where am I?" I said.</p>
+        <p>They gave me an odd stare and ignored me. I felt a panic and I found someone else. "Where am I!?" I said. "We're aboard a ship." said the person. "What?" I glanced at the 3D-holographic map on the wall showing a portion of the Galaxy. "W-What the hell!? I have to get home!"</p>
+        <p>"Home? Where is home?" They said. "Earth!! I need to get back to Earth!" I demanded. "Earth?" They said confused. An AI in the computer on the wall that presented the 3D-Galactic map spoke. "Earth might be the ancient homeworld of the lost sub-species known as: 'Solis sapiens', the planet today is known as 'Solisterra III'." It said.</p>
+        <p>The map then presented a path. It had left Earth thousands and thousands of years ago and has been traveling to another solar system. At this point I realized the people I've been talking to weren't my humans but a more advanced human race from another planet that must have colonized much of the Galaxy.</p>
+        <p>I began to panic as the reality set in. I was the only one left from my Earth. Everyone I've ever known was gone. I can remember hyperventilating for a moment then asking: "Wait? How do you all know English?". "What's English? You mean Primispeak?" The person said.</p>
         <p>################################################</p>
-      </article>
+      </div>
+    </article>
 
-      <!-- November 8, 2024 -->
-      <article class="entry">
-        <header>
-          <h3>November 8, 2024 <time datetime="2024-11-08">— posted</time></h3>
-        </header>
-        <p>I was in a car with me, MoistCritical, and someone else. We were on a highway in an chase being chased by other vehicles and being shot. I remember jumping back and forth between different dreams. I had the ability to go back to different earlier dream levels. But some how made it back to here.</p>
+    <!-- November 8, 2024 -->
+    <article class="entry">
+      <div class="entry-head"><span class="entry-date">November 8, 2024</span><span class="entry-dot"></span></div>
+      <div class="entry-body">
+        <p>I was in a car with me, MoistCritical, and someone else. We were on a highway in a chase being chased by other vehicles and being shot. I remember jumping back and forth between different dreams. I had the ability to go back to different earlier dream levels. But somehow made it back to here.</p>
         <p>MoistCritical was the driver and I was in the backseat. I kept shooting at various vehicles around me and eventually had to get on the roof. I came back inside.</p>
-        <p>We them noticed the portal ahead up the highway. MoistCritical floored it so we could get some air. "Gun it!!" Someone said.</p>
-        <p>The vehicle jumped but got stuck midway through the portal. "Hang on! Lean forward!" Everyone leaned towards the front of the car hopping gravity would do the trick. I looked behind us and notice another vehicle was about to make the jump. "OH SHIT!!!" I barley said as it flew right into the back of our jeep pushing us through the portal.</p>
-        <p>"Ha Ha! Holy shit!" MoistCritical said now that the car is pushed through the portal. "We did it! We're back in the real world!!!" I said. We speed off away from the portal and as I looked behind I noticed other things coming through. I remember seeing two living Baby dolls on hang gliders making their way through before the portal collapsed.</p>
-        <p>We all let out fresh air. "We did it! We're finally safe!" Charle says before a tiny small nuclear missile lands off to the distance of us. "Shit....." I say hearing the explosion then distaned Air Raid siren.</p>
+        <p>We then noticed the portal ahead up the highway. MoistCritical floored it so we could get some air. "Gun it!!" Someone said.</p>
+        <p>The vehicle jumped but got stuck midway through the portal. "Hang on! Lean forward!" Everyone leaned towards the front of the car hoping gravity would do the trick. I looked behind us and noticed another vehicle was about to make the jump. "OH SHIT!!!" I barely said as it flew right into the back of our jeep pushing us through the portal.</p>
+        <p>"Ha Ha! Holy shit!" MoistCritical said now that the car is pushed through the portal. "We did it! We're back in the real world!!!" I said. We sped off away from the portal and as I looked behind I noticed other things coming through. I remember seeing two living Baby dolls on hang gliders making their way through before the portal collapsed.</p>
+        <p>We all let out fresh air. "We did it! We're finally safe!" Charlie says before a tiny small nuclear missile lands off to the distance of us. "Shit....." I say hearing the explosion then distant Air Raid siren.</p>
         <p>################################################</p>
-      </article>
+      </div>
+    </article>
 
-      <!-- August 5, 2024 -->
-      <article class="entry">
-        <header>
-          <h3>August 5, 2024 <time datetime="2024-08-05">— posted</time></h3>
-        </header>
-        <p>Had a dream that the UK was shaped more like a guitar pick</p>
+    <!-- August 5, 2024 -->
+    <article class="entry">
+      <div class="entry-head"><span class="entry-date">August 5, 2024</span><span class="entry-dot"></span></div>
+      <div class="entry-body">
+        <p>Had a dream that the UK was shaped more like a guitar pick.</p>
         <p>Logan or Jake Paul did a video on taking kids to a gun store.</p>
-        <p>While at the gun store. I was actually Sam Fisher from splinter cell, but I looked like Vin Diesel. Later on, I infiltrated some office to get access to a computer. Had to escape and kept speaking into my ear peace in a whisper: "On route to railing point..." Third Echelon gave me wheelie shoes to escape faster.</p>
+        <p>While at the gun store. I was actually Sam Fisher from Splinter Cell, but I looked like Vin Diesel. Later on, I infiltrated some office to get access to a computer. Had to escape and kept speaking into my earpiece in a whisper: "On route to railing point..." Third Echelon gave me wheelie shoes to escape faster.</p>
         <p>################################################</p>
-      </article>
+      </div>
+    </article>
 
-      <!-- July 12, 2024 -->
-      <article class="entry">
-        <header>
-          <h3>July 12, 2024 <time datetime="2024-07-12">— posted</time></h3>
-        </header>
+    <!-- July 12, 2024 -->
+    <article class="entry">
+      <div class="entry-head"><span class="entry-date">July 12, 2024</span><span class="entry-dot"></span></div>
+      <div class="entry-body">
         <p>So's what's I remembers is's, i twas at my grandparents house you see. But alias, they weren't not there (maybe they's did not existing?) Anywhos, turns out the apoculups hasing begun! It was a bit snowing and foggy and me family were outsides.</p>
         <p>Air raid sirens can be heard throughs out city. On the train tracks nearby, the Army was prepaping their trains with much mlitary equipments. It was much confusions and many people were outsides!. I told family: "We must sneak on train! Maybe good idea?". And so, we dids.</p>
         <p>We rode the trains for short time. Mother said: "We need to say 'Goodbyes to dogs...'", "What?" I said. "We can't o-band-in doggies?" This twas stranger, she would never say such things....such stranger things. I could not think of my poor doggies alones...and confused.</p>
         <p>I sence flashed before me. I thought if you will. Picture this, doggy stairing at the moon...becomes angry, hungry....like zombie...Somethings about the moon. Picture done. Brother kept trying to look at moon. "Stop it! Don't" I says. Brother keeps looking at moon. "No looking! Stop!". Finially he asks: "Whys!?". "The moon....it's alive..." I says.</p>
-      </article>
+      </div>
+    </article>
 
-      <!-- June 10, 2024 -->
-      <article class="entry">
-        <header>
-          <h3>June 10, 2024 <time datetime="2024-06-10">— posted</time></h3>
-        </header>
-        <p>I was a Soviet special ops soldier on a mission near the town of Morton on Everon across the bay overlooking the harbour. Using my SVD I was snipping from the hill. But two enemies US forces come to my location to invetigate. It twas dark and could barely see, but I was special forces. I hide in the bushes ultimately being pushed slowely back towards a cliff. I crawl and crawl but get a chance to kill one of the soldiers. I capture him and interrogate him, Splinter Cell style!</p>
-        <p>BUt then a fucking dragon appears! It was Smaug! US and Soviet forces temporaily agree not to fight each other to take on the threat.</p>
-        <p>The dream changes but i'm basically running for my life trying to escape the dragon, Smaug! I'm running in and out and in and out of the woods to confuse him and eventualy I lose him. The world is more fantasy and medevil yet also very liminal.</p>
-        <p>Eventually I find two native of the realm. THey tell me to head twords the Balmora forest. They then try cuming with me but couldn't follow almost like they were a lower rank and couldn't access the area? So i goes alones.</p>
-        <p>I reach Balmora FOrest and dsicovers it is a empty brick and stone like city, with towering building all around. Yet the buildings had no rooms what so ever and were just tall stuctures. Alas it twas getting dark and I could hear the dragon snoring on top of the building nearby. I twas sacred of making noisees so i slowly crept towards the builing it was on top of. Just as I reached it I woke up</p>
-      </article>
+    <!-- June 10, 2024 -->
+    <article class="entry">
+      <div class="entry-head"><span class="entry-date">June 10, 2024</span><span class="entry-dot"></span></div>
+      <div class="entry-body">
+        <p>I was a Soviet special ops soldier on a mission near the town of Morton on Everon across the bay overlooking the harbour. Using my SVD I was sniping from the hill. But two enemy US forces came to my location to investigate. It twas dark and could barely see, but I was special forces. I hid in the bushes ultimately being pushed slowly back towards a cliff. I crawl and crawl but get a chance to kill one of the soldiers. I capture him and interrogate him, Splinter Cell style!</p>
+        <p>But then a fucking dragon appears! It was Smaug! US and Soviet forces temporarily agree not to fight each other to take on the threat.</p>
+        <p>The dream changes but I'm basically running for my life trying to escape the dragon, Smaug! I'm running in and out of the woods to confuse him and eventually I lose him. The world is more fantasy and medieval yet also very liminal.</p>
+        <p>Eventually I find two natives of the realm. They tell me to head towards the Balmora forest. They then try coming with me but couldn't follow almost like they were a lower rank and couldn't access the area? So I goes alones.</p>
+        <p>I reach Balmora Forest and discovers it is an empty brick and stone like city, with towering buildings all around. Yet the buildings had no rooms whatsoever and were just tall structures. Alas it twas getting dark and I could hear the dragon snoring on top of the building nearby. I twas scared of making noises so I slowly crept towards the building it was on top of. Just as I reached it I woke up.</p>
+      </div>
+    </article>
 
-      <!-- May 15, 2024 -->
-      <article class="entry">
-        <header>
-          <h3>May 15, 2024 <time datetime="2024-05-15">— posted</time></h3>
-        </header>
-        <p>i dweamnt i was reading a news article that said Keanu Reeves based his appearnce around a famous "Ripper" artist. Ripping is a combination of Rapping/electronic where the artist lays down on his back across a tube like drum, their heels kicking the drums and in their mouths was a pipe-straw that attaches to the instraument. It's called "Ripping" becuase it just sounds like farting.</p>
-      </article>
+    <!-- May 15, 2024 -->
+    <article class="entry">
+      <div class="entry-head"><span class="entry-date">May 15, 2024</span><span class="entry-dot"></span></div>
+      <div class="entry-body">
+        <p>i dweamnt i was reading a news article that said Keanu Reeves based his appearance around a famous "Ripper" artist. Ripping is a combination of Rapping/electronic where the artist lays down on his back across a tube like drum, their heels kicking the drums and in their mouths was a pipe-straw that attaches to the instrument. It's called "Ripping" because it just sounds like farting.</p>
+      </div>
+    </article>
 
-      <!-- April 6, 2024 -->
-      <article class="entry">
-        <header>
-          <h3>April 6, 2024 <time datetime="2024-04-06">— posted</time></h3>
-        </header>
-        <p>I dreamt I was the kid from Two and a half Men and an Soviet/Zombie invasion had taken place on the island I had grown up on. Everon. In the beginning of the dream was nighttime, I along with other personals were placed on some helicopters to escape but several of our choppers had been shot down.</p>
-        <p>Our pilot was charlie Sheen. I vaguely remembered that we had left behind a girl I was in love with. I asked Charlie to go back but he said he wouldn't. I decided to jump from the chopper and the scene cut away viewing Charlie cheering and being proud that I'd risked everything for some girl but ultimately they'd believed I'd be dead never to be seen again.</p>
-        <p>I woke up this time it was mid-day, somewhere near a river that lead down from a small mountain. Nearby was some still smoky reck from a chopper that had crashed in the forest. I walked the dirt road up the mountain since there was a town nearby.</p>
-        <p>I reached the town but kept a distance and viewed it from the dirt road. The town was being looted by people panicking. I decided to walk around the edge town hoping to avoid anyone. I nearly get caught while entering the towns airport and hangers. Inside the hanger I overheard a Soviet Scout team arguing between each other. One of them bickered about why they were even involved with the invasion and the other snapped back saying "Gorbachev's policy and openness is rooting our system to shit! If we didn't act now, they're might not be a Soviet Union left...". Meanwhile as they were talking one of their patrolmen spotted me in the corner. I panicked but had a M1 Gaurd and shot him and ran around the other side of the building.</p>
-        <p>I enter from the other side to confuse anyone who might be chasing me. On the other side of the hanger was some ruble/gravel pile on top of the pile was a dead local miltia soldier wearing a terrible bright white-blue alpine camouflage uniform. He was wearing some useful gear like a cheat rig and a blue wooded Sa-58P. I tried sneaking my way to grab his gear and just as I was nearly about to get caught I woke up.</p>
-      </article>
+    <!-- April 6, 2024 -->
+    <article class="entry">
+      <div class="entry-head"><span class="entry-date">April 6, 2024</span><span class="entry-dot"></span></div>
+      <div class="entry-body">
+        <p>I dreamt I was the kid from Two and a Half Men and a Soviet/Zombie invasion had taken place on the island I had grown up on. Everon. In the beginning of the dream was nighttime, I along with other personnel were placed on some helicopters to escape but several of our choppers had been shot down.</p>
+        <p>Our pilot was Charlie Sheen. I vaguely remembered that we had left behind a girl I was in love with. I asked Charlie to go back but he said he wouldn't. I decided to jump from the chopper and the scene cut away viewing Charlie cheering and being proud that I'd risked everything for some girl but ultimately they'd believed I'd be dead never to be seen again.</p>
+        <p>I woke up this time it was mid-day, somewhere near a river that lead down from a small mountain. Nearby was some still smoky wreck from a chopper that had crashed in the forest. I walked the dirt road up the mountain since there was a town nearby.</p>
+        <p>I reached the town but kept a distance and viewed it from the dirt road. The town was being looted by people panicking. I decided to walk around the edge of town hoping to avoid anyone. I nearly get caught while entering the town's airport and hangers. Inside the hanger I overheard a Soviet Scout team arguing between each other. One of them bickered about why they were even involved with the invasion and the other snapped back saying "Gorbachev's policy and openness is rotting our system to shit! If we didn't act now, there might not be a Soviet Union left...". Meanwhile as they were talking one of their patrolmen spotted me in the corner. I panicked but had a M1 Garand and shot him and ran around the other side of the building.</p>
+        <p>I enter from the other side to confuse anyone who might be chasing me. On the other side of the hanger was some rubble/gravel pile, on top of the pile was a dead local militia soldier wearing a terrible bright white-blue alpine camouflage uniform. He was wearing some useful gear like a chest rig and a blue wooden Sa-58P. I tried sneaking my way to grab his gear and just as I was nearly about to get caught I woke up.</p>
+      </div>
+    </article>
 
-    </section>
-  </main>
+  </div><!-- .entries -->
 
   <footer>
-    <div class="footer-inner">
-      <p style="font-size:12px; margin:0;">
-        2023 &copy; conshaunery.com | All rights reserved |
-        <a href="LS2.html">LStwoo</a> | conshaunery was here.
-      </p>
-      <img src="./pictures/conshaun.jpg" alt="logo">
-    </div>
+    <p>conshaunery was here.</p>
   </footer>
 
-  <script>
-    // Audio UX: remember mute state; unmute on user action if desired
-    const bg = document.getElementById('bg');
-    const btn = document.getElementById('toggle-audio');
+</div>
 
-    // restore previous preference
-    const saved = localStorage.getItem('dreams_audio_muted');
-    if (saved !== null) {
-      bg.muted = saved === 'true';
+<script type="text/javascript">
+  /* Twinkling stars */
+  (function() {
+    var cv = document.createElement('canvas');
+    cv.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:0;';
+    document.body.insertBefore(cv, document.body.firstChild);
+    var ctx = cv.getContext('2d'), stars = [];
+    function resize() {
+      cv.width=window.innerWidth; cv.height=window.innerHeight; stars=[];
+      for(var i=0;i<200;i++) stars.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.3+0.2,ph:Math.random()*Math.PI*2,sp:Math.random()*0.008+0.003});
     }
+    function draw() {
+      ctx.clearRect(0,0,cv.width,cv.height);
+      var t=Date.now()/1000;
+      for(var i=0;i<stars.length;i++){var s=stars[i],a=0.2+0.65*((Math.sin(t*s.sp*120+s.ph)+1)/2);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(200,180,255,'+a.toFixed(2)+')';ctx.fill();}
+      requestAnimationFrame(draw);
+    }
+    window.addEventListener('resize',resize); resize(); draw();
+  })();
+
+  /* Audio toggle */
+  var bg  = document.getElementById('bg');
+  var btn = document.getElementById('toggle-audio');
+  var saved = null;
+  try { saved = localStorage.getItem('dreams_audio_muted'); } catch(e){}
+  if (saved !== null) bg.muted = saved === 'true';
+  else bg.muted = true;
+  updateBtn();
+  bg.play().catch(function(){});
+
+  btn.addEventListener('click', function() {
+    bg.muted = !bg.muted;
+    try { localStorage.setItem('dreams_audio_muted', String(bg.muted)); } catch(e){}
+    if (!bg.muted) bg.play().catch(function(){});
     updateBtn();
+  });
+  document.addEventListener('click', function() {
+    if (!bg.muted && bg.paused) bg.play().catch(function(){});
+  }, { once: true });
+  function updateBtn() { btn.textContent = bg.muted ? 'Unmute' : 'Mute'; }
+</script>
 
-    // attempt to play (may be blocked until interaction)
-    bg.play().catch(()=>{ /* will start after interaction */ });
-
-    btn.addEventListener('click', () => {
-      bg.muted = !bg.muted;
-      localStorage.setItem('dreams_audio_muted', String(bg.muted));
-      if (!bg.muted) { bg.play().catch(()=>{}); }
-      updateBtn();
-    });
-
-    // first click anywhere starts audio if unmuted but blocked
-    document.addEventListener('click', () => {
-      if (!bg.muted && bg.paused) bg.play().catch(()=>{});
-    }, { once:true });
-
-    function updateBtn(){
-      btn.textContent = bg.muted ? 'Unmute' : 'Mute';
-    }
-  </script>
+<script src="./transition.js"></script>
 </body>
 </html>
