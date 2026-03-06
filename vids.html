@@ -1,507 +1,246 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>conshaunery.com / vids</title>
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<style>
-  :root { --bg-tile-size: 50%; }
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>vids — conshaunery.com</title>
+<style type="text/css">
 
-  body {
-    background: #000 url("./gifs/stars 11.gif") repeat;
-    background-size: var(--bg-tile-size);
-    color: #fff;
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 16px;
-    margin: 0;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* Mute button */
-  #muteBtn {
-    position: fixed;
-    top: 12px;
-    right: 12px;
-    z-index: 1000;
-    background: rgba(0,0,0,0.55);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.4);
-    padding: 8px 12px;
-    font-size: 18px;
-    line-height: 1;
-    cursor: pointer;
-    border-radius: 6px;
-    backdrop-filter: blur(3px);
-    transition: background .25s, transform .25s, border-color .25s;
-  }
-  #muteBtn:hover {
-    background: rgba(255,140,0,0.85);
-    border-color: orange;
-    transform: translateY(-2px);
-  }
-  #muteBtn:active { transform: scale(0.9); }
-
-  .container {
-    max-width: 1150px;
-    margin: 0 auto;
-    padding: 32px 20px 80px;
-  }
-
-  h1, h2, h3 {
-    text-align: center;
-    font-weight: bold;
-    margin: 0 0 24px;
-  }
-  h1 { font-size: clamp(48px,8vw,84px); }
-
-  a { color: orange; text-decoration: none; }
-  a:hover { color: #fff; }
-
-  .nav, .sub-nav {
-    text-align: center;
-    margin-bottom: 28px;
-  }
-  .nav a, .sub-nav a {
-    margin: 0 8px;
-    font-weight: 600;
-    font-size: 14px;
-  }
-  .sub-nav {
-    margin-top: -10px;
-    margin-bottom: 40px;
-    font-size: 13px;
-    opacity: .85;
-  }
-  .sub-nav a { text-decoration: underline; }
-
-  .bg-audio-status {
-    text-align: center;
-    font-size: 12px;
-    opacity: 0.7;
-    margin: 6px 0 30px;
-  }
-
-  /* Section wrapper */
-  section {
-    margin-top: 70px;
-  }
-  section:first-of-type {
-    margin-top: 30px;
-  }
-  section h2 {
-    letter-spacing: 1px;
-    text-transform: lowercase;
-  }
-  section h3 {
-    margin-top: 0;
-  }
-
-  /* Video Grid */
-  .video-grid {
-    display: grid;
-    gap: 24px;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    align-items: start;
-  }
-
-  .video-card {
-    background: rgba(255,255,255,0.06);
-    padding: 10px 10px 16px;
-    border: 1px solid rgba(255,255,255,0.18);
-    border-radius: 10px;
-    position: relative;
-    backdrop-filter: blur(2px);
-    box-shadow: 0 0 12px rgba(0,0,0,0.55);
-    transition: transform .25s, box-shadow .25s, border-color .25s;
-  }
-  .video-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.75);
-    border-color: orange;
-  }
-  .video-card h4 {
-    margin: 8px 0 4px;
+  html, body {
+    background: #000008;
+    color: #ffffff;
+    font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
     font-size: 15px;
-    text-align: center;
-  }
-  .video-card small {
-    display: block;
-    text-align: center;
-    opacity: 0.6;
-    font-size: 11px;
+    min-height: 100%;
   }
 
-  video, iframe {
-    width: 100%;
-    height: auto;
-    background: #000;
-    border: none;
-    display: block;
-    aspect-ratio: 4 / 3;
+  .rainbow-bar {
+    height: 5px;
+    background: linear-gradient(90deg,#ff0000,#ff8800,#ffff00,#00ff88,#00ccff,#cc00ff,#ff0088,#ff0000);
+    background-size: 200% 100%;
+    animation: rb 3s linear infinite;
+    position: sticky; top: 0; z-index: 100;
   }
+  @keyframes rb { 0%{background-position:0% 0} 100%{background-position:200% 0} }
 
-  footer {
-    margin-top: 90px;
-    text-align: center;
-    font-size: 11px;
-    opacity: 0.75;
+  #muteBtn {
+    position: fixed; top: 18px; right: 16px; z-index: 500;
+    background: #0a0018; color: #cc88ff;
+    border: 1px solid #550088; padding: 7px 12px;
+    font-size: 16px; line-height: 1; cursor: pointer;
+    font-family: "Comic Sans MS", Arial, sans-serif;
+    box-shadow: 0 0 10px rgba(150,50,255,0.35);
+    transition: background 0.2s, border-color 0.2s;
   }
+  #muteBtn:hover { background: #1a0033; border-color: #cc66ff; box-shadow: 0 0 16px rgba(180,80,255,0.6); }
 
-  @media (max-width: 600px) {
-    .container { padding: 28px 14px 70px; }
-  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px 70px; position: relative; z-index: 1; }
 
-  /* Divider style (optional) */
-  .divider {
-    height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(255,140,0,0.6), transparent);
-    margin: 50px 0 40px;
+  header { text-align: center; padding: 26px 0 8px; border-bottom: 2px solid #6600cc; margin-bottom: 16px; }
+  header img { max-width: 100%; max-height: 120px; display: inline-block; }
+  .header-sub { font-size: 10px; letter-spacing: 3px; color: #8888cc; margin-top: 5px; animation: blink 2.8s step-end infinite; }
+  @keyframes blink { 0%,85%,100%{opacity:1} 86%,99%{opacity:0} }
+
+  nav { text-align: center; margin: 10px 0 6px; font-size: 12px; letter-spacing: 1px; }
+  nav a { color: #ff8800; text-decoration: none; margin: 0 8px; text-shadow: 0 0 5px rgba(255,136,0,0.5); }
+  nav a:hover { color: #fff; text-decoration: underline; }
+  nav span { color: #440066; }
+
+  .jumps { text-align: center; margin: 8px 0 20px; font-size: 11px; letter-spacing: 1px; }
+  .jumps a { color: #9966cc; text-decoration: underline; margin: 0 8px; }
+  .jumps a:hover { color: #fff; }
+  .jumps span { color: #330055; }
+
+  #bg-status { text-align: center; font-size: 10px; color: #554477; letter-spacing: 1px; margin-bottom: 24px; }
+
+  section { margin: 0 0 8px; border: 1px solid #330055; background: rgba(10,0,20,0.6); box-shadow: 0 0 18px rgba(100,0,180,0.1), inset 0 0 30px rgba(0,0,10,0.4); }
+
+  .sec-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 7px 14px;
+    background: linear-gradient(90deg, #1a0033, #0d001a);
+    border-bottom: 1px solid #440066;
   }
+  .sec-title { font-family: "Impact","Arial Black",sans-serif; font-size: 13px; letter-spacing: 4px; text-transform: uppercase; color: #ffff00; text-shadow: 0 0 8px rgba(255,220,0,0.6), 1px 1px 0 #440000; }
+  .sec-stars { color: #cc66ff; font-size: 11px; letter-spacing: 2px; }
+
+  .divider { height: 2px; background: linear-gradient(90deg,transparent,rgba(150,50,255,0.5),rgba(255,136,0,0.4),rgba(150,50,255,0.5),transparent); margin: 0 0 8px; animation: div-glow 3s ease-in-out infinite alternate; }
+  @keyframes div-glow { from{opacity:0.5} to{opacity:1} }
+
+  .video-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); padding: 10px; }
+
+  .video-card { background: rgba(5,0,15,0.8); border: 1px solid #330055; position: relative; transition: border-color 0.2s, box-shadow 0.2s; }
+  .video-card:hover { border-color: #9933ff; box-shadow: 0 0 18px rgba(150,50,255,0.45); }
+
+  .card-title { padding: 5px 10px; background: linear-gradient(90deg,#0d001a,#060010); border-bottom: 1px solid #330055; font-family: "Courier New",monospace; font-size: 11px; color: #cc88ff; text-shadow: 0 0 5px rgba(180,80,255,0.5); letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
+  .card-title::before { content: "▶"; font-size: 8px; color: #ff8800; }
+  .card-sub { padding: 3px 10px 5px; font-size: 9px; color: #443355; letter-spacing: 1px; text-align: right; }
+
+  video, iframe { width: 100%; display: block; background: #000; border: none; aspect-ratio: 4/3; }
+
+  .vid-wrap { position: relative; overflow: hidden; }
+  .vid-wrap::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px); pointer-events: none; opacity: 0; transition: opacity 0.3s; }
+  .video-card:hover .vid-wrap::after { opacity: 1; }
+
+  .video-card::before { content: "★"; position: absolute; top: 26px; right: 6px; font-size: 9px; color: #ffff00; text-shadow: 0 0 4px #ff8800; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 5; }
+  .video-card:hover::before { opacity: 1; }
+
+  footer { text-align: center; border-top: 2px solid #330055; padding: 22px 0 10px; margin-top: 10px; }
+  footer img { width: 52px; height: 52px; border: 2px solid #440066; border-radius: 50%; margin-top: 8px; }
+  footer p { font-size: 10px; color: #554477; letter-spacing: 2px; margin-bottom: 8px; }
+
 </style>
 </head>
 <body>
 
-<button id="muteBtn" aria-pressed="false" title="Mute background audio">🔊</button>
+<div class="rainbow-bar"></div>
+<button id="muteBtn" aria-pressed="false" title="Mute background audio">&#x1F50A;</button>
 
-<div class="container">
+<div class="wrap">
 
-   <div style="text-align: center;">
-  <img src="./gifs/Vidz-.gif" alt="Download animation">
-  </div>  
+  <header>
+    <img src="./gifs/Vidz-.gif" alt="VIDS">
+    <div class="header-sub">~ video transmissions from the void ~</div>
+  </header>
 
-  <!-- Quick jump links -->
-  <div class="sub-nav">
-    <a href="#vault">vhs vault</a> |
-    <a href="#myvideos">my videos</a> |
+  <div class="jumps">
+    <a href="#vault">vhs vault</a><span> &#9733; </span>
+    <a href="#myvideos">my videos</a><span> &#9733; </span>
     <a href="#othervidz">other vidz</a>
   </div>
 
-  <!-- Background Audio -->
   <audio id="bg-audio" autoplay loop preload="auto">
     <source src="./sounds/Adrianna Kirikl 02 Glitch.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
   </audio>
-  <div class="bg-audio-status" id="bg-status">Background track: normal volume.</div>
+  <div id="bg-status">background track: normal volume.</div>
 
-  <!-- VHS Vault -->
+  <!-- VHS VAULT -->
   <section id="vault">
-    <h2>vhs vault</h2>
+    <div class="sec-head"><span class="sec-title">VHS Vault</span><span class="sec-stars">&#9733; &#9733; &#9733;</span></div>
     <div class="video-grid">
       <div class="video-card">
-        <h4>The Internet For Beginners (1998)</h4>
-        <iframe
-          src="https://archive.org/embed/theinternetforbeginners1998"
-          title="The Internet For Beginners 1998"
-          loading="lazy"
-          allowfullscreen>
-        </iframe>
-        <small>archive.org embed</small>
+        <div class="card-title">The Internet For Beginners (1998)</div>
+        <div class="vid-wrap"><iframe src="https://archive.org/embed/theinternetforbeginners1998" title="The Internet For Beginners 1998" loading="lazy" allowfullscreen></iframe></div>
+        <div class="card-sub">archive.org embed</div>
       </div>
     </div>
   </section>
 
   <div class="divider"></div>
 
-  <!-- My Videos -->
+  <!-- MY VIDEOS -->
   <section id="myvideos">
-    <h2>my videos</h2>
+    <div class="sec-head"><span class="sec-title">My Videos</span><span class="sec-stars">&#9733; &#9733; &#9733;</span></div>
     <div class="video-grid">
-
       <div class="video-card">
-        <h4>UFO Truth</h4>
-        <video controls preload="none" data-title="UFO Truth">
-          <source src="./vids/WATCH NOW!!! The Truth Revealed About UFOs!!!.mp4" type="video/mp4">
-        </video>
-        <small>Local clip</small>
+        <div class="card-title">UFO Truth</div>
+        <div class="vid-wrap"><video controls preload="none"><source src="./vids/WATCH NOW!!! The Truth Revealed About UFOs!!!.mp4" type="video/mp4"></video></div>
+        <div class="card-sub">local clip</div>
       </div>
-
       <div class="video-card">
-        <h4>Halo CE</h4>
-        <video controls preload="none" data-title="Halo CE">
-          <source src="./vids/haloce.mp4" type="video/mp4">
-        </video>
+        <div class="card-title">Halo CE</div>
+        <div class="vid-wrap"><video controls preload="none"><source src="./vids/haloce.mp4" type="video/mp4"></video></div>
       </div>
-
       <div class="video-card">
-        <h4>HOW TO GET FREE ARC TOKENS!!!</h4>
-        <video controls preload="none" data-title="HOW TO GET FREE ARC TOKENS!!!">
-          <source src="./vids/Arc Coins.mp4" type="video/mp4">
-        </video>
+        <div class="card-title">HOW TO GET FREE ARC TOKENS!!!</div>
+        <div class="vid-wrap"><video controls preload="none"><source src="./vids/Arc Coins.mp4" type="video/mp4"></video></div>
       </div>
-
     </div>
   </section>
 
   <div class="divider"></div>
 
-  <!-- Other Vidz -->
+  <!-- OTHER VIDZ -->
   <section id="othervidz">
-  <h2>other vidz</h2>
-  <div class="video-grid">
-
-
-    <div class="video-card">
-      <h4>banana man</h4>
-      <video controls preload="none" data-title="xman">
-        <source src="./vids/bananaman.mp4" type="video/mp4">
-      </video>
-    </div>
-
-
-    <div class="video-card">
-      <h4>grandma</h4>
-      <video controls preload="none" data-title="xman">
-        <source src="./vids/grandma.mp4" type="video/mp4">
-      </video>
-    </div>
-
-    <div class="video-card">
-      <h4>no</h4>
-      <video controls preload="none" data-title="xman">
-        <source src="./vids/oh_no.mp4" type="video/mp4">
-      </video>
-    </div>
-
-
-    <div class="video-card">
-      <h4>transformers</h4>
-      <video controls preload="none" data-title="xman">
-        <source src="./vids/transformer.mp4" type="video/mp4">
-      </video>
-    </div>
-
-
-    <div class="video-card">
-      <h4>hermuckuless</h4>
-      <video controls preload="none" data-title="xman">
-        <source src="./vids/suck_toes.mp4" type="video/mp4">
-      </video>
-    </div>
-
-      <div class="video-card">
-      <h4>propoganda</h4>
-      <video controls preload="none" data-title="xman">
-        <source src="./vids/propagada.mp4" type="video/mp4">
-      </video>
-    </div>
-    
-
-    <div class="video-card">
-      <h4>xman</h4>
-      <video controls preload="none" data-title="xman">
-        <source src="./vids/xman.mp4" type="video/mp4">
-      </video>
-    </div>
-    
-    
-    <div class="video-card">
-      <h4>grandpa</h4>
-      <video controls preload="none" data-title="grandpa">
-        <source src="./vids/grandpa.mp4" type="video/mp4">
-      </video>
-    </div>
-
-    
-    <div class="video-card">
-      <h4>scary</h4>
-      <video controls preload="none" data-title="scary">
-        <source src="./vids/scary.mp4" type="video/mp4">
-      </video>
-    </div>
-
-
-      <div class="video-card">
-        <h4>kat</h4>
-        <video controls preload="none" data-title="kat">
-          <source src="./vids/cat.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="video-card">
-        <h4>Cat Harmonics</h4>
-        <video controls preload="none" data-title="Cat Harmonics">
-          <source src="./vids/cat_hermonics.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="video-card">
-        <h4>German Cola</h4>
-        <video controls preload="none" data-title="German Cola">
-          <source src="./vids/germancola.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="video-card">
-        <h4>Turkey</h4>
-        <video controls preload="none" data-title="Turkey">
-          <source src="./vids/turkey.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="video-card">
-        <h4>Rubert</h4>
-        <video controls preload="none" data-title="Rubert">
-          <source src="./vids/rubert.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="video-card">
-        <h4>Millkers</h4>
-        <video controls preload="none" data-title="Millkers">
-          <source src="./vids/millkers.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="video-card">
-        <h4>Fotosynthasis</h4>
-        <video controls preload="none" data-title="Fotosynthasis">
-          <source src="./vids/fotosynthasis.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="video-card">
-        <h4>edging</h4>
-        <video controls preload="none" data-title="Edging">
-          <source src="./vids/edging.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="video-card">
-        <h4>frog_guy</h4>
-        <video controls preload="none" data-title="frog_guy">
-          <source src="./vids/frog_guy.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="video-card">
-        <h4>irs_guy</h4>
-        <video controls preload="none" data-title="irs_guy">
-          <source src="./vids/irs.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="video-card">
-        <h4>children</h4>
-        <video controls preload="none" data-title="children">
-          <source src="./vids/children.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="video-card">
-        <h4>butt_i_do</h4>
-        <video controls preload="none" data-title="butt_i_do">
-          <source src="./vids/butt_i_do.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="video-card">
-        <h4>connection_terminated</h4>
-        <video controls preload="none" data-title="connection_terminated">
-          <!-- Space in filename encoded; consider renaming to connection_terminated.mp4 -->
-          <source src="./vids/connection%20terminated.mp4" type="video/mp4">
-        </video>
-      </div>
-
+    <div class="sec-head"><span class="sec-title">Other Vidz</span><span class="sec-stars">&#9733; &#9733; &#9733;</span></div>
+    <div class="video-grid">
+      <div class="video-card"><div class="card-title">banana man</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/bananaman.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">grandma</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/grandma.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">no</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/oh_no.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">transformers</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/transformer.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">hermuckuless</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/suck_toes.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">propoganda</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/propagada.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">xman</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/xman.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">grandpa</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/grandpa.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">scary</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/scary.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">kat</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/cat.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">Cat Harmonics</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/cat_hermonics.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">German Cola</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/germancola.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">Turkey</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/turkey.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">Rubert</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/rubert.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">Millkers</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/millkers.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">Fotosynthasis</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/fotosynthasis.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">edging</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/edging.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">frog_guy</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/frog_guy.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">irs_guy</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/irs.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">children</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/children.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">butt_i_do</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/butt_i_do.mp4" type="video/mp4"></video></div></div>
+      <div class="video-card"><div class="card-title">connection_terminated</div><div class="vid-wrap"><video controls preload="none"><source src="./vids/connection%20terminated.mp4" type="video/mp4"></video></div></div>
     </div>
   </section>
 
   <footer>
-    conshaunery was here.<br>
-    <img src="./pictures/conshaun.jpg" alt="logo" width="50" height="50">
+    <p>conshaunery was here.</p>
   </footer>
+
 </div>
 
-<script>
-/* ===============================
-   CONFIG
-   =============================== */
-const BASE_VOLUME = 0.6;      // Normal background music volume
-const DUCK_VOLUME = 0.08;     // Volume while a video is playing
-const FADE_MS = 500;          // Fade time in ms
+<script type="text/javascript">
+(function() {
+  var cv = document.createElement('canvas');
+  cv.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:0;';
+  document.body.insertBefore(cv, document.body.firstChild);
+  var ctx = cv.getContext('2d'), stars = [];
+  function resize() {
+    cv.width = window.innerWidth; cv.height = window.innerHeight; stars = [];
+    for (var i=0;i<200;i++) stars.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.3+0.2,ph:Math.random()*Math.PI*2,sp:Math.random()*0.008+0.003});
+  }
+  function draw() {
+    ctx.clearRect(0,0,cv.width,cv.height);
+    var t=Date.now()/1000;
+    for (var i=0;i<stars.length;i++) { var s=stars[i],a=0.2+0.65*((Math.sin(t*s.sp*120+s.ph)+1)/2); ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fillStyle='rgba(200,180,255,'+a.toFixed(2)+')'; ctx.fill(); }
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',resize); resize(); draw();
+})();
 
-/* ===============================
-   ELEMENTS
-   =============================== */
-const bgAudio = document.getElementById('bg-audio');
-const statusEl = document.getElementById('bg-status');
-const muteBtn  = document.getElementById('muteBtn');
-let videos     = Array.from(document.querySelectorAll('video'));
+var BASE_VOLUME=0.6, DUCK_VOLUME=0.08, FADE_MS=500;
+var bgAudio=document.getElementById('bg-audio');
+var statusEl=document.getElementById('bg-status');
+var muteBtn=document.getElementById('muteBtn');
+var videos=Array.from(document.querySelectorAll('video'));
+var fadeFrame=null, isMuted=false;
+try{isMuted=localStorage.getItem('bgMuted')==='true';}catch(e){}
+bgAudio.volume=BASE_VOLUME;
+if(isMuted){bgAudio.muted=true;muteBtn.textContent='🔇';muteBtn.setAttribute('aria-pressed','true');}
 
-let targetVolume = BASE_VOLUME;
-let fadeFrame = null;
-let isMuted = localStorage.getItem('bgMuted') === 'true';
-
-/* ===============================
-   INIT
-   =============================== */
-bgAudio.volume = BASE_VOLUME;
-if (isMuted) {
-  bgAudio.muted = true;
-  muteBtn.textContent = '🔇';
-  muteBtn.setAttribute('aria-pressed','true');
-} else {
-  bgAudio.muted = false;
-  muteBtn.textContent = '🔊';
-  muteBtn.setAttribute('aria-pressed','false');
-}
-
-/* ===============================
-   FADE / DUCK LOGIC
-   =============================== */
-function fadeTo(vol) {
-  if (bgAudio.muted) return;
-  targetVolume = vol;
-  const startVol = bgAudio.volume;
-  const startTime = performance.now();
+function fadeTo(vol){
+  if(bgAudio.muted)return;
+  var sv=bgAudio.volume,st=performance.now();
   cancelAnimationFrame(fadeFrame);
-
-  function step(now) {
-    const t = Math.min(1, (now - startTime) / FADE_MS);
-    bgAudio.volume = startVol + (targetVolume - startVol) * t;
-    if (t < 1) fadeFrame = requestAnimationFrame(step);
-  }
-  fadeFrame = requestAnimationFrame(step);
+  function step(now){var t=Math.min(1,(now-st)/FADE_MS);bgAudio.volume=sv+(vol-sv)*t;if(t<1)fadeFrame=requestAnimationFrame(step);}
+  fadeFrame=requestAnimationFrame(step);
 }
-
-function updateDuck() {
-  const anyPlaying = videos.some(v => !v.paused && !v.ended);
-  if (anyPlaying) {
-    fadeTo(DUCK_VOLUME);
-    statusEl.textContent = 'Background track: ducked while video plays.';
-  } else {
-    fadeTo(BASE_VOLUME);
-    statusEl.textContent = 'Background track: normal volume.';
-  }
+function updateDuck(){
+  var any=videos.some(function(v){return !v.paused&&!v.ended;});
+  if(any){fadeTo(DUCK_VOLUME);statusEl.textContent='background track: ducked ▾';}
+  else{fadeTo(BASE_VOLUME);statusEl.textContent='background track: normal volume.';}
 }
-
-/* Attach listeners */
-function attachVideoListeners(v) {
-  ['play','playing'].forEach(evt => v.addEventListener(evt, updateDuck));
-  ['pause','ended','abort','error','emptied'].forEach(evt => v.addEventListener(evt, updateDuck));
-}
-videos.forEach(attachVideoListeners);
-
-/* ===============================
-   MUTE TOGGLE
-   =============================== */
-muteBtn.addEventListener('click', () => {
-  isMuted = !isMuted;
-  bgAudio.muted = isMuted;
-  localStorage.setItem('bgMuted', isMuted ? 'true' : 'false');
-  muteBtn.textContent = isMuted ? '🔇' : '🔊';
-  muteBtn.setAttribute('aria-pressed', isMuted ? 'true' : 'false');
-  if (!isMuted) {
-    updateDuck();
-    muteBtn.animate([{transform:'scale(0.9)'},{transform:'scale(1)'}], {duration:180});
-  }
+videos.forEach(function(v){
+  ['play','playing'].forEach(function(e){v.addEventListener(e,updateDuck);});
+  ['pause','ended','abort','error','emptied'].forEach(function(e){v.addEventListener(e,updateDuck);});
 });
-
-/* Handle possible blocked autoplay */
-document.addEventListener('click', () => {
-  if (bgAudio.paused && !isMuted) {
-    bgAudio.play().catch(()=>{});
-  }
-}, { once: true });
+muteBtn.addEventListener('click',function(){
+  isMuted=!isMuted; bgAudio.muted=isMuted;
+  try{localStorage.setItem('bgMuted',isMuted?'true':'false');}catch(e){}
+  muteBtn.textContent=isMuted?'🔇':'🔊';
+  muteBtn.setAttribute('aria-pressed',isMuted?'true':'false');
+  if(!isMuted)updateDuck();
+});
+document.addEventListener('click',function(){if(bgAudio.paused&&!isMuted)bgAudio.play().catch(function(){});},{once:true});
 </script>
 
+<script src="./transition.js"></script>
 </body>
 </html>
