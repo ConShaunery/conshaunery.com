@@ -1,195 +1,377 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-  <head>
-    <title>conshaunery.com</title>
-    <style>
-      body {
-        background-image: url("./gifs/purple_bridge.gif");
-        background-size: 15%;
-        background-position: center;
-        background-color: rgb(91, 0, 128);
-        color: rgb(255, 255, 255);
-        font-family: Helvetica, Arial, sans-serif;
-        font-size: 16px;
-        margin: 0;
-        padding: 0;
-      }
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>downloads — conshaunery.com</title>
+<style type="text/css">
 
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 40px 20px;
-      }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-      h1, h2, h3 {
-        color: rgb(64, 255, 58);
-        font-weight: bold;
-        text-align: center;
-      }
+  html, body {
+    background: #06000f;
+    color: #ffffff;
+    font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
+    font-size: 15px;
+    min-height: 100%;
+  }
 
-      p {
-        line-height: 1.5;
-        text-align: center;
-      }
+  /* ── BG CANVAS ── */
+  #bg-canvas {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 0;
+  }
 
-      a {
-        color: orange;
-        text-decoration: none;
-      }
+  .rainbow-bar {
+    height: 5px;
+    background: linear-gradient(90deg,#ff0000,#ff8800,#ffff00,#00ff88,#00ccff,#cc00ff,#ff0088,#ff0000);
+    background-size: 200% 100%;
+    animation: rb 3s linear infinite;
+    position: sticky; top: 0; z-index: 100;
+  }
+  @keyframes rb { 0%{background-position:0% 0} 100%{background-position:200% 0} }
 
-      a:hover {
-        color: white;
-      }
+  .wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px 70px;
+    position: relative; z-index: 1;
+  }
 
-      .gif {
-        cursor: pointer;
-      }
+  header {
+    text-align: center;
+    padding: 26px 0 10px;
+    border-bottom: 2px solid #6600cc;
+    margin-bottom: 28px;
+  }
+  header img { max-width: 100%; max-height: 130px; display: inline-block; }
+  .header-sub {
+    font-size: 10px; letter-spacing: 3px; color: #8888cc; margin-top: 5px;
+    animation: blink 2.8s step-end infinite;
+  }
+  @keyframes blink { 0%,85%,100%{opacity:1} 86%,99%{opacity:0} }
 
-      .downloads-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 30px 20px;
-      }
+  /* ── PANEL ── */
+  .panel {
+    border: 1px solid #330055;
+    background: rgba(8,0,16,0.75);
+    box-shadow: 0 0 24px rgba(100,0,180,0.15), inset 0 0 40px rgba(0,0,10,0.5);
+    margin-bottom: 16px;
+    backdrop-filter: blur(2px);
+  }
+  .panel-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 7px 14px;
+    background: linear-gradient(90deg, #1a0033, #0d001a);
+    border-bottom: 1px solid #440066;
+  }
+  .panel-title {
+    font-family: "Impact", "Arial Black", sans-serif;
+    font-size: 13px; letter-spacing: 4px; text-transform: uppercase;
+    color: #ffff00; text-shadow: 0 0 8px rgba(255,220,0,0.6), 1px 1px 0 #440000;
+  }
+  .panel-stars { color: #cc66ff; font-size: 11px; letter-spacing: 2px; }
+  .panel-body { padding: 20px 24px; }
 
-      .downloads {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 20px;
-        width: 100%;
-        max-width: 900px;
-        padding: 20px;
-        background: rgba(0, 0, 0, 0.45);
-        border: 2px solid rgba(0, 0, 0, 0.25);
-        border-radius: 12px;
-        box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
-      }
+  /* ── GUIDE / INFO BOX ── */
+  .guide-item { margin-bottom: 18px; }
+  .guide-item:last-child { margin-bottom: 0; }
 
-      .download {
-        background: #000000;
-        border: 2px solid rgb(127, 0, 255);
-        padding: 10px;
-        text-align: center;
-      }
+  .guide-link {
+    display: inline-block;
+    color: #ff8800; text-decoration: none;
+    font-size: 13px; letter-spacing: 1px;
+    border-bottom: 1px solid #552200;
+    text-shadow: 0 0 5px rgba(255,136,0,0.4);
+    margin-bottom: 5px;
+    transition: color 0.2s;
+  }
+  .guide-link:hover { color: #ffffff; border-bottom-color: #ff8800; }
 
-      .download img {
-        width: 100%;
-        image-rendering: pixelated;
-        margin-bottom: 10px;
-      }
+  .guide-item p {
+    font-size: 13px; line-height: 1.7; color: #ccbbdd;
+  }
 
-      .download h4 {
-        margin: 5px 0;
-        font-size: 14px;
-        color: rgb(64, 255, 58);
-      }
+  .guide-label {
+    font-family: "Impact", "Arial Black", sans-serif;
+    font-size: 11px; letter-spacing: 3px; color: #cc88ff;
+    text-shadow: 0 0 5px rgba(180,80,255,0.4);
+    text-transform: uppercase; margin-bottom: 6px;
+    border-left: 2px solid #6600cc; padding-left: 8px;
+  }
 
-      .download a {
-        display: inline-block;
-        margin-top: 6px;
-        padding: 4px 10px;
-        border: 1px solid rgb(127, 0, 255);
-        font-size: 13px;
-      }
-      .info-box {
-        max-width: 900px;
-        margin: 40px auto;
-        padding: 24px 32px;
-        background: #000000; /*solid black */
-        border: 2px solid rgb(127, 0, 255);
-        border-radius: 14px;
-        text-box: 0 0 30px rgba(0, 0, 0, 0.7);
-        text-align: left;
-}
+  /* ── WARNING ── */
+  .warning {
+    text-align: center; padding: 14px;
+    font-family: "Impact", "Arial Black", sans-serif;
+    font-size: 15px; letter-spacing: 3px; text-transform: uppercase;
+    color: #ffff00; text-shadow: 0 0 12px rgba(255,220,0,0.6);
+    animation: alert-flash 1.6s step-end infinite;
+  }
+  @keyframes alert-flash { 0%,100%{opacity:1} 50%{opacity:0.35} }
 
-.info-box h2,
-.info-box h3,
-.info-box h4 {
-  margin: 10px 0;
-}
+  /* ── DOWNLOADS GRID ── */
+  .dl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
 
-.info-box p {
-  margin-top: 12px;
-  line-height: 1.6;
-}
+  .dl-card {
+    background: #000;
+    border: 2px solid #550088;
+    text-align: center;
+    padding: 10px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .dl-card:hover {
+    border-color: #9933ff;
+    box-shadow: 0 0 18px rgba(150,50,255,0.45);
+  }
 
-    </style>
-  </head>
+  .dl-card img.preview {
+    width: 100%; display: block; margin-bottom: 8px;
+    image-rendering: pixelated;
+    border: 1px solid #330055;
+  }
 
-  <body>
+  .dl-card h4 {
+    font-size: 12px; color: #40ff3a;
+    text-shadow: 0 0 6px rgba(60,255,55,0.5);
+    margin-bottom: 8px; letter-spacing: 1px;
+  }
 
-    <audio autoplay loop>
-      <source src="./sounds/music/deep_dive.mp3" type="audio/mpeg">
-    </audio>
+  .dl-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: linear-gradient(180deg, #6600cc, #330066);
+    border: 2px outset #cc66ff;
+    color: #ffff00; text-decoration: none;
+    font-family: "Comic Sans MS", Arial, sans-serif;
+    font-size: 11px; font-weight: bold; letter-spacing: 1px;
+    padding: 4px 10px; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .dl-btn:hover { background: linear-gradient(180deg, #9933ff, #440099); color: #fff; }
+  .dl-btn img { height: 16px; width: auto; }
 
+  .coming-soon {
+    text-align: center; font-size: 11px; color: #552266;
+    letter-spacing: 2px; margin-top: 14px;
+    animation: blink 2.8s step-end infinite;
+  }
 
+  .divider {
+    height: 2px;
+    background: linear-gradient(90deg,transparent,rgba(150,50,255,0.5),rgba(255,136,0,0.3),rgba(150,50,255,0.5),transparent);
+    margin: 0 0 16px;
+  }
 
-    <div style="text-align: center;">
-      <img src="./gifs/Downloads_1.gif" alt="Download animation">
+  footer { text-align: center; border-top: 2px solid #330055; padding: 18px 0 10px; margin-top: 10px; }
+  footer p { font-size: 10px; color: #554477; letter-spacing: 2px; }
+
+</style>
+</head>
+<body>
+
+<!-- WAVY PURPLE BG -->
+<canvas id="bg-canvas"></canvas>
+
+<div class="rainbow-bar"></div>
+
+<audio autoplay loop>
+  <source src="./sounds/music/deep_dive.mp3" type="audio/mpeg">
+</audio>
+
+<div class="wrap">
+
+  <header>
+    <img src="./gifs/Downloads_1.gif" alt="DOWNLOADS">
+    <div class="header-sub">~ the download dimension ~</div>
+  </header>
+
+  <!-- GUIDE -->
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-title">ConShaun's Guide to Surviving the Interwebz</span>
+      <span class="panel-stars">&#9733; &#9733; &#9733;</span>
     </div>
+    <div class="panel-body">
 
+      <div class="guide-item">
+        <div class="guide-label">Operating Systems</div>
+        <a class="guide-link" href="https://cachyos.org/" target="_blank">&#9654; CachyOS &ndash; Linux</a>
+        <p>For nearly a year I've been using Linux for my main battlestation. There are issues here and there, but I haven't looked back. Nearly 90% of Steam will run now under Linux. Also Bill Gates went to that island....so....you know.</p>
+      </div>
 
-  <div class="info-box">
-      <h2>ConShaun's guide to Surviving the Interwebz!</h2>
-      <h3>Operating Systems</h3>
-  <a href="https://cachyos.org/" target="_blank">CachyOS – Linux</a>
-    <p>
-      For nearly a year I've been using Linux for my main battlestation.
-      There are issues here and there, but I haven't looked back. Nearly 90% of Steam will run now under Linux. Also Bill Gates went to that island....so....you know.
-    </p>
+      <div class="guide-item">
+        <div class="guide-label">Web Browsers</div>
+        <a class="guide-link" href="https://www.waterfox.com/" target="_blank">&#9654; WaterFox</a>
+        <p>"A privacy focused browser built for power users who value customization and control over their online experience."</p>
+      </div>
 
-    <h3>Web Browsers</h3>
-  <a href="https://www.waterfox.com/" target="_blank">WaterFox</a>
-    <p>"A privacy focused browser built for power users who value customization and control over their online experience."</p>
-    
-    <h3>Search Engines</h3>
-  <a href="https://search.brave.com/" target="_blank">Brave Search</a>
-    <p> It's a pretty good engine. Gives good results. I'd recommend using it and detaching Google.</p>
+      <div class="guide-item">
+        <div class="guide-label">Search Engines</div>
+        <a class="guide-link" href="https://search.brave.com/" target="_blank">&#9654; Brave Search</a>
+        <p>It's a pretty good engine. Gives good results. I'd recommend using it and detaching Google.</p>
+      </div>
 
-    <h3>Email</h3>
-  <a href="https://proton.me/mail/" target="_blank">Protonmail</a>
-    <p>A Swiss based email services. Also provides Online Drive services and VPN.</p>
+      <div class="guide-item">
+        <div class="guide-label">Email</div>
+        <a class="guide-link" href="https://proton.me/mail/" target="_blank">&#9654; Protonmail</a>
+        <p>A Swiss based email service. Also provides Online Drive services and VPN.</p>
+      </div>
 
-    <h3>Youtube</h3>
-  <a href="https://freetubeapp.io/" target="_blank">FreeTube</a>
-    <p>FreeTube is a YouTube client for Windows (10 and later), Mac (macOS 11 and later), and Linux built around using YouTube more privately.</p>
+      <div class="guide-item">
+        <div class="guide-label">Youtube</div>
+        <a class="guide-link" href="https://freetubeapp.io/" target="_blank">&#9654; FreeTube</a>
+        <p>FreeTube is a YouTube client for Windows, Mac, and Linux built around using YouTube more privately.</p>
+      </div>
 
+    </div>
+  </div>
 
-</div>
+  <div class="divider"></div>
 
-<h1> none of the downloads work at the moment. But thinks!</h1>
-  <h2>Website Rescources</h2>
-    <div class="downloads-wrapper">
-      <div class="downloads">
+  <!-- DOWNLOADS -->
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-title">Website Resources</span>
+      <span class="panel-stars">&#9733; &#9733; &#9733;</span>
+    </div>
+    <div class="panel-body">
 
-        <div class="download">
-          <img src="https://downloadmoreram.com/" alt="More RAM">
+      <div class="warning">!! none of the downloads work at the moment. but thinks! !!</div>
+
+      <div class="dl-grid">
+
+        <div class="dl-card">
+          <img class="preview" src="https://downloadmoreram.com/" alt="More RAM">
           <h4>Go on try it!</h4>
-          <a href="https://downloadmoreram.com/" download>DOWNLOAD <img src="./gifs/ram_stick.gif"></a>
+          <a class="dl-btn" href="https://downloadmoreram.com/" download>DOWNLOAD <img src="./gifs/ram_stick.gif" alt=""></a>
         </div>
 
-        <div class="download">
-          <img src="./previews/icons_preview.png" alt="Icons">
+        <div class="dl-card">
+          <img class="preview" src="./previews/icons_preview.png" alt="Icons">
           <h4>Personal Wallpapers</h4>
-          <a href="./downloads/pixel_icons.zip" download>DOWNLOAD <img src="./gifs/floppy_disk_download.gif"></a>
+          <a class="dl-btn" href="./downloads/pixel_icons.zip" download>DOWNLOAD <img src="./gifs/floppy_disk_download.gif" alt=""></a>
         </div>
 
-        <div class="download">
-          <img src="./previews/music_preview.gif" alt="Music">
+        <div class="dl-card">
+          <img class="preview" src="./previews/music_preview.gif" alt="Music">
           <h4>Site Music Pack</h4>
-          <a href="./downloads/music_pack.zip" download>DOWNLOAD <img src="./gifs/floppy_disk_download.gif"></a>
+          <a class="dl-btn" href="./downloads/music_pack.zip" download>DOWNLOAD <img src="./gifs/floppy_disk_download.gif" alt=""></a>
         </div>
 
-        <div class="download">
-          <img src="./previews/music_preview.gif" alt="Coins!">
-          <h4>Free Arc Raider coins!!</h4>
-          <a href="pictures/token.png" download>DOWNLOAD <img src="./gifs/floppy_disk_download.gif"></a>
+        <div class="dl-card">
+          <img class="preview" src="./previews/music_preview.gif" alt="Coins">
+          <h4>Free Arc Raider Coins!!</h4>
+          <a class="dl-btn" href="./pictures/token.png" download>DOWNLOAD <img src="./gifs/floppy_disk_download.gif" alt=""></a>
         </div>
 
       </div>
-    </div>
 
-    <h3>...more coming soon...</h3>
-    <script src="./transition.js"></script>
-  </body>
+      <div class="coming-soon">...more coming soon...</div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p>conshaunery was here.</p>
+  </footer>
+
+</div>
+
+<script type="text/javascript">
+
+/* ══ WAVY PURPLE BACKGROUND ══════════════════════════════════════════ */
+(function() {
+  var cv  = document.getElementById('bg-canvas');
+  var ctx = cv.getContext('2d');
+  var W, H;
+
+  function resize() {
+    W = cv.width  = window.innerWidth;
+    H = cv.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  /* Wave layers */
+  var layers = [
+    { amp: 0.055, freq: 1.4,  speed: 0.00028, phase: 0,    alpha: 0.18, col: '120,0,220'  },
+    { amp: 0.045, freq: 2.1,  speed: 0.00022, phase: 2.1,  alpha: 0.13, col: '160,0,255'  },
+    { amp: 0.035, freq: 3.3,  speed: 0.00018, phase: 4.4,  alpha: 0.10, col: '80,0,160'   },
+    { amp: 0.025, freq: 0.9,  speed: 0.00035, phase: 1.1,  alpha: 0.08, col: '200,50,255' },
+    { amp: 0.060, freq: 1.8,  speed: 0.00015, phase: 3.3,  alpha: 0.07, col: '100,0,200'  },
+  ];
+
+  function draw(ts) {
+    ctx.clearRect(0, 0, W, H);
+
+    /* Deep base gradient */
+    var bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0,   '#03000a');
+    bg.addColorStop(0.5, '#08001a');
+    bg.addColorStop(1,   '#03000a');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    /* Subtle radial glow in centre */
+    var rg = ctx.createRadialGradient(W*0.5, H*0.45, 0, W*0.5, H*0.45, W*0.6);
+    rg.addColorStop(0,   'rgba(100,0,200,0.08)');
+    rg.addColorStop(0.5, 'rgba(60,0,120,0.04)');
+    rg.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.fillStyle = rg;
+    ctx.fillRect(0, 0, W, H);
+
+    /* Wave layers */
+    for (var li = 0; li < layers.length; li++) {
+      var l = layers[li];
+      var t = ts * l.speed;
+      var amp = H * l.amp;
+      var baseY = H * (0.3 + li * 0.12);
+
+      ctx.beginPath();
+      ctx.moveTo(0, H);
+
+      for (var x = 0; x <= W; x += 4) {
+        var y = baseY
+          + Math.sin(x * l.freq * 0.006 + t + l.phase) * amp
+          + Math.sin(x * l.freq * 0.003 + t * 1.3 + l.phase + 1) * amp * 0.4;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(W, H);
+      ctx.closePath();
+
+      var wg = ctx.createLinearGradient(0, baseY - amp, 0, H);
+      wg.addColorStop(0,   'rgba(' + l.col + ',' + l.alpha + ')');
+      wg.addColorStop(0.5, 'rgba(' + l.col + ',' + (l.alpha * 0.5) + ')');
+      wg.addColorStop(1,   'rgba(' + l.col + ',0)');
+      ctx.fillStyle = wg;
+      ctx.fill();
+
+      /* Glowing wave crest line */
+      ctx.beginPath();
+      for (var x2 = 0; x2 <= W; x2 += 4) {
+        var y2 = baseY
+          + Math.sin(x2 * l.freq * 0.006 + t + l.phase) * amp
+          + Math.sin(x2 * l.freq * 0.003 + t * 1.3 + l.phase + 1) * amp * 0.4;
+        x2 === 0 ? ctx.moveTo(x2, y2) : ctx.lineTo(x2, y2);
+      }
+      ctx.strokeStyle = 'rgba(' + l.col + ',' + Math.min(l.alpha * 1.8, 0.35) + ')';
+      ctx.lineWidth = 1.2;
+      ctx.shadowColor = 'rgba(' + l.col + ',0.6)';
+      ctx.shadowBlur  = 8;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+</script>
+
+<script src="./transition.js"></script>
+</body>
 </html>
