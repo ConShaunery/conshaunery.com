@@ -64,6 +64,7 @@
     border: 1px solid #330055;
     background: rgba(10,0,20,0.6);
     box-shadow: 0 0 18px rgba(100,0,180,0.12), inset 0 0 30px rgba(0,0,10,0.4);
+    margin-bottom: 24px;
   }
 
   .box-head {
@@ -71,6 +72,12 @@
     padding: 7px 14px;
     background: linear-gradient(90deg, #1a0033, #0d001a);
     border-bottom: 1px solid #440066;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .box-head:hover {
+    background: linear-gradient(90deg, #2e0055, #1a0033);
   }
   .box-title {
     font-family: "Impact", "Arial Black", sans-serif;
@@ -79,9 +86,25 @@
   }
   .box-stars { color: #cc66ff; font-size: 11px; letter-spacing: 2px; }
 
+  .box-chevron {
+    font-size: 12px;
+    color: #ffff00;
+    margin-left: 10px;
+    transition: transform 0.35s ease;
+    display: inline-block;
+  }
+  .box-head.open .box-chevron { transform: rotate(180deg); }
+
   .box-body {
-    padding: 22px 28px 28px;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.5s ease, padding 0.35s ease;
+    padding: 0 28px;
     text-align: center;
+  }
+  .box-body.open {
+    max-height: 9999px;
+    padding: 22px 28px 28px;
   }
 
   .box-body h1 {
@@ -95,6 +118,142 @@
     font-size: 14px; line-height: 1.7; color: #ccbbdd;
     text-align: left; margin-bottom: 14px;
   }
+
+  /* ── FACT SECTION DIVIDERS ── */
+  .fact-section {
+    border: 1px solid #440033;
+    background: rgba(20,0,10,0.5);
+    margin: 18px 0;
+    text-align: left;
+  }
+
+  .fact-section-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 14px;
+    background: linear-gradient(90deg, #220011, #110008);
+    border-bottom: 1px solid #550022;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .fact-section-head:hover {
+    background: linear-gradient(90deg, #3a0020, #1e000f);
+  }
+  .fact-section-head.open {
+    border-bottom: 1px solid #880033;
+  }
+
+  .fact-section-head .icon { font-size: 18px; }
+
+  .fact-section-title {
+    font-family: "Impact", "Arial Black", sans-serif;
+    font-size: 13px; letter-spacing: 3px; text-transform: uppercase;
+    color: #ff4488; text-shadow: 0 0 8px rgba(255,50,100,0.6);
+    flex: 1;
+  }
+
+  /* chevron arrow */
+  .fact-chevron {
+    font-size: 12px;
+    color: #ff4488;
+    margin-left: auto;
+    transition: transform 0.3s ease;
+    display: inline-block;
+  }
+  .fact-section-head.open .fact-chevron {
+    transform: rotate(180deg);
+  }
+
+  /* click hint */
+  .fact-hint {
+    font-size: 10px; letter-spacing: 1px; color: #884466;
+    margin-left: 4px; font-family: "Comic Sans MS", sans-serif;
+  }
+
+  .fact-section-body {
+    padding: 14px 18px 18px;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding-top: 0; padding-bottom: 0;
+  }
+  .fact-section-body.open {
+    max-height: 600px;
+    padding: 14px 18px 18px;
+  }
+
+  .fact-section-body ul {
+    list-style: none;
+    padding: 0; margin: 0;
+  }
+
+  .fact-section-body ul li {
+    padding: 6px 0 6px 22px;
+    border-bottom: 1px solid rgba(100,0,50,0.3);
+    color: #ddbbcc;
+    font-size: 13px;
+    line-height: 1.6;
+    position: relative;
+  }
+  .fact-section-body ul li:last-child { border-bottom: none; }
+
+  .fact-section-body ul li::before {
+    content: "▸";
+    position: absolute; left: 0;
+    color: #ff4488;
+  }
+
+  .fact-section-body ul li a {
+    color: #ff8800;
+    font-size: 11px;
+    text-decoration: none;
+    margin-left: 6px;
+    border-bottom: 1px dotted #ff8800;
+    white-space: nowrap;
+  }
+  .fact-section-body ul li a:hover { color: #ffcc44; border-color: #ffcc44; }
+
+  /* ── INTRO BANNER ── */
+  .fact-banner {
+    background: rgba(60,0,20,0.5);
+    border: 1px solid #660022;
+    border-left: 4px solid #ff0055;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  .fact-banner p {
+    font-size: 14px; line-height: 1.7; color: #ffccdd;
+    margin: 0;
+    font-family: "Impact", "Arial Black", sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ── SOURCES ── */
+  .sources-box {
+    background: rgba(5,5,20,0.7);
+    border: 1px solid #221133;
+    padding: 14px 18px;
+    margin-top: 20px;
+    text-align: left;
+  }
+  .sources-box h3 {
+    font-family: "Impact", "Arial Black", sans-serif;
+    font-size: 11px; letter-spacing: 3px; color: #8866aa;
+    text-transform: uppercase; margin-bottom: 10px;
+  }
+  .sources-box ol {
+    padding-left: 18px;
+  }
+  .sources-box ol li {
+    font-size: 11px; color: #776688; margin-bottom: 5px; line-height: 1.5;
+  }
+  .sources-box ol li a {
+    color: #9955cc; text-decoration: none;
+    border-bottom: 1px dotted #9955cc;
+  }
+  .sources-box ol li a:hover { color: #cc88ff; }
 
   /* ── PHOTO ROW ── */
   .photo-row {
@@ -165,19 +324,206 @@
     <div class="header-sub">~ the man. the myth. the legend ~</div>
   </header>
 
+  <!-- ═══════════════ ABOUT ME BOX ═══════════════ -->
   <div class="info-box">
-    <div class="box-head">
+    <div class="box-head" onclick="toggleBox(this)">
       <span class="box-title">About Me</span>
       <span class="box-stars">&#9733; &#9733; &#9733;</span>
+      <span class="box-chevron">&#9660;</span>
     </div>
     <div class="box-body">
-
       <h1>its the man. the myth. the legends. Yur boy ConShaunery</h1>
-
       <p>Hey guys! It ur boy uncle daddy ConShaunery back at it again with this crazy online interwebbing adeventure!</p>
       <p>But who am i? r U sure u wanna know? My story isn't for the faint of heart...It all started when I was a wee young lad in the year 2023.
          I waas bored at work and suddenly created this! This sweet kicka** intercontitental cyberweb page!</p>
+    </div>
+  </div>
 
+  <!-- ═══════════════ POLITICS BOX ═══════════════ -->
+  <div class="info-box">
+    <div class="box-head" onclick="toggleBox(this)">
+      <span class="box-title">Politics?</span>
+      <span class="box-stars">&#9733; &#9733; &#9733;</span>
+      <span class="box-chevron">&#9660;</span>
+    </div>
+    <div class="box-body">
+
+      <p>Oh boy wouldn't you like to know weather boy...Well some might say its "radical", but honestwy i say its rad and kool....but also just common f***kin sense.</p>
+
+      <img src="./gifs/epic_facts!.gif" alt="Epic Facts!" style="margin-bottom:18px;">
+
+      <div class="fact-banner">
+        <p>DESPITE being the richest nation that has ever existed in the entirety of human existence on this planet — this nation doesn't have or guarantee the following for its citizens:</p>
+      </div>
+
+      <!-- ─── SECTION 1: HEALTHCARE ─── -->
+      <div class="fact-section">
+        <div class="fact-section-head" onclick="toggleSection(this)">
+          <span class="icon">&#127973;</span>
+          <span class="fact-section-title">Universal Healthcare</span>
+          <span class="fact-hint">[ click to expand ]</span>
+          <span class="fact-chevron">&#9660;</span>
+        </div>
+        <div class="fact-section-body">
+          <ul>
+            <li>~26 million Americans remain completely uninsured — 8% of the entire population <a href="https://www.census.gov/library/publications/2024/demo/p60-284.html" target="_blank">[source]</a></li>
+            <li>500,000+ families file for bankruptcy due to medical bills <strong>every single year</strong> <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6366487/" target="_blank">[source]</a></li>
+            <li>The US spends MORE per capita on healthcare than any nation on Earth — yet ranks LAST in outcomes among wealthy nations <a href="https://www.commonwealthfund.org/publications/fund-reports/2024/sep/mirror-mirror-2024" target="_blank">[source]</a></li>
+            <li>Losing your job means losing your health insurance</li>
+            <li>Americans regularly crowdfund basic medical care on GoFundMe — 1 in 3 campaigns are medical-related</li>
+            <li>Every other wealthy nation — EU countries, Canada, UK, Israel, Australia — covers 100% of citizens</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── SECTION 2: PARENTAL LEAVE ─── -->
+      <div class="fact-section">
+        <div class="fact-section-head" onclick="toggleSection(this)">
+          <span class="icon">&#128118;</span>
+          <span class="fact-section-title">Paid Parental Leave</span>
+          <span class="fact-hint">[ click to expand ]</span>
+          <span class="fact-chevron">&#9660;</span>
+        </div>
+        <div class="fact-section-body">
+          <ul>
+            <li>The US and <strong>Papua New Guinea</strong> are the only two nations on Earth with no national paid maternity leave <a href="https://www.worldpolicycenter.org/policies/is-paid-leave-available-for-mothers-of-infants" target="_blank">[source]</a></li>
+            <li>The only federal law (FMLA) offers 12 weeks <strong>unpaid</strong> — and only covers companies with 50+ employees</li>
+            <li>Many fathers receive <strong>zero time off</strong> after the birth of a child</li>
+            <li>Low-wage workers — who need it most — are almost entirely excluded</li>
+            <li>Many American mothers return to work <strong>within weeks of giving birth</strong> out of financial necessity</li>
+            <li>Sweden offers 480 days. Estonia: 86 weeks. Norway: up to 59 weeks at full pay. The US: nothing.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── SECTION 3: PAID VACATION ─── -->
+      <div class="fact-section">
+        <div class="fact-section-head" onclick="toggleSection(this)">
+          <span class="icon">&#127958;</span>
+          <span class="fact-section-title">Federally Mandated Paid Vacation</span>
+          <span class="fact-hint">[ click to expand ]</span>
+          <span class="fact-chevron">&#9660;</span>
+        </div>
+        <div class="fact-section-body">
+          <ul>
+            <li>The US is the <strong>only wealthy nation on Earth</strong> with zero federally mandated paid vacation <a href="https://cepr.net/publications/no-vacation-nation-revised/" target="_blank">[source]</a></li>
+            <li>About <strong>1 in 4 American workers</strong> receive NO paid vacation or holidays whatsoever</li>
+            <li>Americans work more hours per year than workers in virtually every other wealthy nation <a href="https://stats.oecd.org/index.aspx?DataSetCode=ANHRS" target="_blank">[source]</a></li>
+            <li>Whether you get any time off is entirely at your employer's discretion</li>
+            <li>EU law guarantees every worker at least <strong>20 paid vacation days</strong> — many countries give 25 to 30</li>
+            <li>"Vacation shaming" — workers fearing to take time off — is a documented widespread American phenomenon</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── SECTION 4: SICK LEAVE ─── -->
+      <div class="fact-section">
+        <div class="fact-section-head" onclick="toggleSection(this)">
+          <span class="icon">&#129298;</span>
+          <span class="fact-section-title">Paid Sick Leave</span>
+          <span class="fact-hint">[ click to expand ]</span>
+          <span class="fact-chevron">&#9660;</span>
+        </div>
+        <div class="fact-section-body">
+          <ul>
+            <li>Nearly <strong>27 million American workers</strong> have zero paid sick days <a href="https://nationalpartnership.org/travesty-27-million-workers-lack-paid-sick-days/" target="_blank">[source]</a></li>
+            <li>Workers frequently go to work sick because they <strong>cannot afford to lose the pay</strong></li>
+            <li>COVID-19 exposed this catastrophically — sick workers had no choice but to show up</li>
+            <li>Only ~18 states have their own sick leave mandates — the rest have nothing</li>
+            <li>Part-time, gig, and low-wage workers are almost universally left out</li>
+            <li>Norway: 100% pay for up to 52 weeks sick leave. Netherlands: full pay for up to 2 years. US: nothing federally.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── SECTION 5: HIGHER EDUCATION ─── -->
+      <div class="fact-section">
+        <div class="fact-section-head" onclick="toggleSection(this)">
+          <span class="icon">&#127979;</span>
+          <span class="fact-section-title">Affordable Higher Education</span>
+          <span class="fact-hint">[ click to expand ]</span>
+          <span class="fact-chevron">&#9660;</span>
+        </div>
+        <div class="fact-section-body">
+          <ul>
+            <li>Americans carry <strong>$1.84 trillion</strong> in total student loan debt <a href="https://educationdata.org/student-loan-debt-statistics" target="_blank">[source]</a></li>
+            <li>42.8 million Americans have federal student loan debt — average balance ~$43,000</li>
+            <li>College costs have risen over <strong>1,400%</strong> since 1980 — far outpacing wages and inflation</li>
+            <li>Student debt delays home ownership, marriage, and having children for an entire generation</li>
+            <li>Germany, Norway, Sweden, Finland, and Denmark offer <strong>free university education</strong></li>
+            <li>Israel subsidizes university to ~$3,000/year. The US averages $35,000+/year at private schools.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── SECTION 6: CHILDCARE ─── -->
+      <div class="fact-section">
+        <div class="fact-section-head" onclick="toggleSection(this)">
+          <span class="icon">&#128116;</span>
+          <span class="fact-section-title">Universal Childcare &amp; Child Benefits</span>
+          <span class="fact-hint">[ click to expand ]</span>
+          <span class="fact-chevron">&#9660;</span>
+        </div>
+        <div class="fact-section-body">
+          <ul>
+            <li>American families pay <strong>$15,000–$30,000+ per year</strong> per child for childcare — often more than rent</li>
+            <li>No permanent universal child benefit exists in the US</li>
+            <li>The expanded Child Tax Credit (2021) cut child poverty nearly in half — when it expired, child poverty <strong>nearly doubled again immediately</strong></li>
+            <li>Lack of affordable childcare is a leading reason American women leave the workforce</li>
+            <li>Nordic countries provide free or near-free childcare from infancy as a matter of policy</li>
+            <li>Every EU country provides a monthly cash child allowance. Israel has one. The US does not.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── SECTION 7: RETIREMENT ─── -->
+      <div class="fact-section">
+        <div class="fact-section-head" onclick="toggleSection(this)">
+          <span class="icon">&#128116;</span>
+          <span class="fact-section-title">Retirement Security</span>
+          <span class="fact-hint">[ click to expand ]</span>
+          <span class="fact-chevron">&#9660;</span>
+        </div>
+        <div class="fact-section-body">
+          <ul>
+            <li>Social Security replaces only ~<strong>40% of pre-retirement income</strong> on average <a href="https://www.ssa.gov/policy/docs/chartbooks/income_aged/" target="_blank">[source]</a></li>
+            <li>~<strong>55 million Americans</strong> have no workplace retirement savings plan at all</li>
+            <li>The shift from employer pensions to 401(k)s transferred all investment risk onto individuals</li>
+            <li>A single medical crisis or job loss in your 50s can <strong>wipe out a lifetime of savings</strong></li>
+            <li>Many Americans work into their late 60s and 70s not by choice, but by financial necessity</li>
+            <li>European pension systems typically replace 60–80% of pre-retirement income</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── SOURCES ─── -->
+      <div class="sources-box">
+        <h3>&#128196; Sources</h3>
+        <ol>
+          <li>U.S. Census Bureau — Health Insurance Coverage 2023: <a href="https://www.census.gov/library/publications/2024/demo/p60-284.html" target="_blank">census.gov</a></li>
+          <li>AJPH — Medical Bankruptcy (Himmelstein et al.): <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6366487/" target="_blank">pmc.ncbi.nlm.nih.gov</a></li>
+          <li>Commonwealth Fund — Mirror Mirror 2024: <a href="https://www.commonwealthfund.org/publications/fund-reports/2024/sep/mirror-mirror-2024" target="_blank">commonwealthfund.org</a></li>
+          <li>World Policy Analysis Center — Paid Parental Leave: <a href="https://www.worldpolicycenter.org/policies/is-paid-leave-available-for-mothers-of-infants" target="_blank">worldpolicycenter.org</a></li>
+          <li>CEPR — No-Vacation Nation Report: <a href="https://cepr.net/publications/no-vacation-nation-revised/" target="_blank">cepr.net</a></li>
+          <li>National Partnership — Paid Sick Days: <a href="https://nationalpartnership.org/travesty-27-million-workers-lack-paid-sick-days/" target="_blank">nationalpartnership.org</a></li>
+          <li>Education Data Initiative — Student Loan Debt: <a href="https://educationdata.org/student-loan-debt-statistics" target="_blank">educationdata.org</a></li>
+          <li>Social Security Administration — Income of the Aged: <a href="https://www.ssa.gov/policy/docs/chartbooks/income_aged/" target="_blank">ssa.gov</a></li>
+          <li>OECD — Annual Hours Worked: <a href="https://stats.oecd.org/index.aspx?DataSetCode=ANHRS" target="_blank">stats.oecd.org</a></li>
+          <li>Princeton Eviction Lab: <a href="https://evictionlab.org/eviction-tracking/" target="_blank">evictionlab.org</a></li>
+        </ol>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ MEMES BOX ═══════════════ -->
+  <div class="info-box">
+    <div class="box-head" onclick="toggleBox(this)">
+      <span class="box-title">kool memes!!!</span>
+      <span class="box-stars">&#9733; &#9733; &#9733;</span>
+      <span class="box-chevron">&#9660;</span>
+    </div>
+    <div class="box-body">
       <div class="photo-row">
         <img src="./pictures/no.jpeg" alt="no">
         <img src="./pictures/virgin.jpeg" alt="oil">
@@ -193,7 +539,6 @@
         <a href="https://www.bitview.net/user/ConShaunery" target="_blank">&#9654; BitView</a>
         <a href="https://spacehey.com/profile?id=1863486" target="_blank">&#9654; SpaceHey</a>
       </div>
-
     </div>
   </div>
 
@@ -222,6 +567,24 @@
     }
     window.addEventListener('resize',resize); resize(); draw();
   })();
+
+  /* Main box accordion toggle */
+  function toggleBox(head) {
+    var body = head.nextElementSibling;
+    var isOpen = body.classList.contains('open');
+    head.classList.toggle('open', !isOpen);
+    body.classList.toggle('open', !isOpen);
+  }
+
+  /* Accordion toggle */
+  function toggleSection(head) {
+    var body = head.nextElementSibling;
+    var isOpen = body.classList.contains('open');
+    head.classList.toggle('open', !isOpen);
+    body.classList.toggle('open', !isOpen);
+    var hint = head.querySelector('.fact-hint');
+    if (hint) hint.textContent = isOpen ? '[ click to expand ]' : '[ click to collapse ]';
+  }
 
   /* Secret button time logic */
   (function() {
