@@ -1,0 +1,341 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>home — conshaunery.com</title>
+<style type="text/css">
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: #000008;
+    overflow: hidden;
+    font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
+    color: #ffffff;
+  }
+
+  .page { display: flex; flex-direction: column; width: 100%; height: 100%; }
+
+  .top-banner {
+    background: linear-gradient(180deg, #000000, #080018, #000000);
+    border-bottom: 2px solid #6600cc;
+    height: 100px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; flex-shrink: 0; position: relative;
+  }
+  .top-banner img { max-height: 300px; width: auto; display: block; }
+  .top-banner::after {
+    content: '';
+    position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(180,100,255,0.06), transparent);
+    animation: sweep 3s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes sweep { to { left: 140%; } }
+
+  .wrap { flex: 1; position: relative; overflow: hidden; min-height: 0; }
+
+  #c { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: default; }
+
+  #tooltip {
+    position: fixed; display: none;
+    background: #000022; border: 1px solid #6633cc;
+    padding: 7px 12px; font-size: 11px; color: #ccccff;
+    pointer-events: none; z-index: 100;
+    font-family: "Courier New", monospace;
+    box-shadow: 0 0 14px rgba(100,50,200,0.6);
+    max-width: 200px; line-height: 1.7;
+  }
+  #tooltip .tt-name { color: #ffff00; font-size: 12px; font-weight: bold; }
+  #tooltip .tt-hint { color: #00ffcc; font-size: 9px; margin-top: 3px; }
+
+</style>
+</head>
+<body>
+
+<audio autoplay loop>
+  <source src="./sounds/illumination-siddhartha-corsus.mp3" type="audio/mpeg">
+</audio>
+
+<div class="page">
+  <div class="top-banner">
+    <img src="./gifs/ConShaunery.com_fancy.gif" alt="conshaunery.com">
+  </div>
+  <div class="wrap" id="wrap">
+    <canvas id="c"></canvas>
+  </div>
+</div>
+
+<div id="tooltip">
+  <div class="tt-name" id="tt-name"></div>
+  <div class="tt-hint">[ click to enter ]</div>
+</div>
+
+<script type="text/javascript">
+
+// ── PAGES ─────────────────────────────────────────────────────────────
+var pages = [
+  { id:"about.html",     label:"ABOUT.HTML"     },
+  { id:"pics.html",      label:"PICS.HTML"       },
+  { id:"vids.html",      label:"VIDS.HTML"       },
+  { id:"terminal.html",  label:"TERMINAL.HTML"   },
+  { id:"dreams.html",    label:"DREAMS.HTML"     },
+  { id:"streams.html",   label:"STREAMS.HTML"    },
+  { id:"faq.html",       label:"FAQ.HTML"        },
+  { id:"downloads.html", label:"DOWNLOADS.HTML"  },
+  { id:"leave.html",     label:"LEAVE.HTML"      }
+];
+
+// ── SETUP ─────────────────────────────────────────────────────────────
+var canvas  = document.getElementById('c');
+var ctx     = canvas.getContext('2d');
+var W, H;
+var CHAR_W  = 16;
+var CHAR_H  = 18;
+var hovered = -1;
+
+// Mix of half-width katakana and ASCII for that 90s matrix feel
+var GLYPHS =
+  'ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ' +
+  '0123456789ABCDEF:<>|/\\!?@#$%&*';
+
+function rndGlyph() {
+  return GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+}
+
+// ── COLUMNS ───────────────────────────────────────────────────────────
+var cols     = [];   // rain column state
+var slots    = [];   // page name anchor positions
+var numCols  = 0;
+
+function buildCols() {
+  numCols = Math.floor(W / CHAR_W);
+  cols    = [];
+  for (var i = 0; i < numCols; i++) {
+    cols.push({
+      y:     -Math.floor(Math.random() * (H / CHAR_H)),  // head row
+      speed: 0.3 + Math.random() * 0.5,
+      frac:  0,
+      chars: []   // per-row { ch, age }
+    });
+  }
+  placePagesInCols();
+}
+
+// ── PAGE SLOTS ────────────────────────────────────────────────────────
+// Each page occupies a column range; the label chars glow and are clickable
+function placePagesInCols() {
+  slots = [];
+
+  var rows  = Math.floor(H / CHAR_H);
+  var avail = numCols;
+
+  // Spread pages evenly across columns with some random jitter
+  for (var i = 0; i < pages.length; i++) {
+    var base_col = Math.floor((i / pages.length) * avail * 0.85) + Math.floor(Math.random() * 4);
+    base_col     = Math.min(base_col, numCols - pages[i].label.length - 2);
+    base_col     = Math.max(1, base_col);
+
+    var row      = 3 + Math.floor(Math.random() * (rows - 8));
+
+    slots.push({
+      page:    pages[i],
+      col:     base_col,
+      row:     row,
+      len:     pages[i].label.length,
+      // bounding box in canvas pixels (set after layout)
+      x1: 0, y1: 0, x2: 0, y2: 0,
+      phase: Math.random() * Math.PI * 2   // for flicker
+    });
+  }
+
+  // Compute pixel bounding boxes
+  slots.forEach(function(s) {
+    s.x1 = s.col * CHAR_W;
+    s.y1 = s.row * CHAR_H - 2;
+    s.x2 = s.x1 + s.len * CHAR_W;
+    s.y2 = s.y1 + CHAR_H + 4;
+  });
+}
+
+// ── FRAME ─────────────────────────────────────────────────────────────
+var ticker = 0;
+
+function isSlotCell(ci, ri) {
+  for (var s = 0; s < slots.length; s++) {
+    var sl = slots[s];
+    if (ri === sl.row && ci >= sl.col && ci < sl.col + sl.len) return s;
+  }
+  return -1;
+}
+
+function frame() {
+  ticker++;
+
+  // Dim previous frame (creates fade trail)
+  ctx.fillStyle = 'rgba(0,0,8,0.18)';
+  ctx.fillRect(0, 0, W, H);
+
+  var rows = Math.ceil(H / CHAR_H) + 2;
+
+  // ── Rain columns ──
+  for (var ci = 0; ci < numCols; ci++) {
+    var col = cols[ci];
+    col.frac += col.speed;
+    if (col.frac >= 1) {
+      col.frac -= 1;
+      col.y    += 1;
+      if (col.y > rows + 2) {
+        col.y     = -Math.floor(Math.random() * 10) - 2;
+        col.speed = 0.3 + Math.random() * 0.5;
+      }
+    }
+
+    // Draw characters in this column's trail
+    var trailLen = 8 + Math.floor(Math.random() * 4);
+    for (var ri = col.y; ri > col.y - trailLen; ri--) {
+      if (ri < 0 || ri >= rows) continue;
+
+      var slotIdx = isSlotCell(ci, ri);
+      if (slotIdx >= 0) continue;  // page slots drawn separately
+
+      var dist    = col.y - ri;
+      var isHead  = (dist === 0);
+      var alpha   = isHead ? 1.0 : Math.max(0, 1 - dist / trailLen);
+
+      var ch = rndGlyph();
+      var x  = ci * CHAR_W;
+      var y  = ri * CHAR_H;
+
+      ctx.font      = '14px "Courier New", monospace';
+      ctx.textAlign = 'left';
+
+      if (isHead) {
+        ctx.fillStyle   = 'rgba(220,200,255,' + alpha.toFixed(2) + ')';
+        ctx.shadowColor = '#cc88ff';
+        ctx.shadowBlur  = 8;
+      } else {
+        // purple rain palette
+        var g = Math.floor(alpha * 140);
+        ctx.fillStyle   = 'rgba(80,' + g + ',180,' + (alpha * 0.75).toFixed(2) + ')';
+        ctx.shadowBlur  = 0;
+      }
+      ctx.fillText(ch, x, y + CHAR_H - 4);
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  // ── Page name slots ──
+  var t = Date.now() / 1000;
+  slots.forEach(function(sl, si) {
+    var hot     = (si === hovered);
+    var flicker = 0.82 + 0.18 * Math.sin(t * 3.1 + sl.phase);
+
+    for (var k = 0; k < sl.len; k++) {
+      var ci = sl.col + k;
+      var x  = ci * CHAR_W;
+      var y  = sl.row * CHAR_H;
+
+      // Background cell highlight when hovered
+      if (hot) {
+        ctx.fillStyle = 'rgba(100,30,200,0.35)';
+        ctx.fillRect(x, y - 2, CHAR_W, CHAR_H + 2);
+      }
+
+      // Occasional random char "glitch" before resolving to correct char
+      var resolved = (ticker % 60 > 12) || hot;
+      var ch       = resolved ? sl.page.label[k] : rndGlyph();
+
+      ctx.font      = 'bold 14px "Courier New", monospace';
+      ctx.textAlign = 'left';
+
+      if (hot) {
+        ctx.fillStyle   = 'rgba(255,255,80,' + flicker.toFixed(2) + ')';
+        ctx.shadowColor = '#ffdd00';
+        ctx.shadowBlur  = 14;
+      } else {
+        ctx.fillStyle   = 'rgba(200,255,180,' + (flicker * 0.9).toFixed(2) + ')';
+        ctx.shadowColor = '#88ffaa';
+        ctx.shadowBlur  = 6;
+      }
+      ctx.fillText(ch, x, y + CHAR_H - 4);
+      ctx.shadowBlur = 0;
+    }
+
+    // Cursor bar before slot
+    if (hot || (ticker % 90 < 45 && Math.abs(ticker % 270 - si * 30) < 45)) {
+      var cx2  = (sl.col - 1) * CHAR_W;
+      var cy2  = sl.row * CHAR_H;
+      ctx.font      = 'bold 14px "Courier New"';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = hot ? 'rgba(255,255,0,0.9)' : 'rgba(180,255,150,0.6)';
+      ctx.shadowColor = '#88ff88';
+      ctx.shadowBlur  = hot ? 10 : 4;
+      ctx.fillText('>', cx2, cy2 + CHAR_H - 4);
+      ctx.shadowBlur = 0;
+    }
+  });
+
+  requestAnimationFrame(frame);
+}
+
+// ── RESIZE ────────────────────────────────────────────────────────────
+function resize() {
+  var wrap = document.getElementById('wrap');
+  W = canvas.width  = wrap.offsetWidth;
+  H = canvas.height = wrap.offsetHeight;
+  buildCols();
+}
+
+// ── INPUT ─────────────────────────────────────────────────────────────
+var tt     = document.getElementById('tooltip');
+var ttName = document.getElementById('tt-name');
+
+function hitSlot(mx, my) {
+  for (var i = 0; i < slots.length; i++) {
+    var s = slots[i];
+    if (mx >= s.x1 - 4 && mx <= s.x2 + 4 && my >= s.y1 - 4 && my <= s.y2 + 4) return i;
+  }
+  return -1;
+}
+
+canvas.addEventListener('mousemove', function(e) {
+  var r   = canvas.getBoundingClientRect();
+  var mx  = e.clientX - r.left, my = e.clientY - r.top;
+  var idx = hitSlot(mx, my);
+  hovered = idx;
+  canvas.style.cursor = idx >= 0 ? 'pointer' : 'default';
+  if (idx >= 0) {
+    ttName.textContent = slots[idx].page.label;
+    tt.style.display   = 'block';
+    var tx = e.clientX + 18, ty = e.clientY + 14;
+    if (tx + 210 > window.innerWidth) tx = e.clientX - 220;
+    tt.style.left = tx + 'px';
+    tt.style.top  = ty + 'px';
+  } else {
+    tt.style.display = 'none';
+  }
+});
+
+canvas.addEventListener('mouseleave', function() {
+  hovered = -1;
+  tt.style.display = 'none';
+});
+
+canvas.addEventListener('click', function(e) {
+  var r   = canvas.getBoundingClientRect();
+  var idx = hitSlot(e.clientX - r.left, e.clientY - r.top);
+  if (idx >= 0) {
+    tt.style.display = 'none';
+    window.location.href = slots[idx].page.id;
+  }
+});
+
+window.addEventListener('load',   function() { resize(); requestAnimationFrame(frame); });
+window.addEventListener('resize', resize);
+
+</script>
+<script src="./transition.js"></script>
+</body>
+</html>

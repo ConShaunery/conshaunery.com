@@ -5,14 +5,43 @@
         <link href="styles/common.css" rel="stylesheet" type="text/css" media="all">
         <style>
             body {
-                /* Cool dark blue! #000020 */
-                background-color: #000014;
-                /* background-image: linear-gradient(#1a2964, #00051e); */
-                background-image: linear-gradient(#210971, #020010);
+                background-color: #000;
                 color: yellow;
                 text-align: center;
-                /* box-shadow: inset 0px 0px 50px 0px #000014; */
             }
+
+            /* ── Power button screen ── */
+            #boot-screen {
+                position: fixed; inset: 0;
+                background: #000;
+                display: flex; flex-direction: column;
+                align-items: center; justify-content: center;
+                z-index: 100; cursor: pointer;
+            }
+            .power-symbol {
+                font-size: 72px; line-height: 1;
+                color: #7700cc;
+                text-shadow: 0 0 20px #9933ff, 0 0 50px rgba(153,51,255,0.4);
+                animation: power-pulse 2.2s ease-in-out infinite;
+                user-select: none;
+            }
+            @keyframes power-pulse {
+                0%,100% { opacity: 0.55; transform: scale(1);    text-shadow: 0 0 20px #9933ff, 0 0 50px rgba(153,51,255,0.3); }
+                50%      { opacity: 1;    transform: scale(1.06); text-shadow: 0 0 30px #cc66ff, 0 0 70px rgba(153,51,255,0.6); }
+            }
+            .power-label {
+                margin-top: 16px; font-size: 10px; letter-spacing: 4px;
+                color: rgba(180,120,255,0.45);
+                font-family: "Courier New", monospace;
+                user-select: none;
+            }
+
+            /* ── Nav (hidden until button clicked) ── */
+            #nav-list {
+                opacity: 0;
+                transition: opacity 1.4s ease;
+            }
+            #nav-list.revealed { opacity: 1; }
 
             #bubbles {
                 background-image: url("./gifs/faces.gif");
@@ -24,6 +53,7 @@
                 float: left;
                 z-index: -10;
                 opacity: 0.9;
+                display: none;
             }
 
             a {
@@ -131,10 +161,16 @@
     </head>
     <body>
         <div id="bubbles"></div>
-        <!-- <p id="guide">
-            <a href="frames/guide.html"><img class="twist" src="images/animated-info-sign-image-0012.gif" /></a>
-        </p> -->
-        <ul>
+
+        <!-- Power button — visible on load -->
+        <div id="boot-screen">
+          <div class="power-symbol">⏻</div>
+          <div class="power-label">[ ENTER SYSTEM ]</div>
+        </div>
+
+        <audio id="click-sfx" src="./sounds/start.mp3" preload="auto"></audio>
+
+        <ul id="nav-list">
             <li>
                  <a href="about.html" target="main"><img class="twist" src="./gifs/wizard.gif" alt="about">about</a>
             </li>
@@ -145,6 +181,10 @@
            
             <li>
                  <a href="home.html" target="main"><img class="twist" src="./gifs/earth.gif" alt="Home">Home</a>
+            </li>
+
+             <li>
+                 <a href="rant.html" target="main"><img class="twist" src="./gifs/3D_dolphin.gif" alt="Rant">Rant</a>
             </li>
 
             <li>
@@ -185,71 +225,32 @@
         <br>
 
         <script>
-            let nav = {};
+            var bootScreen = document.getElementById('boot-screen');
+            var navList    = document.getElementById('nav-list');
+            var clickSfx   = document.getElementById('click-sfx');
 
-            window.addEventListener("DOMContentLoaded", async () => {
-                nav.audio = {};
-                nav.audio.elevator = new Audio("/audio/elevator.mp3");
-                nav.audio.click = new Audio("/audio/ui/click.mp3");
-                nav.audio.interact = new Audio("/audio/ui/drip.mp3");
-                nav.audio.interact.volume = 0.3;
+            bootScreen.addEventListener('click', function() {
+                // Play click sound
+                try { clickSfx.currentTime = 0; clickSfx.play().catch(function(){}); } catch(e) {}
 
-                nav.audio.context = new AudioContext();
-                nav.audio.track = {};
-                nav.audio.track.elevator = nav.audio.context.createMediaElementSource(nav.audio.elevator);
-                nav.audio.track.elevator.connect(nav.audio.context.destination);
-                nav.audio.track.click = nav.audio.context.createMediaElementSource(nav.audio.click);
-                nav.audio.track.click.connect(nav.audio.context.destination);
-                nav.audio.track.interact = nav.audio.context.createMediaElementSource(nav.audio.interact);
-                nav.audio.track.interact.connect(nav.audio.context.destination);
+                // Hide power button
+                bootScreen.style.transition = 'opacity 0.4s';
+                bootScreen.style.opacity    = '0';
+                setTimeout(function() { bootScreen.style.display = 'none'; }, 420);
 
-                nav.hits = document.getElementById("hits-box");
-                nav.links = document.getElementsByTagName("a");
+                // Reveal nav links + restore background
+                setTimeout(function() {
+                    document.body.style.backgroundColor = '#000014';
+                    document.body.style.backgroundImage = 'linear-gradient(#210971, #020010)';
+                    document.getElementById('bubbles').style.display = 'block';
+                    navList.classList.add('revealed');
+                }, 100);
 
-                // Elevator Links
-                for (var i = 0, len = nav.links.length; i < len; i++) {
-                    if(nav.links[i].target != "_blank") {
-                        let url = nav.links[i].href;
-                        nav.links[i].removeAttribute("href");
-                        nav.links[i].onclick = async function () {
-                            nav.audio.elevator.currentTime = 0;
-                            nav.audio.elevator.play();
-                            nav.audio.click.play();
-                            window.open("./loading.html", "main");
-                            await sleep(2050);
-                            window.open(url, "main");
-                        };
-                    }
-                }
-
-                // Hit Counter
-                fetch("https://brain.melonking.net/melon-hits")
-                    .then(function (response) {
-                        return response.text();
-                    })
-                    .then(function (responseText) {
-                        if (responseText != "error") {
-                            nav.hits.innerHTML = '<strong><a target="main" href="https://brain.melonking.net/melon-hits?info=1">' + responseText + " HITS</a></strong>";
-                        }
-                    });
-
-                // Interact Sounds
-                document.addEventListener("mouseover", (e) => {
-                    if (e.target.tagName == "BUTTON" || e.target.tagName == "A") {
-                        nav.audio.interact.play();
-                    }
-                });
-
-                document.addEventListener("click", (e) => {
-                    if (e.target.tagName == "BUTTON" || e.target.tagName == "A") {
-                        nav.audio.click.play();
-                    }
-                });
+                // Signal home.html (main frame) to start boot sequence
+                try {
+                    window.parent.frames['main'].postMessage('startBoot', '*');
+                } catch(e) {}
             });
-
-            function sleep(ms) {
-                return new Promise((resolve) => setTimeout(resolve, ms));
-            }
         </script>
     
 </body></html>

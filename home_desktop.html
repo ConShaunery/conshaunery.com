@@ -1,0 +1,323 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>home — conshaunery.com</title>
+<style type="text/css">
+
+  * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: #000008;
+    overflow: hidden;
+    font-family: "Tahoma", "Arial", sans-serif;
+    color: #ffffff;
+  }
+
+  /* ── DESKTOP AREA ── */
+  .desktop {
+    width: 100%;
+    height: calc(100% - 30px);
+    position: relative;
+    overflow: hidden;
+    /* subtle scanline wallpaper */
+    background:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,20,0.08) 2px,
+        rgba(0,0,20,0.08) 4px
+      ),
+      radial-gradient(ellipse at 60% 40%, rgba(40,0,80,0.5) 0%, #000010 70%);
+  }
+
+  /* watermark */
+  .desktop::after {
+    content: 'conshaunery.com';
+    position: absolute;
+    bottom: 14px; right: 18px;
+    font-size: 10px;
+    color: rgba(120,80,180,0.22);
+    font-family: "Courier New", monospace;
+    letter-spacing: 2px;
+    pointer-events: none;
+  }
+
+  /* ── ICONS ── */
+  .icon {
+    position: absolute;
+    width: 76px;
+    text-align: center;
+    cursor: pointer;
+    padding: 3px;
+  }
+
+  .icon-inner {
+    padding: 3px 4px 4px;
+    border: 1px dotted transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .icon img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    display: block;
+  }
+
+  .icon span {
+    display: block;
+    font-size: 10px;
+    color: #ffffff;
+    text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    line-height: 1.3;
+    word-break: break-word;
+    font-family: "Tahoma", "Arial", sans-serif;
+    text-align: center;
+  }
+
+  .icon.selected .icon-inner {
+    background: rgba(0, 60, 160, 0.55);
+    border: 1px dotted #aabbff;
+  }
+
+  .icon:hover .icon-inner {
+    background: rgba(30, 80, 200, 0.35);
+  }
+
+  /* ── TASKBAR ── */
+  .taskbar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 30px;
+    background: linear-gradient(180deg, #3a1060, #1a0035);
+    border-top: 2px solid #7722cc;
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+    gap: 6px;
+    z-index: 200;
+    box-shadow: 0 -2px 12px rgba(100,0,200,0.4);
+  }
+
+  .start-btn {
+    height: 22px;
+    background: linear-gradient(180deg, #7700ee, #4400aa);
+    border-top:    1px solid #bb66ff;
+    border-left:   1px solid #bb66ff;
+    border-right:  1px solid #330077;
+    border-bottom: 1px solid #330077;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 0 10px 0 7px;
+    cursor: pointer;
+    font-family: "Comic Sans MS", Arial;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    letter-spacing: 0.5px;
+  }
+
+  .start-btn:active {
+    border-top:    1px solid #330077;
+    border-left:   1px solid #330077;
+    border-right:  1px solid #bb66ff;
+    border-bottom: 1px solid #bb66ff;
+    background: linear-gradient(180deg, #4400aa, #7700ee);
+  }
+
+  .start-logo {
+    width: 14px; height: 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+  }
+  .start-logo div {
+    background: #ffff00;
+    border-radius: 1px;
+  }
+  .start-logo div:nth-child(2) { background: #ff4400; }
+  .start-logo div:nth-child(3) { background: #44ff44; }
+  .start-logo div:nth-child(4) { background: #4488ff; }
+
+  .taskbar-divider {
+    width: 1px; height: 20px;
+    background: linear-gradient(180deg, transparent, #6633cc, transparent);
+  }
+
+  .taskbar-active {
+    height: 22px;
+    background: rgba(0,0,40,0.5);
+    border: 1px inset #5522aa;
+    color: #ccaaff;
+    font-size: 10px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    font-family: "Tahoma", Arial;
+    gap: 5px;
+    flex: 1;
+    max-width: 200px;
+  }
+
+  .taskbar-tray {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 6px;
+    height: 22px;
+    background: rgba(0,0,0,0.3);
+    border: 1px inset #5522aa;
+  }
+
+  .clock {
+    font-size: 11px;
+    color: #ccccff;
+    font-family: "Courier New", monospace;
+    min-width: 42px;
+    text-align: center;
+  }
+
+  .tray-icon {
+    width: 14px; height: 14px;
+    background: #6600cc;
+    border-radius: 50%;
+    animation: tray-pulse 3s ease-in-out infinite;
+  }
+  @keyframes tray-pulse {
+    0%,100% { background: #6600cc; box-shadow: 0 0 3px #9933ff; }
+    50%      { background: #9933ff; box-shadow: 0 0 8px #cc66ff; }
+  }
+
+  /* ── DOUBLE-CLICK HINT ── */
+  .hint {
+    position: absolute;
+    top: 10px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    color: rgba(150,100,200,0.45);
+    font-family: "Courier New", monospace;
+    letter-spacing: 1px;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+</style>
+</head>
+<body>
+
+<audio autoplay loop>
+  <source src="./sounds/illumination-siddhartha-corsus.mp3" type="audio/mpeg">
+</audio>
+
+<div class="desktop" id="desktop">
+  <div class="hint">double-click to open</div>
+</div>
+
+<div class="taskbar">
+  <div class="start-btn">
+    <div class="start-logo">
+      <div></div><div></div><div></div><div></div>
+    </div>
+    Start
+  </div>
+  <div class="taskbar-divider"></div>
+  <div class="taskbar-active" id="active-label">
+    <img src="./gifs/earth.gif" style="width:14px;height:14px;object-fit:contain;image-rendering:pixelated;">
+    conshaunery.com
+  </div>
+  <div class="taskbar-tray">
+    <div class="tray-icon"></div>
+    <div class="clock" id="clock">00:00</div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+var items = [
+  { id:"about.html",     name:"about.html",     gif:"./gifs/aboot_me!.gif"    },
+  { id:"pics.html",      name:"pics.html",       gif:"./gifs/Pics!.gif"        },
+  { id:"vids.html",      name:"vids.html",       gif:"./gifs/Vidz-.gif"        },
+  { id:"terminal.html",  name:"terminal.html",   gif:"./gifs/terminal.gif"     },
+  { id:"dreams.html",    name:"dreams.html",     gif:"./gifs/Dreamz_fancy.gif" },
+  { id:"streams.html",   name:"streams.html",    gif:"./gifs/stream_2.gif"     },
+  { id:"faq.html",       name:"faq.html",        gif:"./gifs/faq_fancy.gif"    },
+  { id:"downloads.html", name:"downloads.html",  gif:"./gifs/Downloads_1.gif"  },
+  { id:"leave.html",     name:"leave.html",      gif:"./gifs/ufo.gif"          }
+];
+
+// Grid layout — two columns along the left
+var COL_W    = 90;
+var ROW_H    = 90;
+var MARGIN_X = 14;
+var MARGIN_Y = 14;
+
+var desktop    = document.getElementById('desktop');
+var selected   = -1;
+var lastClick  = -1;
+var lastTime   = 0;
+var iconEls    = [];
+
+items.forEach(function(item, i) {
+  var col = Math.floor(i / 5);
+  var row = i % 5;
+
+  var el = document.createElement('div');
+  el.className = 'icon';
+  el.style.left = (MARGIN_X + col * COL_W) + 'px';
+  el.style.top  = (MARGIN_Y + row * ROW_H) + 'px';
+
+  el.innerHTML =
+    '<div class="icon-inner">' +
+      '<img src="' + item.gif + '" alt="' + item.name + '">' +
+      '<span>' + item.name + '</span>' +
+    '</div>';
+
+  el.addEventListener('click', function(e) {
+    // Deselect all
+    iconEls.forEach(function(ic) { ic.classList.remove('selected'); });
+    el.classList.add('selected');
+    selected = i;
+
+    // Double-click detection
+    var now = Date.now();
+    if (lastClick === i && now - lastTime < 500) {
+      window.location.href = item.id;
+    }
+    lastClick = i;
+    lastTime  = now;
+    e.stopPropagation();
+  });
+
+  desktop.appendChild(el);
+  iconEls.push(el);
+});
+
+// Deselect on desktop click
+desktop.addEventListener('click', function() {
+  iconEls.forEach(function(ic) { ic.classList.remove('selected'); });
+  selected = -1; lastClick = -1;
+});
+
+// Clock
+function tick() {
+  var d = new Date();
+  var h = d.getHours().toString().padStart(2, '0');
+  var m = d.getMinutes().toString().padStart(2, '0');
+  document.getElementById('clock').textContent = h + ':' + m;
+}
+tick();
+setInterval(tick, 1000);
+
+</script>
+<script src="./transition.js"></script>
+</body>
+</html>

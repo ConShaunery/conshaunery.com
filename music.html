@@ -491,5 +491,6 @@ document.addEventListener('click', function(){
 </script>
 
 <script src="./transition.js"></script>
+<script>(function(){if(location.search.indexOf("nomedia")<0)return;function muteAll(){document.querySelectorAll("audio,video").forEach(function(e){e.muted=true;e.volume=0;if(!e.paused)e.pause();});}muteAll();window.addEventListener("message",function(e){if(e.data==="desk:mute"){muteAll();}if(e.data==="desk:unmute"){document.querySelectorAll("audio,video").forEach(function(e){e.muted=false;e.volume=1;});document.querySelectorAll("audio").forEach(function(e){e.play&&e.play().catch(function(){});});}});}());</script>
 </body>
 </html>
