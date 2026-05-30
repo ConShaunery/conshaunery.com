@@ -5,43 +5,11 @@
         <link href="styles/common.css" rel="stylesheet" type="text/css" media="all">
         <style>
             body {
-                background-color: #000;
+                background-color: #000014;
+                background-image: linear-gradient(#210971, #020010);
                 color: yellow;
                 text-align: center;
             }
-
-            /* ── Power button screen ── */
-            #boot-screen {
-                position: fixed; inset: 0;
-                background: #000;
-                display: flex; flex-direction: column;
-                align-items: center; justify-content: center;
-                z-index: 100; cursor: pointer;
-            }
-            .power-symbol {
-                font-size: 72px; line-height: 1;
-                color: #7700cc;
-                text-shadow: 0 0 20px #9933ff, 0 0 50px rgba(153,51,255,0.4);
-                animation: power-pulse 2.2s ease-in-out infinite;
-                user-select: none;
-            }
-            @keyframes power-pulse {
-                0%,100% { opacity: 0.55; transform: scale(1);    text-shadow: 0 0 20px #9933ff, 0 0 50px rgba(153,51,255,0.3); }
-                50%      { opacity: 1;    transform: scale(1.06); text-shadow: 0 0 30px #cc66ff, 0 0 70px rgba(153,51,255,0.6); }
-            }
-            .power-label {
-                margin-top: 16px; font-size: 10px; letter-spacing: 4px;
-                color: rgba(180,120,255,0.45);
-                font-family: "Courier New", monospace;
-                user-select: none;
-            }
-
-            /* ── Nav (hidden until button clicked) ── */
-            #nav-list {
-                opacity: 0;
-                transition: opacity 1.4s ease;
-            }
-            #nav-list.revealed { opacity: 1; }
 
             #bubbles {
                 background-image: url("./gifs/faces.gif");
@@ -53,7 +21,6 @@
                 float: left;
                 z-index: -10;
                 opacity: 0.9;
-                display: none;
             }
 
             a {
@@ -114,17 +81,9 @@
                 max-width: 88px;
             }
 
-            .wider img {
-                width: 60px;
-            }
-
-            .thinner img {
-                width: 40px;
-            }
-
-            .even-thinner img {
-                width: 35px;
-            }
+            .wider img { width: 60px; }
+            .thinner img { width: 40px; }
+            .even-thinner img { width: 35px; }
 
             .nav-block {
                 background-color: yellow;
@@ -134,13 +93,8 @@
                 margin-bottom: 35px;
             }
 
-            #mood {
-                font-size: 12px;
-            }
-
-            #mood img {
-                height: 17px;
-            }
+            #mood { font-size: 12px; }
+            #mood img { height: 17px; }
 
             #hitcounter,
             #hitcounter a {
@@ -154,103 +108,28 @@
                 padding: 0px;
                 color: #d7f3ff;
             }
-            #guide a {
-                color: #d7f3ff;
-            }
+            #guide a { color: #d7f3ff; }
         </style>
     </head>
     <body>
         <div id="bubbles"></div>
 
-        <!-- Power button — visible on load -->
-        <div id="boot-screen">
-          <div class="power-symbol">⏻</div>
-          <div class="power-label">[ ENTER SYSTEM ]</div>
-        </div>
-
-        <audio id="click-sfx" src="./sounds/start.mp3" preload="auto"></audio>
-
-        <ul id="nav-list">
-            <li>
-                 <a href="about.html" target="main"><img class="twist" src="./gifs/wizard.gif" alt="about">about</a>
-            </li>
-
-           <li>
-                 <a href="terminal.html" target="main"><img class="twist" src="./gifs/terminal.gif" alt="terminal">Terminal</a>
-            </li>
-           
-            <li>
-                 <a href="home.html" target="main"><img class="twist" src="./gifs/earth.gif" alt="Home">Home</a>
-            </li>
-
-             <li>
-                 <a href="rant.html" target="main"><img class="twist" src="./gifs/3D_dolphin.gif" alt="Rant">Rant</a>
-            </li>
-
-            <li>
-                 <a href="dreams.html" target="main"><img class="twist" src="./gifs/sleep.gif" alt="Dreams">Dreams</a>
-            </li>
-            <li>
-                 <a href="pics.html" target="main"><img class="twist" src="./gifs/fish.gif" alt="Pics">Pics</a>
-            </li>
-            <li>
-                 <a href="vids.html" target="main"><img class="twist" src="./gifs/film_2.gif" alt="Vids">Vids</a>
-            </li>
-            <li>
-                 <a href="music.html" target="main"><img class="twist" src="./gifs/guitar.gif" alt="Music">Music</a>
-            </li>
-            <li>
-                 <a href="games.html" target="main"><img class="twist" src="./gifs/yellow_guy.gif" alt="Games">Games</a>
-            </li>
-            <li>
-                 <a href="downloads.html" target="main"><img class="twist" src="./gifs/purple_floppy.gif" alt="Downloads">Downloads</a>
-            </li>
-            <li>
-                 <a href="stream.html" target="main"><img class="twist" src="./gifs/stream_2.gif" alt="stream">streams</a>
-            </li>
-            <li>
-                 <a href="faq.html" target="main"><img class="twist" src="./gifs/questions.gif" alt="faq">faq</a>
-            </li>
-            <li>
-                 <a href="help.html" target="main"><img class="twist" src="./gifs/help.gif" alt="help">help</a>
-            </li>
-            <li>
-                 <a href="leave.html" target="main"><img class="twist" src="./gifs/ufo.gif" alt="leave">leave</a>
-            </li>
-            <li>
-                 <a href="guestbook.html" target="main"><img class="twist" src="./gifs/book.gif" alt="GUEST BOOK">GUEST BOOOK</a>
-            </li>
+        <ul>
+            <li><a href="about.html" target="main"><img class="twist" src="./gifs/wizard.gif" alt="about">about</a></li>
+            <li><a href="terminal.html" target="main"><img class="twist" src="./gifs/terminal.gif" alt="terminal">Terminal</a></li>
+            <li><a href="home.html" target="main"><img class="twist" src="./gifs/earth.gif" alt="Home">Home</a></li>
+            <li><a href="rant.html" target="main"><img class="twist" src="./gifs/3D_dolphin.gif" alt="Rant">Rant</a></li>
+            <li><a href="dreams.html" target="main"><img class="twist" src="./gifs/sleep.gif" alt="Dreams">Dreams</a></li>
+            <li><a href="pics.html" target="main"><img class="twist" src="./gifs/fish.gif" alt="Pics">Pics</a></li>
+            <li><a href="vids.html" target="main"><img class="twist" src="./gifs/film_2.gif" alt="Vids">Vids</a></li>
+            <li><a href="music.html" target="main"><img class="twist" src="./gifs/guitar.gif" alt="Music">Music</a></li>
+            <li><a href="games.html" target="main"><img class="twist" src="./gifs/yellow_guy.gif" alt="Games">Games</a></li>
+            <li><a href="downloads.html" target="main"><img class="twist" src="./gifs/purple_floppy.gif" alt="Downloads">Downloads</a></li>
+            <li><a href="stream.html" target="main"><img class="twist" src="./gifs/stream_2.gif" alt="stream">streams</a></li>
+            <li><a href="faq.html" target="main"><img class="twist" src="./gifs/questions.gif" alt="faq">faq</a></li>
+            <li><a href="help.html" target="main"><img class="twist" src="./gifs/help.gif" alt="help">help</a></li>
+            <li><a href="leave.html" target="main"><img class="twist" src="./gifs/ufo.gif" alt="leave">leave</a></li>
+            <li><a href="guestbook.html" target="main"><img class="twist" src="./gifs/book.gif" alt="GUEST BOOK">GUEST BOOOK</a></li>
         </ul>
 
-        <br>
-
-        <script>
-            var bootScreen = document.getElementById('boot-screen');
-            var navList    = document.getElementById('nav-list');
-            var clickSfx   = document.getElementById('click-sfx');
-
-            bootScreen.addEventListener('click', function() {
-                // Play click sound
-                try { clickSfx.currentTime = 0; clickSfx.play().catch(function(){}); } catch(e) {}
-
-                // Hide power button
-                bootScreen.style.transition = 'opacity 0.4s';
-                bootScreen.style.opacity    = '0';
-                setTimeout(function() { bootScreen.style.display = 'none'; }, 420);
-
-                // Reveal nav links + restore background
-                setTimeout(function() {
-                    document.body.style.backgroundColor = '#000014';
-                    document.body.style.backgroundImage = 'linear-gradient(#210971, #020010)';
-                    document.getElementById('bubbles').style.display = 'block';
-                    navList.classList.add('revealed');
-                }, 100);
-
-                // Signal home.html (main frame) to start boot sequence
-                try {
-                    window.parent.frames['main'].postMessage('startBoot', '*');
-                } catch(e) {}
-            });
-        </script>
-    
 </body></html>
