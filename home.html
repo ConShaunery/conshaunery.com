@@ -8,7 +8,7 @@
       html, body { height: 100%; }
 
       body {
-        background: #000 url("./gifs/stars_sparkly.gif") repeat;
+        background: #000 url("./backgrounds/stars_sparkly.gif") repeat;
         background-size: 10%;
         color: #fff;
         font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
@@ -121,7 +121,7 @@
           
             <br>
             <marquee scrollamount="69" width="50%" bgcolor="#000000">
-              <font color="#FF0000">+++ UPDATES: Added new MIDI music! +++ Sign the Guestbook! +++ Under Construction +++ 90s +++ 2000s +++ idk +++ </font>
+              <font color="#FF0000">+++ UPDATES: Added new MIDI music! +++ Sign the Guestbook! +++ Under Construction +++ Crinkly Feets? +++ Boobies! +++ </font>
             </marquee>
           </td>
         </tr>
@@ -158,7 +158,7 @@
               <table border="4" bordercolor="#FFFF00" cellpadding="5">
                 <tr>
                   <td align="center">
-                    <img src="./gifs/under_construct.gif" alt="logo" width="200" height="200" align="center">
+                    <img src="./gifs/under_construct.gif" alt="logo" width="100" height="80" align="center">
                   </td>
                 </tr>
               </table>
@@ -190,5 +190,15 @@
         <a href="mailto:webmaster@example.com">Email the Webmaster</a>  
       </font>
     </footer>
+
+<script>
+  var openSound  = new Audio('./sounds/piemenu.mp3');
+  var closeSound = new Audio('./sounds/piemenu-interact.mp3');
+
+  var trigger = document.getElementById('aboutTrigger');
+  trigger.addEventListener('mouseenter', function(){ openSound.currentTime = 0;  openSound.play();  });
+  trigger.addEventListener('mouseleave', function(){ closeSound.currentTime = 0; closeSound.play(); });
+</script>
+
   </body>
 </html>
