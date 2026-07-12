@@ -1,219 +1,194 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>home — conshaunery.com</title>
-<style type="text/css">
+  <head>
+    <title>conshaunery.com</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
 
- body {
-      background: #000 url("./pictures/home_background.png") repeat;
-      background-size: 90%;
-      color: #fff;
-      font-family: Helvetica, Arial, sans-serif;
-      margin:0; padding:40px 20px;
-      text-align:center;
-  }
+      html, body { height: 100%; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        background: #000 url("./backgrounds/stars_sparkly.gif") repeat;
+        background-size: 10%;
+        color: #fff;
+        font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
+        margin: 0;
+        padding: 40px 20px;
+        text-align: center;
 
-  html, body {
-    width: 100%; height: 100%;
-    font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
-    color: #ffffff;
-  }
+        /* THE KEY PART: make the body a full-height column */
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
 
-  .page { display: flex; flex-direction: column; width: 100%; }
+      /* This grows to fill leftover space, pushing the footer down */
+      .container {
+        flex: 1;
+      }
 
-  .top-banner {
-    height: 100px;.page { display: flex; flex-direction: column; width: 100%; height: 100%; }
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden; flex-shrink: 0; position: relative;
-  }
-  .top-banner img { max-height: 300px; width: auto; display: block; }
-  .top-banner::after {
-    content: '';
-    position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(180,100,255,0.06), transparent);
-    animation: sweep 3s linear infinite;
-    pointer-events: none;
-  }
-  @keyframes sweep { to { left: 140%; } }
+      .centered { text-align: center; }
 
-  .wrap { flex: 1; position: relative; overflow: hidden; min-height: 0; }
-
-  #c { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: default; }
-
-  #tooltip {
-    position: fixed; display: none;
-    background: #000022; border: 1px solid #6633cc;
-    padding: 7px 12px; font-size: 11px; color: #ccccff;
-    pointer-events: none; z-index: 100;
-    font-family: "Courier New", monospace;
-    box-shadow: 0 0 14px rgba(100,50,200,0.6);
-    max-width: 200px; line-height: 1.7;
-  }
-  #tooltip .tt-name { color: #ffff00; font-size: 12px; font-weight: bold; }
-  #tooltip .tt-hint { color: #00ffcc; font-size: 9px; margin-top: 3px; }
-
-  .centered {
-  text-align: center;
+      #aboutTrigger {
+  position: fixed;
+  top: 150px;
+  right: 20px;
+  z-index: 1000;
 }
 
- .about-me {
-      position: fixed;        /* Stays in place when scrolling */
-      top: 150px;
-      right: 20px;
-      width: 250px;
-      padding: 15px;
-      background-color: #070745;
-      border: 1px solid #3cff00;
-      border-radius: 1x;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      font-family: Arial, sans-serif;
-      z-index: 1000;          /* Ensures it stays above other content */
-    }
-    .about-me h2 {
-      margin-top: 0;
-      color: #ffffff;
-    }
+.about-me {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 
-  .left-meme {
-      position: fixed;        /* Stays in place when scrolling */
-      top: 250px;
-      left: 20px;             /* CHANGED: 'right' to 'left' and set a reasonable margin */
-      width: 250px;
-      padding: 15px;
-      background-color: #070745;
-      border: 1px solid #3cff00;
-      border-radius: 1px;    /* FIXED: '1x' is invalid, changed to '10px' */
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      font-family: Arial, sans-serif;
-      z-index: 1000;          /* Ensures it stays above other content */
-    }   
-</style>
-</head>
-<body>
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 250px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 15px;
+  background-color: #241445;
+  border: 1px solid #ED64F5;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
 
-<audio autoplay loop>
-  <source src="./sounds/home_theme_low.mp3" type="audio/mpeg">
-</audio>
+#aboutTrigger:hover .about-me {
+  visibility: visible;
+  opacity: 1;
+}
 
-<div class="page">
-  <div class="top-banner">
-    <img src="./gifs/ConShaunery.com_fancy.gif" alt="conshaunery.com">
-  </div>
+      .left-meme {
+        position: fixed;        /* Stays in place when scrolling */
+        top: 250px;
+        left: 20px;
+        width: 250px;
+        padding: 15px;
+        background-color: #070745;
+        border: 1px solid #a600ff;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        font-family: Arial, sans-serif;
+        z-index: 1000;
+      }
+
+      footer {
+        width: 100%;
+        padding: 10px;
+        text-align: center;
+      }
+
+      ul {
+        list-style: none;
+        padding-left: 0;
+        margin-left: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+    <img src="./pictures/conshauneryDotcompng.png" style="width: 1000px; height: auto;">
+
+    <audio autoplay>
+      <source src="./sounds/startup.mp3" type="audio/mpeg">
+    </audio>
+    </header>
+
+
+  
+ <div id="aboutTrigger">
+  <img src="./gifs/finger.gif" alt="over here!" class="about-icon">
 
   <div class="about-me">
     <img src="./gifs/about_me_wiz.gif" style="width: 100%; height: auto;">
     <h2>About Me</h2>
-    <p>hey, its your boy the dark-webmaster, ConShaun. U can say im Superduper Passionate about creating beautifuler and functionally interWeb links and pages!
-       And nostalgic memomries to fight those evil depression!</p>
+    <p>hey, its your boy the dark-webmaster, ConShaun. U can say im Superduper Passionate about creating beautifuler and functionally interWeb links and pages! And nostalgic memomries to fight those evil depression!</p>
   </div>
-
-    <div class="left-meme">
-    <img src="https://blob.gifcities.org/gifcities/XJQU3OIPCTDTXQW4VP7XDT74NVF5JZU2.gif" style="width: 50px; height: 20px;">
-    <h2>Take a look at these kool pages!</h2>
-  </div>
-
-
 </div>
 
+    <div class="left-meme">
+      <img src="https://blob.gifcities.org/gifcities/XJQU3OIPCTDTXQW4VP7XDT74NVF5JZU2.gif" style="width: 50px; height: 20px;">
+      <h2>Take a look at these kool pages!</h2>
+    </div>
 
-<!-- MAIN TABLE // BRAVE AI PASTE -->
+    <!-- MAIN TABLE // BRAVE AI PASTE -->
+    <center class="container">
+      <!-- Main Table Layout -->
+      <table width="800" border="1" bordercolor="#a600ff" cellpadding="10" cellspacing="0">
+        <tr>
+          
+            <br>
+            <marquee scrollamount="69" width="50%" bgcolor="#000000">
+              <font color="#FF0000">+++ UPDATES: Added new MIDI music! +++ Sign the Guestbook! +++ Under Construction +++ Crinkly Feets? +++ Boobies! +++ </font>
+            </marquee>
+          </td>
+        </tr>
 
-<center>
-  <!-- Main Table Layout -->
-  <table width="800" border="1" bordercolor="#00FF00" cellpadding="10" cellspacing="0" class="container">
-    <tr>
-      <td colspan="2" align="center" bgcolor="#000066">
-        <font size="7" color="#FFFF00" face="Times New Roman">
-          <b>Welcome to ConShaunerydotCom!!</b>
-        </font>
-        <br>
-        <marquee scrollamount="69" width="50%" bgcolor="#000000">
-          <font color="#FF0000">+++ UPDATES: Added new MIDI music! +++ Sign the Guestbook! +++ Under Construction +++ Crinkly Feets? +++ Boobies! +++ </font>
-        </marquee>
-      </td>
-    </tr>
-    
-    <tr>
-      <!-- Sidebar Navigation -->
-      <td width="200" valign="top" bgcolor="#000033">
-        <center>
-          <font size="4" color="#FFFFFF"><b>:: MENU ::</b></font><br><br>
-          <!-- <a href="#">[ Home ]</a><br><br>
-          <a href="#">[ About Me ]</a><br><br>
-          <a href="#">[ My Links ]</a><br><br>
-          <a href="#">[ WebRing ]</a><br><br>
-          <a href="#">[ Email Me ]</a><br><br> -->
-          <br>
-          <font size="2">You are visitor number:</font><br>
-          <font size="5" color="red" face="Courier New"><b>01337</b></font>
-          <br><br>
-          <img src="https://web.archive.org/web/20090829035224im_/http://geocities.com/SunsetStrip/Club/6688/ie_logo.gif" alt="IE Logo" width="88" height="31">
-          <br>
-          <img src="https://web.archive.org/web/20091027083020im_/http://geocities.com/Area51/Cavern/9150/ns_logo.gif" alt="Netscape Logo" width="88" height="31">
-        </center>
-      </td>
-
-      <!-- Main Content -->
-      <td valign="top" bgcolor="#000000">
-        <center>
-          <font size="5" color="#00FFFF"><b>Hello World!</b></font>
-        </center>
-        <p>
-          <font face="Trebuchet MS" size="3">
-            Welcome to my corner of the <span class="blink"> CYBER WIDE WEB</span>! 
-            Please make yourself at home. OH! And, Don't forget to sign my <a href="guestbook.html">guestbook</a> please and thank you very much.
-          </font>
-        </p>
         
-        <center>
-          *** *** ***
-        </center>
 
-        <div align="center">
-          <font color="#FF00FF"><b>My Interests</b></font><br>
-          <ul>
-            <li>Alternative societies (this one is lowkey exhausting)</li>
-            <li>HTML Coding</li>
-            <li>Playing PEAK, ARMA, or endlessly staring at my Steam collection, overwhelmed.</li>
-            <li>Collecting Memes</li>
-          </ul>
-        </div>
+          <!-- Main Content -->
+          <td valign="top" bgcolor="#000000">
+            <center>
+              <font size="5" color="#00FFFF"><b>Hello World!</b></font>
+            </center>
+            <p>
+              <font face="Trebuchet MS" size="3">
+                Welcome to my corner of the <span class="blink"> CYBER WIDE WEB</span>!
+                Please make yourself at home. OH! And, Don't forget to sign my <a href="guestbook.html">guestbook</a> please and thank you very much.
+              </font>
+            </p>
 
-        <center>
-          <table border="4" bordercolor="#FFFF00" cellpadding="5">
-            <tr>
-              <td align="center">
-                <img src="./gifs/under_construct.gif" alt="logo" width="200" height="200" align="center">
-              </td>
-            </tr>
-          </table>
-        </center>
-        
-        <br>
-        <center>
-          <font size="2">
-            Best viewed with <b>Netscape Navigator 4.0</b> at 800x600 resolution.
-          </font>
-        </center>
-      </td>
-    </tr>
-    
+            <center>
+              *** *** ***
+            </center>
 
-    <!-- FOOTER -->
-    <tr>
-      <td colspan="2" align="center" bgcolor="#000066">
-        <font size="2" color="#FFFFFF">
-        Trademark Notice
-This website is not sponsored by, endorsed by, or affiliated with like anyone. All titles, logos, or company names are the registered trademarks of their original owners. The use of any trademark or trade name is for identification purposes only and does not imply any association with the trademark holder.  <br>
-          <a href="mailto:webmaster@example.com">Email the Webmaster</a>
-        </font>
-      </td>
-    </tr>
-  </table>
-</center>
+            <div align="center">
+              <font color="#FF00FF"><b>My Interests</b></font><br>
+              <ul>
+                <li>Alternative societies (this one is lowkey exhausting)</li>
+                <li>HTML Coding</li>
+                <li>Playing PEAK, ARMA, or endlessly staring at my Steam collection, overwhelmed.</li>
+                <li>Collecting Memes</li>
+              </ul>
+            </div>
 
-</body>
+            <center>
+              <table border="4" bordercolor="#FFFF00" cellpadding="5">
+                <tr>
+                  <td align="center">
+                    <img src="./gifs/under_construct.gif" alt="logo" width="200" height="200" align="center">
+                  </td>
+                </tr>
+              </table>
+            </center>
+
+            <br>
+            <center>
+              <font size="2">
+                Best viewed with <b>Netscape Navigator 4.0</b> at 800x600 resolution.
+              </font>
+            </center>
+          </td>
+        </tr>
+      </table>
+    </center>
+
+    <footer>
+
+      <font size="1">You are visitor number:</font><br>
+              <script type="text/javascript" src="https://counter.websiteout.com/js/6/5/0/1"></script>
+
+<br>
+<br>
+<br>
+<br>
+    <font size="1" color="#FFFFFF">
+        Trademark Notice:
+        This website is not sponsored by, endorsed by, or affiliated with like anyone. All titles, logos, or company names are the registered trademarks of their original owners. The use of any trademark or trade name is for identification purposes only and does not imply any association with the trademark holder.  <br>
+        <a href="mailto:webmaster@example.com">Email the Webmaster</a>  
+      </font>
+    </footer>
+  </body>
 </html>
