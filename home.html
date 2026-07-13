@@ -8,7 +8,7 @@
       html, body { height: 100%; }
 
       body {
-        background: #000 url("./gifs/stars_sparkly.gif") repeat;
+        background: #000 url("./backgrounds/stars_sparkly.gif") repeat;
         background-size: 10%;
         color: #fff;
         font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
@@ -194,11 +194,40 @@
 <script>
   var openSound  = new Audio('./sounds/piemenu.mp3');
   var closeSound = new Audio('./sounds/piemenu-interact.mp3');
+  var freakSound = new Audio('./sounds/get_out.mp3');  // the spam reward
 
   var trigger = document.getElementById('aboutTrigger');
-  trigger.addEventListener('mouseenter', function(){ openSound.currentTime = 0;  openSound.play();  });
-  trigger.addEventListener('mouseleave', function(){ closeSound.currentTime = 0; closeSound.play(); });
-</script>
 
+  var hoverCount = 0;
+  var resetTimer;
+  var THRESHOLD = 30;     // how many hovers to trigger it
+  var WINDOW = 1500;     // must happen within this many ms of the last one
+
+  function bumpCounter() {
+    hoverCount++;
+
+    // reset the count if they stop waving for a moment
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(function(){ hoverCount = 0; }, WINDOW);
+
+    if (hoverCount >= THRESHOLD) {
+      freakSound.currentTime = 0;
+      freakSound.play().catch(function(){});
+      hoverCount = 0;   // reset so it doesn't spam repeatedly
+    }
+  }
+
+  trigger.addEventListener('mouseenter', function(){
+    openSound.currentTime = 0;
+    openSound.play().catch(function(){});
+    bumpCounter();
+  });
+
+  trigger.addEventListener('mouseleave', function(){
+    closeSound.currentTime = 0;
+    closeSound.play().catch(function(){});
+    bumpCounter();
+  });
+</script>
   </body>
 </html>
