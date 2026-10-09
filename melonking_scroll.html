@@ -109,6 +109,18 @@
                 color: #d7f3ff;
             }
             #guide a { color: #d7f3ff; }
+
+            /* Scrollbar - Firefox */
+            html {
+                scrollbar-color: #fffd0c #210971;
+                scrollbar-width: thin;
+            }
+
+            /* Scrollbar - Chrome, Edge, Safari */
+            ::-webkit-scrollbar { width: 12px; }
+            ::-webkit-scrollbar-track { background: #210971; }
+            ::-webkit-scrollbar-thumb { background: #fffd0c; border: 2px solid #210971; }
+            ::-webkit-scrollbar-thumb:hover { background: #ffffff; }
         </style>
     </head>
     <body>
