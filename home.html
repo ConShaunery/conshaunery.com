@@ -136,6 +136,13 @@
       }
       .station .tip.on { display: block; }
       .station .tip .cur { animation: stBlink 1s steps(1) infinite; }
+      @keyframes stShake {
+        0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-5px, 3px) rotate(-3deg); }
+        50% { transform: translate(4px, -4px) rotate(2deg); } 75% { transform: translate(-3px, -2px) rotate(-1deg); }
+      }
+      .station.dying img { animation: stShake .1s linear infinite; filter: drop-shadow(0 0 14px #ff3b2f); }
+      .station.gone { pointer-events: none; }
+      .station.gone img { visibility: hidden; }
 
       /* ---------- fly-by decorations (not clickable) ---------- */
       #sky {
@@ -185,7 +192,7 @@
       <a class="orb" href="terminal.html"><img src="./gifs/terminal.gif" alt="terminal"><span>terminal</span></a>
       <a class="orb" href="about.html"><img src="./gifs/wizard.gif" alt="about"><span>about</span></a>
       <a class="orb" href="stream.html"><img src="./gifs/stream_2.gif" alt="stream"><span>stream</span></a>
-      <a class="station" href="webstation.html" aria-label="Webstation.047: STATUS: Emergency Power"><img src="./gifs/spacestation3.gif" alt="spacestation"><span class="tip" id="stationTip"></span></a>
+      <a class="station" href="webstation.html" aria-label="Webstation.047: STATUS: Emergency Power"><img src="./gifs/spacestation.gif" alt="spacestation"><span class="tip" id="stationTip"></span></a>
       <canvas id="ink"></canvas>
     </div>
 
@@ -805,6 +812,36 @@
   st.addEventListener('mouseleave', hide);
   st.addEventListener('focus', show);
   st.addEventListener('blur', hide);
+})();
+</script>
+
+<script>
+/* Coming back from webstation.html after "self destruct": the station shakes and blows up. */
+(function(){
+  if (!/[?&]destroyed=1/.test(location.search)) return;
+  try { history.replaceState(null, '', location.pathname); } catch (e) {}   /* a reload won't replay it */
+  var st = document.querySelector('.station');
+  if (!st) return;
+
+  var WAIT = 1500;   /* let the elevator doors open first */
+  setTimeout(function(){
+    st.classList.add('dying');
+    st.setAttribute('aria-label', 'Webstation.047: STATUS: Destroyed');
+    var r = st.getBoundingClientRect();
+    var cx = r.left + r.width/2, cy = r.top + r.height/2;
+    var pops = [[0, 90], [300, 110], [550, 80], [850, 130], [1100, 100]];    /* [delay ms, size px] */
+    pops.forEach(function(p){
+      setTimeout(function(){
+        if (window.boom) window.boom(cx + (Math.random()-.5)*r.width*.7, cy + (Math.random()-.5)*r.height*.7, p[1]);
+      }, p[0]);
+    });
+    setTimeout(function(){                                                     /* the big one */
+      if (window.boom) window.boom(cx, cy, Math.max(260, r.width*2));
+      st.classList.remove('dying');
+      st.classList.add('gone');
+      st.removeAttribute('href');
+    }, 1450);
+  }, WAIT);
 })();
 </script>
   </body>
