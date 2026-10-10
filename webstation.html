@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Webstation.047</title>
+  <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  <style>
+    html, body { margin: 0; padding: 0; min-height: 100%; }
+
+    body {
+      min-height: 100vh;
+      background: #000 url("./backgrounds/dither.png") repeat;   /* your dither image */
+      image-rendering: pixelated;                                /* keeps the dither pixels sharp */
+      color: #ffb347;
+      font-family: "Lucida Console", "Courier New", monospace;
+    }
+
+    /* centre message */
+    @keyframes msgIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes blink { 50% { opacity: 0; } }
+    #msg {
+      position: fixed; left: 50%; top: 46%;
+      transform: translate(-50%, -50%);
+      width: 90%; max-width: 640px;
+      margin: 0; text-align: center;
+      font-size: 22px; letter-spacing: 2px; line-height: 1.6;
+      color: #c800ff;
+      text-shadow: 0 0 10px rgba(255, 71, 249, 0.5), 0 0 3px #000, 0 0 3px #000;
+      opacity: 0;
+      animation: msgIn 2.5s ease 1s forwards;     /* fades in after 1 second */
+    }
+    #msg .cur { animation: blink 1s steps(1) infinite; }
+    @media (prefers-reduced-motion: reduce) {
+      #msg { animation: none; opacity: 1; }
+      #msg .cur { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <p id="msg" aria-label="Its Dark. Webstation has no power..."></p>
+
+  <!-- Background sound -->
+  <audio id="bg-sound" loop preload="auto">
+    <source src="./sounds/music/webstation.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    /* Background sound: tries to start straight away. If the browser blocks it,
+       it starts on the visitor's first click, key press or tap. */
+    (function(){
+      var VOLUME = 0.15;
+      var snd = document.getElementById('bg-sound');
+      snd.volume = VOLUME;
+
+      function waitForTouch(){
+        var evs = ['pointerdown', 'keydown', 'touchstart'];
+        function go(){
+          evs.forEach(function(e){ document.removeEventListener(e, go, true); });
+          snd.play().catch(function(){});
+        }
+        evs.forEach(function(e){ document.addEventListener(e, go, true); });
+      }
+
+      var p = snd.play();
+      if (p && p.catch) p.catch(waitForTouch);
+    })();
+  </script>
+
+  <script>
+    /* Centre message: fades in, then types out one letter at a time. */
+    (function(){
+      var TEXT  = 'Its Dark. Webstation has no power...';
+      var START = 1500;   /* ms before typing begins */
+      var SPEED = 70;     /* ms per letter */
+
+      var el = document.getElementById('msg');
+      var textNode = document.createTextNode('');
+      var cur = document.createElement('span'); cur.className = 'cur'; cur.textContent = '\u25AE';
+      el.appendChild(textNode); el.appendChild(cur);
+
+      if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        textNode.nodeValue = TEXT; return;
+      }
+      var i = 0;
+      function step(){
+        textNode.nodeValue = TEXT.slice(0, ++i);
+        if (i < TEXT.length) {
+          var ch = TEXT.charAt(i - 1);
+          setTimeout(step, ch === '.' ? SPEED * 6 : SPEED);   /* pause on each dot */
+        }
+      }
+      setTimeout(step, START);
+    })();
+  </script>
+
+<script src="./transition.js"></script>
+</body>
+</html>
