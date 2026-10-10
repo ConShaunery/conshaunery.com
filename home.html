@@ -113,6 +113,30 @@
       }
       .orb:hover span { opacity: 1; }
 
+      /* ---------- space station (never moves) ---------- */
+      @keyframes stBlink { 50% { opacity: 0; } }
+      .station {
+        position: absolute; left: 50%; top: 50%;
+        transform: translate(-50%, -50%);       /* dead centre of the play area */
+        z-index: 2;                             /* icons float in front of it */
+        display: block; text-decoration: none;
+      }
+      .station:hover, .station:focus { z-index: 7; }
+      .station img {
+        display: block; width: 160px; height: auto;   /* change 160px to resize it */
+        image-rendering: pixelated;
+        transition: filter .15s;
+      }
+      .station:hover img, .station:focus img { filter: drop-shadow(0 0 12px rgba(255,179,71,.8)); }
+      .station .tip {
+        display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+        margin-top: 8px; padding: 6px 10px; white-space: nowrap; pointer-events: none;
+        font: 12px "Lucida Console", "Courier New", monospace; color: #ffb347; background: rgba(7,9,58,.95);
+        box-shadow: 0 -2px 0 #ffb347, 0 2px 0 #ffb347, -2px 0 0 #ffb347, 2px 0 0 #ffb347;
+      }
+      .station .tip.on { display: block; }
+      .station .tip .cur { animation: stBlink 1s steps(1) infinite; }
+
       /* ---------- fly-by decorations (not clickable) ---------- */
       #sky {
         position: fixed; inset: 0;
@@ -161,6 +185,7 @@
       <a class="orb" href="terminal.html"><img src="./gifs/terminal.gif" alt="terminal"><span>terminal</span></a>
       <a class="orb" href="about.html"><img src="./gifs/wizard.gif" alt="about"><span>about</span></a>
       <a class="orb" href="stream.html"><img src="./gifs/stream_2.gif" alt="stream"><span>stream</span></a>
+      <a class="station" href="webstation.html" aria-label="Webstation.047: STATUS: Emergency Power"><img src="./gifs/spacestation3.gif" alt="spacestation"><span class="tip" id="stationTip"></span></a>
       <canvas id="ink"></canvas>
     </div>
 
@@ -391,7 +416,7 @@
 
   stage.addEventListener('pointerdown', function(e){
     if (e.pointerType === 'mouse' && e.button !== 0) return;
-    if (e.target.closest && e.target.closest('.orb')) return;   /* clicking an icon still follows the link */
+    if (e.target.closest && e.target.closest('.orb, .station')) return;   /* clicking an icon or the station still follows the link */
     var p = stagePos(e);
     drawing = true; hue = rnd(0,360); lx = p.x; ly = p.y;
     stroke(p.x, p.y);
@@ -741,6 +766,45 @@
     }, rnd(GAP[0], GAP[1]));
   }
   setTimeout(function(){ spawn(); schedule(); }, rnd(2000, 5000));
+})();
+</script>
+
+<script>
+/* Webstation.047: hovering over it shows its status, typed out one letter at a time. */
+(function(){
+  var st  = document.querySelector('.station');
+  var tip = document.getElementById('stationTip');
+  if (!st || !tip) return;
+
+  var TEXT  = 'Webstation.047: STATUS: Emergency Power';
+  var SPEED = 32;                                       /* ms per letter */
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var textNode = document.createTextNode('');
+  var cur = document.createElement('span'); cur.className = 'cur'; cur.textContent = '\u25AE';
+  tip.appendChild(textNode); tip.appendChild(cur);
+  var timer = null;
+
+  function show(){
+    clearInterval(timer);
+    textNode.nodeValue = '';
+    tip.classList.add('on');
+    if (reduce) { textNode.nodeValue = TEXT; return; }
+    var i = 0;
+    timer = setInterval(function(){
+      textNode.nodeValue = TEXT.slice(0, ++i);
+      if (i >= TEXT.length) clearInterval(timer);
+    }, SPEED);
+  }
+  function hide(){
+    clearInterval(timer);
+    tip.classList.remove('on');
+    textNode.nodeValue = '';
+  }
+  st.addEventListener('mouseenter', show);
+  st.addEventListener('mouseleave', hide);
+  st.addEventListener('focus', show);
+  st.addEventListener('blur', hide);
 })();
 </script>
   </body>
