@@ -59,20 +59,6 @@
   opacity: 1;
 }
 
-      .left-meme {
-        position: fixed;        /* Stays in place when scrolling */
-        top: 250px;
-        left: 20px;
-        width: 250px;
-        padding: 15px;
-        background-color: #070745;
-        border: 1px solid #a600ff;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        font-family: Arial, sans-serif;
-        z-index: 1000;
-      }
-
       footer {
         width: 100%;
         padding: 10px;
@@ -84,6 +70,38 @@
         padding-left: 0;
         margin-left: 0;
       }
+
+      /* ---------- floating icons ---------- */
+      #stage {
+        position: relative;
+        min-height: 420px;
+        margin: 10px 0;
+      }
+      .orb {
+        position: absolute; top: 40%; left: 10%;   /* fallback row if JS is off */
+        width: 64px;
+        display: flex; flex-direction: column; align-items: center;
+        text-decoration: none; color: #fff;
+        will-change: transform;
+        z-index: 5;
+      }
+      .orb:nth-child(2) { left: 28%; }
+      .orb:nth-child(3) { left: 46%; }
+      .orb:nth-child(4) { left: 64%; }
+      .orb:nth-child(5) { left: 82%; }
+      .orb img {
+        width: 64px; height: auto; display: block;
+        image-rendering: pixelated;
+        filter: drop-shadow(0 0 8px rgba(166,0,255,.8));
+        transition: filter .15s;
+      }
+      .orb:hover img { filter: drop-shadow(0 0 14px #fff); }
+      .orb span {
+        margin-top: 4px; font-size: 12px; letter-spacing: 1px; color: #ED64F5;
+        text-shadow: 0 0 6px #000;
+        opacity: 0; transition: opacity .15s; pointer-events: none;
+      }
+      .orb:hover span { opacity: 1; }
     </style>
   </head>
 
@@ -108,72 +126,14 @@
   </div>
 </div>
 
-    <div class="left-meme">
-      <img src="https://blob.gifcities.org/gifcities/XJQU3OIPCTDTXQW4VP7XDT74NVF5JZU2.gif" style="width: 50px; height: 20px;">
-      <h2>Take a look at these kool pages!</h2>
+    <!-- FLOATING ICONS -->
+    <div class="container" id="stage">
+      <a class="orb" href="vids.html"><img src="./gifs/film_2.gif" alt="vids"><span>vids</span></a>
+      <a class="orb" href="pics.html"><img src="./gifs/fish.gif" alt="pics"><span>pics</span></a>
+      <a class="orb" href="terminal.html"><img src="./gifs/terminal.gif" alt="terminal"><span>terminal</span></a>
+      <a class="orb" href="about.html"><img src="./gifs/wizard.gif" alt="about"><span>about</span></a>
+      <a class="orb" href="stream.html"><img src="./gifs/stream_2.gif" alt="stream"><span>stream</span></a>
     </div>
-
-    <!-- MAIN TABLE // BRAVE AI PASTE -->
-    <center class="container">
-      <!-- Main Table Layout -->
-      <table width="800" border="1" bordercolor="#a600ff" cellpadding="10" cellspacing="0">
-        <tr>
-          
-            <br>
-            <marquee scrollamount="79" width="50%" bgcolor="#000000">
-              <font color="#FF0000">+++ UPDATES: Added new MIDI music! +++ Sign the Guestbook! +++ Under Construction +++ Crinkly Memes? +++ Smoothies! +++ </font>
-            </marquee>
-          </td>
-        </tr>
-
-        
-
-          <!-- Main Content -->
-          <td valign="top" bgcolor="#000000">
-            <center>
-              <font size="5" color="#00FFFF"><b>Hello World!</b></font>
-            </center>
-            <p>
-              <font face="Trebuchet MS" size="3">
-                Welcome to my corner of the <span class="blink"> CYBER WIDE WEB</span>!
-                Please make yourself at home. OH! And, Don't forget to sign my <a href="guestbook.html">guestbook</a> please and thank you very much.
-              </font>
-            </p>
-
-            <center>
-              *** *** ***
-            </center>
-
-            <div align="center">
-              <font color="#FF00FF"><b>My Interests</b></font><br>
-              <ul>
-                <li>Alternative societies (this one is lowkey exhausting)</li>
-                <li>HTML Coding</li>
-                <li>Playing PEAK, ARMA, or endlessly staring at my Steam collection, overwhelmed.</li>
-                <li>Collecting Memes</li>
-              </ul>
-            </div>
-
-            <center>
-              <table border="4" bordercolor="#FFFF00" cellpadding="5">
-                <tr>
-                  <td align="center">
-                    <img src="./gifs/under_construct.gif" alt="logo" width="100" height="80" align="center">
-                  </td>
-                </tr>
-              </table>
-            </center>
-
-            <br>
-            <center>
-              <font size="2">
-                Best viewed with <b>Netscape Navigator 4.0</b> at 800x600 resolution.
-              </font>
-            </center>
-          </td>
-        </tr>
-      </table>
-    </center>
 
     <footer>
 
@@ -228,6 +188,132 @@
     closeSound.play().catch(function(){});
     bumpCounter();
   });
+</script>
+
+<script>
+/* Floating icons: every visit each icon is randomly given a behaviour
+   (spin = bounces around spinning, orbit = circles a point, flee = runs from the cursor)
+   plus random speeds, sizes of orbit and start positions. */
+(function(){
+  var stage = document.getElementById('stage');
+  var orbs  = [].slice.call(stage.querySelectorAll('.orb'));
+  var SIZE  = 64;
+  var W = 0, H = 0;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function measure(){ W = stage.clientWidth; H = stage.clientHeight; }
+  function rnd(a,b){ return a + Math.random()*(b-a); }
+  function sign(){ return Math.random() < .5 ? -1 : 1; }
+  function span(lo,hi){ return hi < lo ? (lo+hi)/2 : rnd(lo,hi); }
+  function clamp(v,lo,hi){ return Math.max(lo, Math.min(hi, v)); }
+  measure();
+
+  /* random behaviour per icon, but never all the same */
+  var MODES = ['spin','orbit','flee'];
+  var modes = orbs.map(function(){ return MODES[Math.floor(Math.random()*MODES.length)]; });
+  var seen = {}; modes.forEach(function(m){ seen[m] = 1; });
+  if (Object.keys(seen).length < 2) { modes[0] = 'spin'; modes[1] = 'flee'; modes[2] = 'orbit'; }
+
+  var S = orbs.map(function(el, i){
+    var m = modes[i];
+    var s = { el: el, img: el.querySelector('img'), mode: m, hover: false,
+              x: rnd(0, Math.max(1, W-SIZE)), y: rnd(0, Math.max(1, H-SIZE)),
+              vx: 0, vy: 0, rot: rnd(0,360), rs: 0 };
+    if (m === 'spin') {
+      var a = rnd(0, 6.28), sp = rnd(25, 70);
+      s.vx = Math.cos(a)*sp; s.vy = Math.sin(a)*sp; s.rs = sign()*rnd(150, 480);
+    }
+    if (m === 'orbit') {
+      var maxR = Math.max(30, Math.min(W,H)/2 - SIZE/2 - 4);
+      s.r  = rnd(Math.min(50,maxR), Math.min(170,maxR));
+      s.cx = span(s.r + SIZE/2, W - s.r - SIZE/2);
+      s.cy = span(s.r + SIZE/2, H - s.r - SIZE/2);
+      s.th = rnd(0, 6.28); s.om = sign()*rnd(.5, 1.3); s.ry = rnd(.5, 1);
+      s.rs = sign()*rnd(30, 120);
+    }
+    if (m === 'flee') {
+      s.hx = s.x; s.hy = s.y;
+      var a2 = rnd(0, 6.28); s.vx = Math.cos(a2)*15; s.vy = Math.sin(a2)*15;
+    }
+    el.style.left = '0'; el.style.top = '0';
+    /* hold still while the cursor is on it, so it can always be clicked */
+    el.addEventListener('mouseenter', function(){ s.hover = true; });
+    el.addEventListener('mouseleave', function(){ s.hover = false; });
+    return s;
+  });
+
+  function draw(s){
+    s.el.style.transform  = 'translate(' + s.x + 'px,' + s.y + 'px)';
+    s.img.style.transform = 'rotate(' + s.rot + 'deg)';
+  }
+
+  function place(){
+    S.forEach(function(s, i){
+      if (reduce) { s.x = (W/(S.length+1))*(i+1) - SIZE/2; s.y = H/2 - SIZE/2; s.rot = 0; }
+      draw(s);
+    });
+  }
+  place();
+
+  window.addEventListener('resize', function(){
+    measure();
+    S.forEach(function(s){
+      if (s.mode !== 'orbit') { s.x = clamp(s.x, 0, Math.max(0, W-SIZE)); s.y = clamp(s.y, 0, Math.max(0, H-SIZE)); }
+    });
+    if (reduce) place();
+  });
+
+  if (reduce) return;   /* respect reduced-motion: icons just sit in a row */
+
+  var mx = null, my = null;
+  document.addEventListener('mousemove', function(e){ mx = e.clientX; my = e.clientY; });
+  document.addEventListener('mouseleave', function(){ mx = my = null; });
+
+  var last = performance.now();
+  function frame(t){
+    var dt = Math.min(.05, (t - last)/1000); last = t;
+    var rect = stage.getBoundingClientRect();
+    var px = mx === null ? null : mx - rect.left;
+    var py = my === null ? null : my - rect.top;
+
+    S.forEach(function(s){
+      if (s.hover) return;
+
+      if (s.mode === 'spin') {
+        s.x += s.vx*dt; s.y += s.vy*dt; s.rot += s.rs*dt;
+        if (s.x < 0)      { s.x = 0;      s.vx = -s.vx; }
+        if (s.x > W-SIZE) { s.x = W-SIZE; s.vx = -s.vx; }
+        if (s.y < 0)      { s.y = 0;      s.vy = -s.vy; }
+        if (s.y > H-SIZE) { s.y = H-SIZE; s.vy = -s.vy; }
+      }
+      else if (s.mode === 'orbit') {
+        s.th += s.om*dt; s.rot += s.rs*dt;
+        s.x = s.cx + s.r*Math.cos(s.th) - SIZE/2;
+        s.y = s.cy + s.r*s.ry*Math.sin(s.th) - SIZE/2;
+      }
+      else { /* flee */
+        s.vx += rnd(-1,1)*40*dt; s.vy += rnd(-1,1)*40*dt;           /* wander */
+        s.vx += (s.hx - s.x)*0.15*dt; s.vy += (s.hy - s.y)*0.15*dt;  /* drift back home */
+        if (px !== null) {
+          var dx = s.x + SIZE/2 - px, dy = s.y + SIZE/2 - py;
+          var d = Math.sqrt(dx*dx + dy*dy) || 1;
+          if (d < 150) { var f = (1 - d/150)*1100; s.vx += dx/d*f*dt; s.vy += dy/d*f*dt; }
+        }
+        var fr = Math.pow(.35, dt); s.vx *= fr; s.vy *= fr;
+        var sp = Math.sqrt(s.vx*s.vx + s.vy*s.vy);
+        if (sp > 320) { s.vx = s.vx/sp*320; s.vy = s.vy/sp*320; }
+        s.x += s.vx*dt; s.y += s.vy*dt;
+        if (s.x < 0)      { s.x = 0;      s.vx = 0; }   /* pins at the edge so it can be cornered */
+        if (s.x > W-SIZE) { s.x = W-SIZE; s.vx = 0; }
+        if (s.y < 0)      { s.y = 0;      s.vy = 0; }
+        if (s.y > H-SIZE) { s.y = H-SIZE; s.vy = 0; }
+      }
+      draw(s);
+    });
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
 </script>
   </body>
 </html>
