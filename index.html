@@ -6,41 +6,99 @@
    <!-- Favicon: -->
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
   <style>
+    .hidden { display: none; }
+    @keyframes blink { 50% { opacity: 0; } }
+    @keyframes tw { 50% { opacity: .2; } }
+
     body {
-      background-color: #272323;
-      color: white;
-      font-family: Helvetica, Arial, sans-serif;
-      font-size: 16px;
-      text-align: center;
-      padding: 40px 20px;
+      margin: 0; padding: 28px 14px 44px; min-height: 100vh;
+      font-family: "Lucida Console", "Courier New", monospace;
+      color: #cdbfff; text-align: center;
+      background:
+        radial-gradient(circle at 20px 30px, #7ff 0 1.2px, transparent 1.8px) 0 0 / 170px 170px,
+        radial-gradient(circle at 90px 110px, #ff8bea 0 1.2px, transparent 1.8px) 0 0 / 210px 210px,
+        radial-gradient(circle at 50px 60px, #b8a6ff 0 1px, transparent 1.5px) 0 0 / 130px 130px,
+        #0a0e3b;
+      background-attachment: fixed;
     }
-    .dialogue { margin-top: 20px; }
+    /* twinkling stars */
+    body::before {
+      content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background: radial-gradient(circle at 70px 40px, #fff 0 1.4px, transparent 2px) 0 0 / 240px 240px;
+      animation: tw 2.4s steps(2) infinite;
+    }
+    /* scanlines */
+    body::after {
+      content: ""; position: fixed; inset: 0; z-index: 900; pointer-events: none;
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px);
+    }
+
+    .quick-enter { margin-bottom: 6px; font-size: 12px; letter-spacing: 1px; }
+    .quick-enter a { color: #7a82ff; text-decoration: none; }
+    .quick-enter a:hover { color: #5ff7ff; text-decoration: underline; }
+
+    .moon { display: block; margin: 14px auto 22px; max-width: 100%; }
+
+    /* the gatekeeper's window */
+    .win {
+      max-width: 760px; margin: 0 auto; text-align: left;
+      border: 2px solid #9b7bff; background: rgba(7,9,58,.92);
+      box-shadow: 6px 6px 0 rgba(0,0,0,.45);
+    }
+    .bar {
+      display: flex; padding: 4px 10px; font-size: 13px; white-space: nowrap; overflow: hidden;
+      color: #5ff7ff; background: #17167a; border-bottom: 2px solid #9b7bff;
+    }
+    .bar .dash { flex: 1; min-width: 0; overflow: hidden; color: #6f55d8; }
+    .bar .dash::before { content: "------------------------------------------------------------------------------------------------------------------------------------------------------"; }
+    .body { padding: 18px 22px 22px; min-height: 220px; }
+
+    /* typed lines */
+    .ln { margin: 10px 0; line-height: 1.6; }
+    .ln.say { font-size: 20px; color: #fff; text-shadow: -2px 0 #00f0ff, 2px 0 #ff2bd6; }
+    .ln.say::before { content: "> "; color: #3cff5a; text-shadow: none; }
+    .ln.sub { font-size: 15px; color: #cdbfff; }
+    .ln.act { font-size: 13px; font-style: italic; color: #7a82ff; }
+    .cur { color: #5ff7ff; font-style: normal; text-shadow: none; animation: blink 1s steps(1) infinite; }
+    .talk, .out { cursor: pointer; }
+    .out { margin-top: 12px; }
+
+    /* the answer box fades in once the text has finished */
+    .reply { opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity 1s, transform 1s; margin-top: 14px; }
+    .reply.show { opacity: 1; transform: none; pointer-events: auto; }
+
     input[type="text"] {
-      padding: 10px; font-size: 18px;
-      width: 80%; max-width: 400px;
-      border: 2px solid #555; border-radius: 5px;
-      background-color: #222; color: white;
-      text-align: center; margin-bottom: 10px;
+      width: 100%; max-width: 420px; padding: 10px; font-size: 16px; margin-bottom: 6px;
+      font-family: "Lucida Console", "Courier New", monospace;
+      color: #5ff7ff; background: #05072a; border: 0; outline: 0; caret-color: #ff4fd8;
+      box-shadow: 0 -2px 0 #9b7bff, 0 2px 0 #9b7bff, -2px 0 0 #9b7bff, 2px 0 0 #9b7bff;
+    }
+    input[type="text"]::placeholder { color: #4b52c0; }
+    input[type="text"]:focus {
+      box-shadow: 0 -2px 0 #ff4fd8, 0 2px 0 #ff4fd8, -2px 0 0 #ff4fd8, 2px 0 0 #ff4fd8;
     }
     button {
-      padding: 10px 20px; font-size: 16px;
-      background-color: purple; color: white;
-      border: none; cursor: pointer; margin: 10px;
+      margin: 10px 8px 0 0; padding: 8px 16px; border: 0; cursor: pointer;
+      font: 14px "Lucida Console", "Courier New", monospace; color: #1a1650; background: #b79bff;
+      box-shadow: 0 -2px 0 #d8c8ff, 0 2px 0 #6f55d8, -2px 0 0 #b79bff, 2px 0 0 #b79bff;
     }
-    button:hover { background-color: orange; color: black; }
-    .hidden { display: none; }
-    #name-reaction, #question-response {
-      font-style: italic; margin-top: 10px;
-    }
+    button:hover { background: #5ff7ff; }
+
     #enter-line a {
-      color: orange; font-size: 18px; text-decoration: underline;
+      display: inline-block; padding: 10px 20px; font-size: 16px; text-decoration: none;
+      color: #000; background: #3cff5a;
+      box-shadow: 0 -2px 0 #3cff5a, 0 2px 0 #3cff5a, -2px 0 0 #3cff5a, 2px 0 0 #3cff5a;
     }
-    #enter-line a:hover { color: white; }
-    #rejection-line {
-      color: crimson; font-size: 20px;
-      font-weight: bold; margin-top: 20px;
+    #enter-line a:hover { background: #ffb347; box-shadow: 0 -2px 0 #ffb347, 0 2px 0 #ffb347, -2px 0 0 #ffb347, 2px 0 0 #ffb347; }
+
+    #rejection-line .ln.say { color: #ff7aa8; text-shadow: -2px 0 #ff2bd6, 2px 0 #ff0044; }
+    #rejection-line button { background: #ff4fd8; }
+    #rejection-line button:hover { background: #ffb347; }
+
+    @media (prefers-reduced-motion: reduce) {
+      body::before, .cur { animation: none; }
+      .reply { transition: none; }
     }
-    #rejection-line button { margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -50,53 +108,70 @@
   </div>
 
 
-  <img src="./gifs/moon_face.gif" alt="logo" width="500">
+  <img class="moon" src="./gifs/moon_face.gif" alt="logo" width="500">
 
-  <!-- Step 1: Name -->
-  <div class="dialogue" id="step1">
-    <h1 id="initial-greeting">"Oh... And whomest could dis be?"</h1>
-    <input type="text" id="q1" placeholder="Your name?">
-    <p id="name-reaction" class="hidden"></p>
-    <br>
-    <button onclick="nextStep(1)">Proceed</button>
-  </div>
+  <div class="win">
+    <div class="bar"><span>[ the gatekeeper ]</span><span class="dash"></span><span>[_][#][x]</span></div>
+    <div class="body">
 
-  <!-- Step 2: Origin -->
-  <div class="dialogue hidden" id="step2">
-    <h1>"Hmm... Un traveller, perchance... But from where?"</h1>
-    <input type="text" id="q2" placeholder="From where do you come?">
-    <br>
-    <button onclick="nextStep(2)">Proceed</button>
-  </div>
+      <!-- Step 1: Name -->
+      <div class="dialogue hidden" id="step1">
+        <div class="talk"></div>
+        <div class="reply">
+          <input type="text" id="q1" placeholder="Your name?">
+          <div class="out" id="name-reaction"></div>
+          <button onclick="nextStep(1)">Proceed</button>
+        </div>
+      </div>
 
-  <!-- Step 3: Q&A -->
-  <div class="dialogue hidden" id="step3">
-    <h1>"Oh how interesting! But questions? What might you ask? Curious."</h1>
-    <input type="text" id="q3" placeholder="Your question...">
-    <p id="question-response" class="hidden"></p>
-    <br>
-    <button onclick="questionResponse()">Ask</button>
-    <button id="to-final" class="hidden" onclick="toFinal()">Proceed to Final Question</button>
-  </div>
+      <!-- Step 2: Origin -->
+      <div class="dialogue hidden" id="step2">
+        <div class="talk"></div>
+        <div class="reply">
+          <input type="text" id="q2" placeholder="From where do you come?">
+          <br>
+          <button onclick="nextStep(2)">Proceed</button>
+        </div>
+      </div>
 
-  <!-- Step 4: Final Question -->
-  <div class="dialogue hidden" id="step4">
-    <h2>"Oh?....What dost thou seek in these shadowed cyberrealm? Hmm?"</h2>
-    <input type="text" id="q4" placeholder='Speak! Wali...for I have spoken...'>
-    <br>
-    <button onclick="finalCheck()">Reveal My Destiny</button>
-  </div>
+      <!-- Step 3: Q&A -->
+      <div class="dialogue hidden" id="step3">
+        <div class="talk"></div>
+        <div class="reply">
+          <input type="text" id="q3" placeholder="Your question...">
+          <div class="out" id="question-response"></div>
+          <button onclick="questionResponse()">Ask</button>
+          <button id="to-final" class="hidden" onclick="toFinal()">Proceed to Final Question</button>
+        </div>
+      </div>
 
-  <!-- Entry if correct -->
-  <div id="enter-line" class="hidden">
-    <h1>"Is that so?... Then you shallest enterz..."</h1>
-    <p><a href="main.html">✨ Enter the Realm ✨</a></p>
-  </div>
+      <!-- Step 4: Final Question -->
+      <div class="dialogue hidden" id="step4">
+        <div class="talk"></div>
+        <div class="reply">
+          <input type="text" id="q4" placeholder='Speak! Wali...for I have spoken...'>
+          <br>
+          <button onclick="finalCheck()">Reveal My Destiny</button>
+        </div>
+      </div>
 
-  <!-- Rejection -->
-  <div id="rejection-line" class="hidden">
-    <p>"Fie! Your intentions feel... impure. Be gone you thot! For I...I never you...."</p>
-    <button onclick="redirectToBrave()">Leave thy realm… or return with the right answers…</button>
+      <!-- Entry if correct -->
+      <div class="dialogue hidden" id="enter-line">
+        <div class="talk"></div>
+        <div class="reply">
+          <p><a href="main.html">✨ Enter the Realm ✨</a></p>
+        </div>
+      </div>
+
+      <!-- Rejection -->
+      <div class="dialogue hidden" id="rejection-line">
+        <div class="talk"></div>
+        <div class="reply">
+          <button onclick="redirectToBrave()">Leave thy realm… or return with the right answers…</button>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <!-- Background Music -->
@@ -115,65 +190,180 @@
       }
     }
 
+    /* ---------- the gatekeeper's lines (c: say = spoken, sub = murmured, act = stage direction) ---------- */
+    var STEP1 = [
+      { t: '*the moon blinks twice, then once more for the sake of arithmetic*', c: 'act' },
+      { t: 'Ahh... another stardust-sack stumbles into the hollow between two zeroes...', c: 'sub' },
+      { t: 'Oh... And whomest could dis be?', c: 'say', s: 48 }
+    ];
+    var STEP1_RETURN = [
+      { t: '*the moon tilts its head, remembering a door that was shut*', c: 'act' },
+      { t: 'Oh... so you\'ve returned...', c: 'say', s: 48 },
+      { t: 'The moon forgets nothing. The moon is not sorry.', c: 'sub' }
+    ];
+    var STEP2 = [
+      { t: '*the gate hums a note only your shoelaces can hear*', c: 'act' },
+      { t: 'Hmm... Un traveller, perchance... But from where?', c: 'say', s: 48 },
+      { t: 'Every road is a circle that forgot it was a circle... so speak: whence came thy feet?', c: 'sub' }
+    ];
+    var STEP3 = [
+      { t: '*somewhere, a clock eats its own hands and is satisfied*', c: 'act' },
+      { t: 'Oh how interesting! But questions? What might you ask? Curious.', c: 'say', s: 48 },
+      { t: 'A question is merely an answer wearing tomorrow\'s coat...', c: 'sub' }
+    ];
+    var STEP4 = [
+      { t: '*the shadows lean in, as shadows do when a secret is near*', c: 'act' },
+      { t: 'Oh?....What dost thou seek in these shadowed cyberrealm? Hmm?', c: 'say', s: 48 },
+      { t: 'Choose with care: words are keys, I am the lock, the lock is a door, and the door is also you...', c: 'sub' }
+    ];
+    var ENTER = [
+      { t: '*the floor becomes sky, the sky becomes a doorway, the doorway becomes whatever you were about to say*', c: 'act' },
+      { t: 'Is that so?... Then you shallest enterz...', c: 'say', s: 48 }
+    ];
+    var REJECT = [
+      { t: 'Fie! Your intentions feel... impure. Be gone you thot! For I...I never you....', c: 'say', s: 48 },
+      { t: '*the moon turns away, humming a song that never began*', c: 'act' }
+    ];
+
+    /* ---------- typewriter ---------- */
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var job = { timer: null, skip: null };
+
+    function typeLines(box, lines, done) {
+      clearTimeout(job.timer); job.skip = null;
+      box.textContent = '';
+      var cur = document.createElement('span'); cur.className = 'cur'; cur.textContent = '\u25AE';
+      var li = 0, ci = 0, textNode = null, finished = false;
+
+      function addLine(L, full) {
+        var d = document.createElement('div'); d.className = 'ln ' + (L.c || 'say');
+        var tn = document.createTextNode(full ? L.t : '');
+        d.appendChild(tn); box.appendChild(d);
+        return tn;
+      }
+      function finish() {
+        if (finished) return;
+        finished = true; job.skip = null;
+        if (box.lastChild) box.lastChild.appendChild(cur);
+        if (done) done();
+      }
+      if (reduce) { lines.forEach(function (L) { addLine(L, true); }); finish(); return; }
+
+      function startLine() {
+        textNode = addLine(lines[li], false);
+        box.lastChild.appendChild(cur);
+        ci = 0; step();
+      }
+      function step() {
+        var L = lines[li];
+        if (ci < L.t.length) {
+          var ch = L.t.charAt(ci++);
+          textNode.nodeValue += ch;
+          job.timer = setTimeout(step, (L.s || 30) * (/[.,?!]/.test(ch) ? 5 : 1));
+        } else if (++li < lines.length) {
+          job.timer = setTimeout(startLine, 450);
+        } else {
+          finish();
+        }
+      }
+      job.skip = function () {                       /* click the text to skip the typing */
+        if (finished) return;
+        clearTimeout(job.timer); box.textContent = '';
+        lines.forEach(function (L) { addLine(L, true); });
+        finish();
+      };
+      startLine();
+    }
+
+    /* show one step: type its lines first, THEN fade in the answer box */
+    var STEP_IDS = ['step1', 'step2', 'step3', 'step4', 'enter-line', 'rejection-line'];
+    function showStep(id, lines) {
+      STEP_IDS.forEach(function (x) { document.getElementById(x).classList.add('hidden'); });
+      var st = document.getElementById(id);
+      st.classList.remove('hidden');
+      var reply = st.querySelector('.reply');
+      reply.classList.remove('show');
+      typeLines(st.querySelector('.talk'), lines, function () {
+        reply.classList.add('show');
+        var inp = st.querySelector('input');
+        if (inp) { try { inp.focus({ preventScroll: true }); } catch (e) { inp.focus(); } }
+      });
+    }
+
     // Welcome back message after rejection
     document.addEventListener("DOMContentLoaded", () => {
-      if (localStorage.getItem("rejectedVisitor") === "true") {
-        document.getElementById("initial-greeting")
-                .textContent = '"Oh... so you\'ve returned..."';
-      }
+      var rejected = false;
+      try { rejected = localStorage.getItem("rejectedVisitor") === "true"; } catch (e) {}
+      showStep('step1', rejected ? STEP1_RETURN : STEP1);
     });
 
     // Step transitions for steps 1 & 2
+    var busy = false;
     function nextStep(step) {
       startAudio();
+      if (busy) return;
       if (step === 1) {
         const name = document.getElementById("q1").value.trim();
         const react = document.getElementById("name-reaction");
         if (!name) {
-          react.textContent = "A name must be spoken...";
-          react.classList.remove("hidden");
+          typeLines(react, [
+            { t: 'A name must be spoken...', c: 'sub' },
+            { t: '*silence is also a name, but a very shy one*', c: 'act' }
+          ]);
           return;
         }
-        react.textContent = `"${name}"... A name most curious...`;
-        react.classList.remove("hidden");
-        setTimeout(() => {
-          document.getElementById("step1").classList.add("hidden");
-          document.getElementById("step2").classList.remove("hidden");
-        }, 1500);
+        busy = true;
+        typeLines(react, [
+          { t: `"${name}"... A name most curious...`, c: 'sub' },
+          { t: '*the syllables taste of copper and forgotten Tuesdays*', c: 'act' }
+        ], function () {
+          setTimeout(function () { busy = false; showStep('step2', STEP2); }, 1100);
+        });
       } else {
         // after step2 → show Q&A
-        document.getElementById("step2").classList.add("hidden");
-        document.getElementById("step3").classList.remove("hidden");
+        showStep('step3', STEP3);
       }
     }
 
     // Q&A logic
+    function has(q, words) {
+      return words.some(function (w) { return q.indexOf(w) > -1; });
+    }
     function questionResponse() {
       startAudio();
       const q = document.getElementById("q3").value.trim().toLowerCase();
-      const resp = document.getElementById("question-response");
+      const out = document.getElementById("question-response");
       let answer;
-      if (q.includes("place")) {
+      if (has(q, ["place"])) {
         answer = "This is a place of the past...Now that those destroyed our future....";
-      } else if (q.includes("who", "what" ,"where")) {
+      } else if (has(q, ["who", "what", "where"])) {
         answer = "I am the gatekeeper of this cyberrealm, ever watchful. Sha'za Zuk Kysion the name.";
-      } else if (q.includes("help")) {
+      } else if (has(q, ["help"])) {
         answer = "Ask of origins, purpose, or secrets—then press ‘Proceed’.";
-      } else if (q.includes("music", "song", "sound")) {
+      } else if (has(q, ["music", "song", "sound"])) {
         answer = "The melody you hear stems from the sunset echoes of old nets.";
+      } else if (has(q, ["moon"])) {
+        answer = "The moon is a coin the night spends on dreams, and it always gets the change back.";
+      } else if (has(q, ["why"])) {
+        answer = "Why is the egg of the question that hatches the chicken of the answer, which lays more eggs. Eggs all the way down.";
       } else {
-        answer = "I know not that. Speak of the realm’s lore or proceed on.";
+        var shrugs = [
+          "I know not that. Speak of the realm’s lore or proceed on.",
+          "Hmm... that question has no roots, only wings. Try another.",
+          "The void shrugs. Even the void has off days. Ask of the realm."
+        ];
+        answer = shrugs[Math.floor(Math.random() * shrugs.length)];
       }
-      resp.textContent = answer;
-      resp.classList.remove("hidden");
-      // show proceed-to-final button
-      document.getElementById("to-final").classList.remove("hidden");
+      document.getElementById("to-final").classList.add("hidden");
+      typeLines(out, [{ t: answer, c: 'sub' }], function () {
+        // show proceed-to-final button
+        document.getElementById("to-final").classList.remove("hidden");
+      });
     }
 
     function toFinal() {
       startAudio();
-      document.getElementById("step3").classList.add("hidden");
-      document.getElementById("step4").classList.remove("hidden");
+      showStep('step4', STEP4);
     }
 
     // Final acceptance/rejection
@@ -182,24 +372,29 @@
       const ans = document.getElementById("q4").value.trim().toLowerCase();
       const allowed = ["refuge","vibez","knownledge","past","truth", "tickles"];
 
-      document.getElementById("step4").classList.add("hidden");
-
       if (allowed.includes(ans)) {
         // accepted
-        localStorage.removeItem("rejectedVisitor");
-        document.getElementById("rejection-line").classList.add("hidden");
-        document.getElementById("enter-line").classList.remove("hidden");
+        try { localStorage.removeItem("rejectedVisitor"); } catch (e) {}
+        showStep('enter-line', ENTER);
       } else {
         // rejected
-        localStorage.setItem("rejectedVisitor", "true");
-        document.getElementById("enter-line").classList.add("hidden");
-        document.getElementById("rejection-line").classList.remove("hidden");
+        try { localStorage.setItem("rejectedVisitor", "true"); } catch (e) {}
+        showStep('rejection-line', REJECT);
       }
     }
 
     function redirectToBrave() {
       window.location.href = "https://search.brave.com";
     }
+
+    /* press Enter in a box = press its button; click typed text = skip the typing */
+    [['q1', function () { nextStep(1); }], ['q2', function () { nextStep(2); }],
+     ['q3', questionResponse], ['q4', finalCheck]].forEach(function (p) {
+      document.getElementById(p[0]).addEventListener('keydown', function (e) { if (e.key === 'Enter') p[1](); });
+    });
+    document.querySelectorAll('.talk, .out').forEach(function (el) {
+      el.addEventListener('click', function () { if (job.skip) job.skip(); });
+    });
   </script>
 <script src="./transition.js"></script>
 <script>(function(){if(location.search.indexOf("nomedia")<0)return;function muteAll(){document.querySelectorAll("audio,video").forEach(function(e){e.muted=true;e.volume=0;if(!e.paused)e.pause();});}muteAll();window.addEventListener("message",function(e){if(e.data==="desk:mute"){muteAll();}if(e.data==="desk:unmute"){document.querySelectorAll("audio,video").forEach(function(e){e.muted=false;e.volume=1;});document.querySelectorAll("audio").forEach(function(e){e.play&&e.play().catch(function(){});});}});}());</script>
