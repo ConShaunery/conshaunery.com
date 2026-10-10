@@ -22,23 +22,119 @@
       position: fixed; left: 50%; top: 46%;
       transform: translate(-50%, -50%);
       width: 90%; max-width: 640px;
-      margin: 0; text-align: center;
+      margin: 0; text-align: center; z-index: 2;
       font-size: 22px; letter-spacing: 2px; line-height: 1.6;
-      color: #c800ff;
-      text-shadow: 0 0 10px rgba(255, 71, 249, 0.5), 0 0 3px #000, 0 0 3px #000;
+      color: #ffb347;
+      text-shadow: 0 0 10px rgba(255,179,71,.5), 0 0 3px #000, 0 0 3px #000;
       opacity: 0;
       animation: msgIn 2.5s ease 1s forwards;     /* fades in after 1 second */
     }
     #msg .cur { animation: blink 1s steps(1) infinite; }
+
+    /* the typing console under the message */
+    #console {
+      position: fixed; left: 50%; top: 53%;
+      transform: translateX(-50%);
+      width: 90%; max-width: 640px; z-index: 2;
+      font-size: 14px; line-height: 1.6;
+      text-shadow: 0 0 3px #000, 0 0 3px #000;
+      opacity: 0; pointer-events: none; transition: opacity 1.2s;
+    }
+    #console.on { opacity: 1; pointer-events: auto; }
+    #log .ln { white-space: pre-wrap; }
+    #log .you { color: #7a82ff; }
+    #log .sys { color: #ffb347; }
+    #log .dim { color: #b07a35; font-style: italic; }
+    #log .ok  { color: #3cff5a; }
+    .row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+    .row span { color: #3cff5a; }
+    #cmd {
+      flex: 1; min-width: 0; padding: 4px 0;
+      font: inherit; color: #ffb347; caret-color: #ffb347;
+      background: transparent; border: 0; border-bottom: 1px dashed #b07a35; outline: 0;
+    }
+    #cmd::placeholder { color: #6b4a22; }
+
+    /* lights: flicker on over the dark background */
+    #lit {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background: #1a1408 url("./backgrounds/webstation_lit.png") center / cover no-repeat;
+      opacity: 0;
+    }
+    @keyframes flicker {
+      0% { opacity: 0; } 8% { opacity: .7; } 10% { opacity: 0; } 22% { opacity: 0; }
+      24% { opacity: .9; } 27% { opacity: .1; } 40% { opacity: .1; } 43% { opacity: 1; }
+      46% { opacity: .3; } 60% { opacity: .3; } 100% { opacity: 1; }
+    }
+    #lit.on { animation: flicker 2.6s steps(1, end) forwards; opacity: 1; }
+
+    /* ---------- self destruct ---------- */
+    #destruct {
+      position: fixed; inset: 0; z-index: 50; display: none; overflow: hidden;
+      background: #200000; color: #ff3b2f; text-align: center;
+      font-family: "Lucida Console", "Courier New", monospace;
+    }
+    #destruct.on { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    #destruct::before {                       /* rotating warning beacon */
+      content: ""; position: absolute; left: 50%; top: 50%; width: 220vmax; height: 220vmax;
+      margin: -110vmax 0 0 -110vmax; pointer-events: none;
+      background: conic-gradient(from 0deg, rgba(255,40,20,.55) 0 30deg, transparent 30deg 180deg, rgba(255,40,20,.55) 180deg 210deg, transparent 210deg 360deg);
+      animation: beacon 1.6s linear infinite;
+    }
+    #destruct::after {                        /* red strobe */
+      content: ""; position: absolute; inset: 0; pointer-events: none; background: #ff1a0a;
+      animation: strobe 1s steps(1) infinite;
+    }
+    @keyframes beacon { to { transform: rotate(360deg); } }
+    @keyframes strobe { 0% { opacity: .35; } 50% { opacity: 0; } }
+    @keyframes shake {
+      0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-6px, 4px); }
+      50% { transform: translate(5px, -5px); } 75% { transform: translate(-4px, -3px); }
+    }
+    #destruct .panel {
+      position: relative; z-index: 1; width: 90%; max-width: 760px; padding: 22px 18px;
+      background: rgba(0,0,0,.82); border: 3px solid #ff3b2f; box-shadow: 0 0 40px rgba(255,40,20,.6);
+    }
+    #destruct.shake .panel { animation: shake .12s linear infinite; }
+    #destruct .hdr { font-size: 13px; letter-spacing: 4px; color: #ffb347; margin-bottom: 12px; }
+    #destruct .warn { font-size: 26px; letter-spacing: 3px; line-height: 1.3; animation: blink .5s steps(1) infinite; }
+    #destruct .t { margin: 18px 0 10px; font-size: 64px; letter-spacing: 6px; color: #fff; text-shadow: 0 0 18px #ff3b2f; }
+    #destruct .sub { min-height: 1.6em; font-size: 14px; letter-spacing: 2px; color: #ffb347; }
+    #whiteout { position: fixed; inset: 0; z-index: 60; background: #fff; opacity: 0; pointer-events: none; transition: opacity .6s; }
+    #whiteout.on { opacity: 1; }
+
     @media (prefers-reduced-motion: reduce) {
+      #destruct::before, #destruct::after, #destruct .warn, #destruct.shake .panel { animation: none; }
       #msg { animation: none; opacity: 1; }
       #msg .cur { animation: none; }
+      #lit.on { animation: none; }
+      #console { transition: none; }
     }
   </style>
 </head>
 <body>
 
+  <div id="lit"></div>
+
   <p id="msg" aria-label="Its Dark. Webstation has no power..."></p>
+
+  <div id="console">
+    <div id="log" aria-live="polite"></div>
+    <div class="row">
+      <span>&gt;</span>
+      <input id="cmd" type="text" autocomplete="off" spellcheck="false" placeholder="type here... (try 'help')" aria-label="command">
+    </div>
+  </div>
+
+  <div id="destruct" role="alert" aria-live="assertive">
+    <div class="panel">
+      <div class="hdr">MU-TH-047 // STATION CONTROL</div>
+      <div class="warn">EMERGENCY DESTRUCT SYSTEM ARMED</div>
+      <div class="t" id="dt">T-00:20</div>
+      <div class="sub" id="ds"></div>
+    </div>
+  </div>
+  <div id="whiteout"></div>
 
   <!-- Background sound -->
   <audio id="bg-sound" loop preload="auto">
@@ -49,7 +145,7 @@
     /* Background sound: tries to start straight away. If the browser blocks it,
        it starts on the visitor's first click, key press or tap. */
     (function(){
-      var VOLUME = 0.15;
+      var VOLUME = 0.5;
       var snd = document.getElementById('bg-sound');
       snd.volume = VOLUME;
 
@@ -68,30 +164,181 @@
   </script>
 
   <script>
-    /* Centre message: fades in, then types out one letter at a time. */
-    (function(){
-      var TEXT  = 'Its Dark. Webstation has no power...';
+    var reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* Centre message: fades in, then types out one letter at a time. Shows the console when done. */
+    var setMsg = (function(){
       var START = 1500;   /* ms before typing begins */
       var SPEED = 70;     /* ms per letter */
 
       var el = document.getElementById('msg');
       var textNode = document.createTextNode('');
-      var cur = document.createElement('span'); cur.className = 'cur'; cur.textContent = '\u25AE';
+      var cur = document.createElement('span'); cur.className = 'cur'; cur.textContent = '▮';
       el.appendChild(textNode); el.appendChild(cur);
+      var timer = null;
 
-      if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        textNode.nodeValue = TEXT; return;
-      }
-      var i = 0;
-      function step(){
-        textNode.nodeValue = TEXT.slice(0, ++i);
-        if (i < TEXT.length) {
-          var ch = TEXT.charAt(i - 1);
-          setTimeout(step, ch === '.' ? SPEED * 6 : SPEED);   /* pause on each dot */
+      function type(text, delay, done){
+        clearTimeout(timer);
+        textNode.nodeValue = '';
+        el.setAttribute('aria-label', text);
+        if (reduceMotion) { textNode.nodeValue = text; if (done) done(); return; }
+        var i = 0;
+        function step(){
+          textNode.nodeValue = text.slice(0, ++i);
+          if (i < text.length) timer = setTimeout(step, text.charAt(i - 1) === '.' ? SPEED * 6 : SPEED);   /* pause on each dot */
+          else if (done) done();
         }
+        timer = setTimeout(step, delay);
       }
-      setTimeout(step, START);
+
+      type('Its Dark. Webstation has no power...', START, function(){
+        setTimeout(function(){
+          document.getElementById('console').classList.add('on');
+          addLine('dim', 'a cursor blinks on an emergency terminal. type help.');
+          try { document.getElementById('cmd').focus({ preventScroll: true }); } catch (e) {}
+        }, 600);
+      });
+      return function(text){ type(text, 0); };
     })();
+
+    /* ---------- console ---------- */
+    var PASSWORDS = ['047', 'generator'];        /* typing one of these turns the lights on */
+    var POWER_SOUND = './sounds/power_up.mp3';   /* add this file when you have it; silent until then */
+
+    var log = document.getElementById('log');
+    var cmd = document.getElementById('cmd');
+    var MAX_LINES = 10, busy = false, powered = false;
+
+    function addLine(cls, text){
+      var d = document.createElement('div');
+      d.className = 'ln ' + cls; d.textContent = text;
+      log.appendChild(d);
+      while (log.children.length > MAX_LINES) log.removeChild(log.firstChild);
+    }
+
+    /* print lines one after another, then run done() */
+    function say(lines, done, gap){
+      busy = true;
+      var i = 0;
+      (function next(){
+        if (i >= lines.length) { busy = false; if (done) done(); return; }
+        var L = lines[i++];
+        addLine(L[0], L[1]);
+        setTimeout(next, reduceMotion ? 0 : (gap || 380));
+      })();
+    }
+
+    function lightsOn(){
+      if (powered) return;
+      powered = true;
+      try { var a = new Audio(POWER_SOUND); a.volume = 0.7; a.play().catch(function(){}); } catch (e) {}
+      document.getElementById('lit').classList.add('on');
+      setTimeout(function(){
+        setMsg('Webstation.047 is online.');
+        addLine('ok', 'POWER RESTORED.');
+      }, reduceMotion ? 0 : 2700);
+    }
+
+    var EERIE = [
+      'the dark does not understand that word.',
+      'something hums back at you. it is not a yes.',
+      'nothing happens. the nothing seems pleased.',
+      'the terminal blinks. it is waiting for something better.',
+      'your words echo down a corridor that should not be that long.'
+    ];
+
+    function run(raw){
+      var c = raw.trim().toLowerCase().replace(/\s+/g, ' ');
+      if (!c) return;
+      addLine('you', '> ' + raw.trim());
+
+      if (powered && /^(power on|flip breaker|breaker|reboot|047|generator)$/.test(c)) {
+        say([['sys', 'the lights are already on.']]); return;
+      }
+      if (PASSWORDS.indexOf(c) > -1) {
+        say([['ok', 'ACCESS CODE ACCEPTED.'], ['sys', 'rerouting emergency power...']], lightsOn); return;
+      }
+      switch (c) {
+        case 'help':
+          say([['sys', 'commands: look, check panel, flip breaker, power on, reboot, self destruct, clear'],
+               ['dim', '(some words are not on this list.)']]); break;
+        case 'look':
+        case 'look around':
+          say(powered
+            ? [['sys', 'the station hums. dust drifts through the light like slow snow.']]
+            : [['sys', 'darkness. a terminal glows faintly. a breaker panel hangs open on the wall.'],
+               ['dim', 'something is written on a sticky note beside it.']]); break;
+        case 'check panel':
+        case 'panel':
+        case 'read note':
+        case 'note':
+          say([['sys', 'main breaker: TRIPPED.'],
+               ['dim', 'the sticky note reads: "access code = station number"']]); break;
+        case 'flip breaker':
+        case 'breaker':
+        case 'power on':
+        case 'turn on lights':
+        case 'lights on':
+          say([['sys', '*clunk*'], ['sys', 'the breaker catches...']], lightsOn); break;
+        case 'reboot':
+          say([['sys', 'REBOOTING WEBSTATION.047...'],
+               ['sys', 'ALT POWER.......... OK'],
+               ['sys', 'LIFE SUPPORT....... OK'],
+               ['sys', 'CORRIDOR LIGHTS.... OK'],
+               ['sys', 'GRAVITY............ OK?']], lightsOn, 550); break;
+        case 'self destruct':
+        case 'self-destruct':
+        case 'selfdestruct':
+        case 'destruct':
+          say([['sys', 'DESTRUCT SEQUENCE AUTHORISED.'], ['sys', 'there is no override.']], selfDestruct); break;
+        case 'clear':
+          log.textContent = ''; break;
+        default:
+          say([['dim', EERIE[Math.floor(Math.random() * EERIE.length)]]]);
+      }
+    }
+
+    /* ---------- self destruct: alarm, countdown, white flash, then back to home.html ---------- */
+    var DESTRUCT_SOUND = './sounds/self_destruct.mp3';   /* add this file when you have it; silent until then */
+    var COUNT_FROM = 20;                                 /* seconds on the countdown (matches self_destruct.mp3) */
+    var LINES = [
+      'all personnel proceed to the escape shuttles.',
+      'coolant systems: offline.',
+      'reactor core: critical.',
+      'this station will detonate.',
+      'there is no override.',
+      'have a nice day.'
+    ];
+
+    function selfDestruct(){
+      busy = true;
+      cmd.disabled = true;
+      var bgs = document.getElementById('bg-sound'); try { bgs.pause(); } catch (e) {}
+      try { var a = new Audio(DESTRUCT_SOUND); a.volume = 0.9; a.play().catch(function(){}); } catch (e) {}
+
+      var box = document.getElementById('destruct'), dt = document.getElementById('dt'), ds = document.getElementById('ds');
+      box.classList.add('on');
+      var n = COUNT_FROM, li = 0;
+      function p2(x){ return x < 10 ? '0' + x : '' + x; }
+      (function tick(){
+        dt.textContent = 'T-00:' + p2(n);
+        if (n % 2 === 0) ds.textContent = LINES[li++ % LINES.length];
+        if (n <= 3) box.classList.add('shake');
+        if (n <= 0) {
+          document.getElementById('whiteout').classList.add('on');
+          setTimeout(function(){ window.location.href = 'home.html?destroyed=1'; }, 1400);
+          return;
+        }
+        n--;
+        setTimeout(tick, 1000);
+      })();
+    }
+
+    cmd.addEventListener('keydown', function(e){
+      if (e.key !== 'Enter' || busy) return;
+      var v = cmd.value; cmd.value = '';
+      run(v);
+    });
   </script>
 
 <script src="./transition.js"></script>
