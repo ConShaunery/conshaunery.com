@@ -92,6 +92,51 @@
   .info .f { margin-top: 4px; font-size: 11px; letter-spacing: 1px; color: #7a82ff; word-break: break-all; }
   .info .f::before { content: "file: "; color: #ff4fd8; }
 
+  /* 90s media-player controls (Windows 95 style bevels) */
+  .deck {
+    padding: 6px; background: #c0c0c0; color: #000; border-top: 2px solid #9b7bff;
+    box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+  }
+  .deck .row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .deck .row + .row { margin-top: 6px; }
+  .deck .b {
+    min-width: 38px; height: 26px; padding: 0 8px; border: 0; cursor: pointer;
+    background: #c0c0c0; color: #000; font: 13px "Lucida Console", "Courier New", monospace;
+    box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+  }
+  .deck .b:active, .deck .b.on {
+    padding: 2px 7px 0 9px;
+    box-shadow: inset 1px 1px #0a0a0a, inset -1px -1px #fff, inset 2px 2px #808080, inset -2px -2px #dfdfdf;
+  }
+  .deck .lcd {
+    padding: 4px 8px; background: #000; color: #3cff5a; font-size: 12px; letter-spacing: 1px; white-space: nowrap;
+    box-shadow: inset 1px 1px #808080, inset -1px -1px #fff, inset 2px 2px #0a0a0a;
+  }
+  .deck input[type=range] { -webkit-appearance: none; appearance: none; background: transparent; margin: 0; height: 22px; cursor: pointer; min-width: 0; }
+  .deck input[type=range]:focus { outline: none; }
+  .deck input[type=range]::-webkit-slider-runnable-track {
+    height: 4px; background: #dfdfdf;
+    box-shadow: inset 1px 1px #808080, inset -1px -1px #fff, inset 2px 2px #0a0a0a;
+  }
+  .deck input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 11px; height: 20px; margin-top: -8px; border: 0; border-radius: 0;
+    background: #c0c0c0;
+    box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+  }
+  .deck input[type=range]::-moz-range-track {
+    height: 4px; background: #dfdfdf;
+    box-shadow: inset 1px 1px #808080, inset -1px -1px #fff, inset 2px 2px #0a0a0a;
+  }
+  .deck input[type=range]::-moz-range-thumb {
+    width: 11px; height: 20px; border: 0; border-radius: 0; background: #c0c0c0;
+    box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+  }
+  .screen video { cursor: pointer; }
+  .win:fullscreen { display: flex; flex-direction: column; background: #000; }
+  .win:fullscreen .screen { aspect-ratio: auto; flex: 1; min-height: 0; }
+  .win:-webkit-full-screen { display: flex; flex-direction: column; background: #000; }
+  .win:-webkit-full-screen .screen { aspect-ratio: auto; flex: 1; min-height: 0; }
+
   /* ascii section headers */
   h2, .hd {
     display: flex; align-items: center; white-space: nowrap; overflow: hidden;
@@ -185,8 +230,20 @@
     <div class="win" id="theatre">
       <div class="bar"><span>[ now playing ]</span><span class="dash"></span><span>[_][#][x]</span></div>
       <div class="screen">
-        <video id="mv" controls preload="none"></video>
+        <video id="mv" preload="none" playsinline></video>
         <iframe id="mf" allowfullscreen hidden></iframe>
+      </div>
+      <div class="deck" id="deck">
+        <div class="row"><input type="range" id="seek" min="0" max="1000" value="0" step="1" style="flex:1" aria-label="seek"></div>
+        <div class="row">
+          <button class="b" id="bPlay" title="play / pause">&#9654;</button>
+          <button class="b" id="bStop" title="stop">&#9632;</button>
+          <div class="lcd" id="tm">00:00 / 00:00</div>
+          <span style="flex:1"></span>
+          <button class="b" id="bMute" title="mute this video">MUTE</button>
+          <input type="range" id="vol" min="0" max="100" value="100" style="width:90px" aria-label="volume">
+          <button class="b" id="bFull" title="fullscreen">[ ]</button>
+        </div>
       </div>
       <div class="info">
         <div class="t" id="vt"></div>
@@ -268,6 +325,7 @@ var bg=document.getElementById('bg-audio');
 var btn=document.getElementById('muteBtn');
 var mv=document.getElementById('mv');
 var mf=document.getElementById('mf');
+var deck=document.getElementById('deck');
 var vt=document.getElementById('vt');
 var vf=document.getElementById('vf');
 var ch=document.getElementById('ch');
@@ -350,6 +408,55 @@ mv.addEventListener('play',duck);
 mv.addEventListener('pause',duck);
 mv.addEventListener('ended',duck);
 
+/* ---------- 90s-style player controls ---------- */
+var bPlay=document.getElementById('bPlay'), bStop=document.getElementById('bStop');
+var bMute=document.getElementById('bMute'), bFull=document.getElementById('bFull');
+var seek=document.getElementById('seek'), vol=document.getElementById('vol'), tm=document.getElementById('tm');
+var seeking=false;
+
+function fmt(t){
+  if(!isFinite(t)||t<0) t=0;
+  var h=Math.floor(t/3600), m=Math.floor(t%3600/60), s=Math.floor(t%60);
+  return (h ? h+':'+p2(m) : p2(m))+':'+p2(s);
+}
+function tick(){
+  tm.textContent=fmt(mv.currentTime)+' / '+fmt(mv.duration);
+  if(!seeking && mv.duration) seek.value=Math.round(mv.currentTime/mv.duration*1000);
+}
+function icons(){
+  bPlay.innerHTML = mv.paused ? '\u25B6' : '\u275A\u275A';
+  bMute.className = 'b' + (mv.muted ? ' on' : '');
+}
+function toggle(){ if(mv.paused) mv.play().catch(function(){}); else mv.pause(); }
+
+['timeupdate','durationchange','loadedmetadata','seeked'].forEach(function(e){ mv.addEventListener(e,tick); });
+['play','pause','ended','emptied','volumechange'].forEach(function(e){ mv.addEventListener(e,icons); });
+mv.addEventListener('error',function(){
+  if(!mv.hasAttribute('src')) return;
+  tm.textContent='ERROR '+(mv.error ? mv.error.code : '?');     /* 4 = the file/format can't be played */
+});
+mv.addEventListener('click',toggle);
+bPlay.onclick=toggle;
+bStop.onclick=function(){ mv.pause(); try{ mv.currentTime=0; }catch(e){} tick(); };
+seek.addEventListener('input',function(){
+  seeking=true;
+  if(mv.duration) tm.textContent=fmt(seek.value/1000*mv.duration)+' / '+fmt(mv.duration);
+});
+seek.addEventListener('change',function(){
+  if(mv.duration) mv.currentTime=seek.value/1000*mv.duration;
+  seeking=false;
+});
+vol.addEventListener('input',function(){ mv.muted=false; mv.volume=vol.value/100; icons(); });
+bMute.onclick=function(){ mv.muted=!mv.muted; icons(); };
+bFull.onclick=function(){
+  var el=document.getElementById('theatre');
+  var inFs=document.fullscreenElement||document.webkitFullscreenElement;
+  var req=el.requestFullscreen||el.webkitRequestFullscreen;
+  var ex=document.exitFullscreen||document.webkitExitFullscreen;
+  if(inFs){ if(ex) ex.call(document); } else if(req){ req.call(el); }
+};
+tick(); icons();
+
 function loadRow(row, play){
   for(var i=0;i<rows.length;i++){ rows[i].classList.remove('active'); }
   row.classList.add('active');
@@ -359,10 +466,12 @@ function loadRow(row, play){
   renderComments(src);
   if(row.hasAttribute('data-embed')){
     mv.pause(); mv.removeAttribute('src'); mv.load(); mv.hidden=true;
+    deck.hidden=true;                                   /* the archive.org embed has its own controls */
     mf.src=src; mf.hidden=false;
   } else {
     mf.hidden=true; mf.src='about:blank';
-    mv.hidden=false; mv.src=src; mv.load();
+    mv.hidden=false; deck.hidden=false; mv.src=src; mv.load();
+    seek.value=0; tm.textContent='00:00 / 00:00';
     if(play) mv.play().catch(function(){});
   }
   duck();
