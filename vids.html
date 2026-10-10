@@ -4,88 +4,182 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <title>vids — conshaunery.com</title>
 <style type="text/css">
-  body { background: #000008 url("./skyboxes/night_3.png") repeat; color: #ffffff; font-family: "Comic Sans MS", Arial, sans-serif; text-align: center; }
-  a { color: #ff8800; }
-  #muteBtn { position: fixed; top: 12px; right: 12px; z-index: 500; background: #0a0018; color: #cc88ff; border: 1px solid #550088; padding: 6px 10px; font-size: 15px; cursor: pointer; }
-  .card { display: inline-block; vertical-align: top; width: 290px; margin: 6px; border: 1px solid #6600cc; background: #05000f; text-align: left; }
-  .card b { display: block; padding: 4px 8px; font-size: 12px; color: #cc88ff; border-bottom: 1px solid #330055; }
+  body {
+    margin: 0; padding: 28px 14px 44px; min-height: 100vh;
+    font-family: "Lucida Console", "Courier New", monospace;
+    color: #cdbfff; text-align: center;
+    background: #000 url("./pictures/bit_castle2.jpg") repeat;
+  }
+
+
+  /* scanlines */
+  body::after {
+    content: ""; position: fixed; inset: 0; z-index: 900; pointer-events: none;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px);
+  }
+  @keyframes tw { 50% { opacity: .2; } }
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes glitch {
+    0%, 92%, 100% { transform: none; }
+    93% { transform: translate(3px, 0); }
+    95% { transform: translate(-3px, 1px); }
+    97% { transform: translate(2px, -1px); }
+  }
+
+  a { color: #5ff7ff; }
+
+  /* soft-key mute button */
+  #muteBtn {
+    position: fixed; top: 12px; right: 12px; z-index: 500;
+    padding: 6px 12px; border: 0; cursor: pointer;
+    font-size: 16px; color: #1a1650; background: #b79bff;
+    box-shadow: 0 -2px 0 #d8c8ff, 0 2px 0 #6f55d8, -2px 0 0 #b79bff, 2px 0 0 #b79bff;
+  }
+  #muteBtn:hover { background: #5ff7ff; }
+
+  /* header */
+  .hero i {
+    display: inline-block; margin-top: 10px;
+    font-style: normal; font-size: 15px; letter-spacing: 3px; color: #fff;
+    text-shadow: -2px 0 #00f0ff, 2px 0 #ff2bd6;
+    animation: glitch 4s steps(1) infinite;
+  }
+  .hero i::after { content: " \25AE"; color: #5ff7ff; animation: blink 1s steps(1) infinite; }
+
+  /* keypad-style jump buttons */
+  .jumps { margin: 22px 0 34px; counter-reset: k; font-size: 0; }
+  .jumps a {
+    counter-increment: k;
+    display: inline-block; margin: 6px 7px; padding: 8px 16px 8px 12px;
+    font-size: 14px; letter-spacing: 2px; color: #cdbfff; text-decoration: none;
+    background: rgba(110,90,255,.18);
+    box-shadow: 0 -2px 0 #9b7bff, 0 2px 0 #9b7bff, -2px 0 0 #9b7bff, 2px 0 0 #9b7bff;
+  }
+  .jumps a::before {
+    content: counter(k); margin-right: 10px; font-size: 22px; color: #5ff7ff;
+    text-shadow: 0 0 8px rgba(95,247,255,.6);
+  }
+  .jumps a:hover {
+    color: #fff; background: rgba(255,79,216,.2);
+    box-shadow: 0 -2px 0 #ff4fd8, 0 2px 0 #ff4fd8, -2px 0 0 #ff4fd8, 2px 0 0 #ff4fd8;
+  }
+  .jumps a:hover::before { color: #ff9be8; }
+
+  /* sections */
+  .section {
+    max-width: 1000px; margin: 0 auto 40px; padding: 18px 10px 12px;
+    background: rgba(110,90,255,.1);
+    box-shadow: 0 -3px 0 #6f55d8, 0 3px 0 #6f55d8, -3px 0 0 #6f55d8, 3px 0 0 #6f55d8;
+  }
+  h2 {
+    margin: 0 0 16px; font-size: 22px; letter-spacing: 4px; text-transform: lowercase;
+    color: #fff; text-shadow: -2px 0 #00f0ff, 2px 0 #ff2bd6;
+  }
+  h2::after { content: " \25AE"; color: #5ff7ff; animation: blink 1s steps(1) infinite; }
+
+  /* video cards */
+  .card {
+    display: inline-block; vertical-align: top; width: 290px; margin: 9px; text-align: left;
+    background: #0b0d44;
+    box-shadow: 0 -2px 0 #9b7bff, 0 2px 0 #9b7bff, -2px 0 0 #9b7bff, 2px 0 0 #9b7bff, 6px 6px 0 rgba(0,0,0,.45);
+  }
+  .card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 0 -2px 0 #ff4fd8, 0 2px 0 #ff4fd8, -2px 0 0 #ff4fd8, 2px 0 0 #ff4fd8, 8px 8px 0 rgba(0,0,0,.45);
+  }
+  .card b {
+    display: block; padding: 6px 10px; font-size: 12px; font-weight: normal; letter-spacing: 1px;
+    color: #5ff7ff; background: #17167a; border-bottom: 2px solid #9b7bff;
+    text-shadow: 1px 0 #ff2bd6;
+  }
+  .card b::before { content: ">"; margin-right: 6px; color: #ff4fd8; }
   video, iframe { width: 100%; display: block; background: #000; border: none; }
+
+  .foot {
+    margin: 6px 0 0; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: #fff;
+    text-shadow: -2px 0 #00f0ff, 2px 0 #ff2bd6;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body::before, .hero i, .hero i::after, h2::after { animation: none; }
+  }
 </style>
 </head>
 <body>
 
 <button id="muteBtn">&#x1F50A;</button>
 
-<!-- gif at top -->
-<img src="./gifs/Vidz-.gif" alt="VIDS" style="width: 200px; height: auto;"><br>
-<i>~ video transmissions from the void ~</i>
+<div class="hero">
+  <!-- gif at top -->
+  <img src="./gifs/Vidz-.gif" alt="VIDS" style="width: 200px; height: auto;"><br>
+  <i>~ video transmissions from the void ~</i>
 
-<p>
-  <a href="#vault">vhs vault</a> &#9733;
-  <a href="#myvideos">my videos</a> &#9733;
-  <a href="#othervidz">other vidz</a>
-</p>
+  <p class="jumps">
+    <a href="#vault">vhs vault</a> &#9733;
+    <a href="#myvideos">my videos</a> &#9733;
+    <a href="#othervidz">other vidz</a>
+  </p>
+</div>
 
 <audio id="bg-audio" autoplay loop>
   <source src="./sounds/Adrianna Kirikl 02 Glitch.mp3" type="audio/mpeg">
 </audio>
 
-<hr>
-
 <!-- VHS VAULT -->
-<h2 id="vault">VHS Vault</h2>
-<div>
-  <div class="card"><b>The Internet For Beginners (1998)</b>
-    <iframe src="https://archive.org/embed/theinternetforbeginners1998" allowfullscreen></iframe></div>
+<div class="section">
+  <h2 id="vault">VHS Vault</h2>
+  <div>
+    <div class="card"><b>The Internet For Beginners (1998)</b>
+      <iframe src="https://archive.org/embed/theinternetforbeginners1998" allowfullscreen></iframe></div>
+  </div>
 </div>
-
-<hr>
 
 <!-- MY VIDEOS -->
-<h2 id="myvideos">My Videos</h2>
-<div>
-  <div class="card"><b>UFO Truth</b><video controls preload="none"><source src="./vids/WATCH NOW!!! The Truth Revealed About UFOs!!!.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>Halo CE</b><video controls preload="none"><source src="./vids/haloce.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>HOW TO GET FREE ARC TOKENS!!!</b><video controls preload="none"><source src="./vids/Arc Coins.mp4" type="video/mp4"></video></div>
+<div class="section">
+  <h2 id="myvideos">My Videos</h2>
+  <div>
+    <div class="card"><b>UFO Truth</b><video controls preload="none"><source src="./vids/WATCH NOW!!! The Truth Revealed About UFOs!!!.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>Halo CE</b><video controls preload="none"><source src="./vids/haloce.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>HOW TO GET FREE ARC TOKENS!!!</b><video controls preload="none"><source src="./vids/Arc Coins.mp4" type="video/mp4"></video></div>
+  </div>
 </div>
-
-<hr>
 
 <!-- OTHER VIDZ -->
-<h2 id="othervidz">Other Vidz</h2>
-<div>
-  <div class="card"><b>networking</b><video controls preload="none"><source src="./vids/network_wizard.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>piggy</b><video controls preload="none"><source src="./vids/panties.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>sick rap</b><video controls preload="none"><source src="./vids/rapper.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>walls</b><video controls preload="none"><source src="./vids/walls.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>my ass</b><video controls preload="none"><source src="./vids/myass.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>cring flute</b><video controls preload="none"><source src="./vids/This is The Day.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>banana man</b><video controls preload="none"><source src="./vids/bananaman.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>grandma</b><video controls preload="none"><source src="./vids/grandma.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>no</b><video controls preload="none"><source src="./vids/oh_no.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>transformers</b><video controls preload="none"><source src="./vids/transformer.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>hermuckuless</b><video controls preload="none"><source src="./vids/suck_toes.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>propoganda</b><video controls preload="none"><source src="./vids/propagada.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>xman</b><video controls preload="none"><source src="./vids/xman.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>grandpa</b><video controls preload="none"><source src="./vids/grandpa.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>scary</b><video controls preload="none"><source src="./vids/scary.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>kat</b><video controls preload="none"><source src="./vids/cat.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>Cat Harmonics</b><video controls preload="none"><source src="./vids/cat_hermonics.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>German Cola</b><video controls preload="none"><source src="./vids/germancola.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>Turkey</b><video controls preload="none"><source src="./vids/turkey.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>Rubert</b><video controls preload="none"><source src="./vids/rubert.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>Millkers</b><video controls preload="none"><source src="./vids/millkers.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>Fotosynthasis</b><video controls preload="none"><source src="./vids/fotosynthasis.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>edging</b><video controls preload="none"><source src="./vids/edging.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>frog_guy</b><video controls preload="none"><source src="./vids/frog_guy.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>irs_guy</b><video controls preload="none"><source src="./vids/irs.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>children</b><video controls preload="none"><source src="./vids/children.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>butt_i_do</b><video controls preload="none"><source src="./vids/butt_i_do.mp4" type="video/mp4"></video></div>
-  <div class="card"><b>connection_terminated</b><video controls preload="none"><source src="./vids/connection%20terminated.mp4" type="video/mp4"></video></div>
+<div class="section">
+  <h2 id="othervidz">Other Vidz</h2>
+  <div>
+    <div class="card"><b>networking</b><video controls preload="none"><source src="./vids/network_wizard.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>piggy</b><video controls preload="none"><source src="./vids/panties.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>sick rap</b><video controls preload="none"><source src="./vids/rapper.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>walls</b><video controls preload="none"><source src="./vids/walls.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>my ass</b><video controls preload="none"><source src="./vids/myass.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>cring flute</b><video controls preload="none"><source src="./vids/This is The Day.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>banana man</b><video controls preload="none"><source src="./vids/bananaman.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>grandma</b><video controls preload="none"><source src="./vids/grandma.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>no</b><video controls preload="none"><source src="./vids/oh_no.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>transformers</b><video controls preload="none"><source src="./vids/transformer.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>hermuckuless</b><video controls preload="none"><source src="./vids/suck_toes.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>propoganda</b><video controls preload="none"><source src="./vids/propagada.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>xman</b><video controls preload="none"><source src="./vids/xman.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>grandpa</b><video controls preload="none"><source src="./vids/grandpa.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>scary</b><video controls preload="none"><source src="./vids/scary.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>kat</b><video controls preload="none"><source src="./vids/cat.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>Cat Harmonics</b><video controls preload="none"><source src="./vids/cat_hermonics.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>German Cola</b><video controls preload="none"><source src="./vids/germancola.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>Turkey</b><video controls preload="none"><source src="./vids/turkey.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>Rubert</b><video controls preload="none"><source src="./vids/rubert.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>Millkers</b><video controls preload="none"><source src="./vids/millkers.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>Fotosynthasis</b><video controls preload="none"><source src="./vids/fotosynthasis.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>edging</b><video controls preload="none"><source src="./vids/edging.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>frog_guy</b><video controls preload="none"><source src="./vids/frog_guy.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>irs_guy</b><video controls preload="none"><source src="./vids/irs.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>children</b><video controls preload="none"><source src="./vids/children.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>butt_i_do</b><video controls preload="none"><source src="./vids/butt_i_do.mp4" type="video/mp4"></video></div>
+    <div class="card"><b>connection_terminated</b><video controls preload="none"><source src="./vids/connection%20terminated.mp4" type="video/mp4"></video></div>
+  </div>
 </div>
 
-<hr>
-<p><font size="1">conshaunery was here.</font></p>
+<p class="foot">conshaunery was here.</p>
 
 <script type="text/javascript">
 var BASE=0.6, DUCK=0.08;
