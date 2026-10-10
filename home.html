@@ -76,6 +76,15 @@
         position: relative;
         min-height: 420px;
         margin: 10px 0;
+        cursor: crosshair;
+        touch-action: none;
+        user-select: none; -webkit-user-select: none;
+      }
+      #ink {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        z-index: 1; pointer-events: none;
+        image-rendering: pixelated;
       }
       .orb {
         position: absolute; top: 40%; left: 10%;   /* fallback row if JS is off */
@@ -125,7 +134,6 @@
     <p>hey, its your boy the dark-webmaster, ConShaun. U can say im Superduper Passionate about creating beautifuler and functionally interWeb links and pages! And nostalgic memomries to fight those evil depression!</p>
   </div>
 </div>
-
     <!-- FLOATING ICONS -->
     <div class="container" id="stage">
       <a class="orb" href="vids.html"><img src="./gifs/film_2.gif" alt="vids"><span>vids</span></a>
@@ -133,6 +141,7 @@
       <a class="orb" href="terminal.html"><img src="./gifs/terminal.gif" alt="terminal"><span>terminal</span></a>
       <a class="orb" href="about.html"><img src="./gifs/wizard.gif" alt="about"><span>about</span></a>
       <a class="orb" href="stream.html"><img src="./gifs/stream_2.gif" alt="stream"><span>stream</span></a>
+      <canvas id="ink"></canvas>
     </div>
 
     <footer>
@@ -192,16 +201,22 @@
 
 <script>
 /* Floating icons: every visit each icon is randomly given a behaviour
-   (spin = bounces around spinning, orbit = circles a point, flee = runs from the cursor)
-   plus random speeds, sizes of orbit and start positions. */
+   (spin = bounces around spinning, orbit = circles a point, flee = runs from the cursor).
+   Click + drag on the empty area to draw rainbow pixel lines. The lines block the icons,
+   then slowly disintegrate pixel by pixel. */
 (function(){
   var stage = document.getElementById('stage');
   var orbs  = [].slice.call(stage.querySelectorAll('.orb'));
-  var SIZE  = 64;
+  var ink   = document.getElementById('ink');
+  var ctx   = ink.getContext('2d');
+  var SIZE = 64, HALF = SIZE/2;
+  var R    = 24;      /* collision radius of an icon */
+  var CELL = 6;       /* size of one line pixel */
+  var LIFE = 7000;    /* average lifetime of a line pixel (ms) */
   var W = 0, H = 0;
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function measure(){ W = stage.clientWidth; H = stage.clientHeight; }
+  function measure(){ W = stage.clientWidth; H = stage.clientHeight; ink.width = W; ink.height = H; }
   function rnd(a,b){ return a + Math.random()*(b-a); }
   function sign(){ return Math.random() < .5 ? -1 : 1; }
   function span(lo,hi){ return hi < lo ? (lo+hi)/2 : rnd(lo,hi); }
@@ -214,25 +229,30 @@
   var seen = {}; modes.forEach(function(m){ seen[m] = 1; });
   if (Object.keys(seen).length < 2) { modes[0] = 'spin'; modes[1] = 'flee'; modes[2] = 'orbit'; }
 
+  /* positions are the CENTRE of each icon */
   var S = orbs.map(function(el, i){
     var m = modes[i];
     var s = { el: el, img: el.querySelector('img'), mode: m, hover: false,
-              x: rnd(0, Math.max(1, W-SIZE)), y: rnd(0, Math.max(1, H-SIZE)),
-              vx: 0, vy: 0, rot: rnd(0,360), rs: 0 };
+              px: rnd(HALF, Math.max(HALF+1, W-HALF)), py: rnd(HALF, Math.max(HALF+1, H-HALF)),
+              vx: 0, vy: 0, rot: rnd(0,360), rs: 0, e: 1 };
     if (m === 'spin') {
-      var a = rnd(0, 6.28), sp = rnd(25, 70);
-      s.vx = Math.cos(a)*sp; s.vy = Math.sin(a)*sp; s.rs = sign()*rnd(150, 480);
+      var a = rnd(0, 6.28); s.sp0 = rnd(25, 70);
+      s.vx = Math.cos(a)*s.sp0; s.vy = Math.sin(a)*s.sp0; s.rs = sign()*rnd(150, 480);
     }
     if (m === 'orbit') {
-      var maxR = Math.max(30, Math.min(W,H)/2 - SIZE/2 - 4);
+      /* a real (physical) orbit, so a line can knock it off its path */
+      var maxR = Math.max(30, Math.min(W,H)/2 - HALF - 4);
       s.r  = rnd(Math.min(50,maxR), Math.min(170,maxR));
-      s.cx = span(s.r + SIZE/2, W - s.r - SIZE/2);
-      s.cy = span(s.r + SIZE/2, H - s.r - SIZE/2);
-      s.th = rnd(0, 6.28); s.om = sign()*rnd(.5, 1.3); s.ry = rnd(.5, 1);
+      s.ox = span(s.r + HALF, W - s.r - HALF);
+      s.oy = span(s.r + HALF, H - s.r - HALF);
+      var th = rnd(0, 6.28), om = sign()*rnd(.5, 1.3), ry = rnd(.5, 1);
+      s.w  = Math.abs(om);
+      s.px = s.ox + s.r*Math.cos(th);        s.py = s.oy + s.r*ry*Math.sin(th);
+      s.vx = -s.r*om*Math.sin(th);           s.vy = s.r*ry*om*Math.cos(th);
       s.rs = sign()*rnd(30, 120);
     }
     if (m === 'flee') {
-      s.hx = s.x; s.hy = s.y;
+      s.hx = s.px; s.hy = s.py; s.e = .5;
       var a2 = rnd(0, 6.28); s.vx = Math.cos(a2)*15; s.vy = Math.sin(a2)*15;
     }
     el.style.left = '0'; el.style.top = '0';
@@ -243,13 +263,13 @@
   });
 
   function draw(s){
-    s.el.style.transform  = 'translate(' + s.x + 'px,' + s.y + 'px)';
+    s.el.style.transform  = 'translate(' + (s.px-HALF) + 'px,' + (s.py-HALF) + 'px)';
     s.img.style.transform = 'rotate(' + s.rot + 'deg)';
   }
 
   function place(){
     S.forEach(function(s, i){
-      if (reduce) { s.x = (W/(S.length+1))*(i+1) - SIZE/2; s.y = H/2 - SIZE/2; s.rot = 0; }
+      if (reduce) { s.px = (W/(S.length+1))*(i+1); s.py = H/2; s.rot = 0; }
       draw(s);
     });
   }
@@ -258,61 +278,251 @@
   window.addEventListener('resize', function(){
     measure();
     S.forEach(function(s){
-      if (s.mode !== 'orbit') { s.x = clamp(s.x, 0, Math.max(0, W-SIZE)); s.y = clamp(s.y, 0, Math.max(0, H-SIZE)); }
+      s.px = clamp(s.px, HALF, Math.max(HALF, W-HALF));
+      s.py = clamp(s.py, HALF, Math.max(HALF, H-HALF));
+      if (s.mode === 'orbit') { s.ox = clamp(s.ox, HALF, Math.max(HALF, W-HALF)); s.oy = clamp(s.oy, HALF, Math.max(HALF, H-HALF)); }
     });
     if (reduce) place();
   });
 
-  if (reduce) return;   /* respect reduced-motion: icons just sit in a row */
+  if (reduce) { ink.style.display = 'none'; return; }   /* reduced motion: icons sit in a row, no drawing */
+
+  /* ---------- rainbow pixel lines ---------- */
+  var COLS = [];
+  for (var h0 = 0; h0 < 360; h0 += 5) COLS.push('hsl(' + h0 + ',100%,60%)');
+
+  var cells  = new Map();    /* one entry per line pixel */
+  var nextId = 1, MAXCELLS = 7000;
+  function key(gx,gy){ return gx + gy*4096; }
+
+  function addCell(gx, gy, hi, now){
+    if (gx < 0 || gy < 0 || gx*CELL >= W || gy*CELL >= H) return;
+    cells.set(key(gx,gy), { gx: gx, gy: gy, hi: hi, born: now, life: LIFE*rnd(.6,1.4),
+                            id: nextId++, solid: true, vis: true, a: 1 });
+    if (cells.size > MAXCELLS) cells.delete(cells.keys().next().value);
+  }
+
+  var drawing = false, lx = 0, ly = 0, hue = 0;
+  function stagePos(e){ var r = stage.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+
+  function stamp(x, y, now){
+    var hi = Math.floor(((hue % 360) + 360) % 360 / 5) % COLS.length;
+    var gx = Math.floor((x - CELL)/CELL), gy = Math.floor((y - CELL)/CELL);   /* 2x2 pixel brush = 12px wide line */
+    for (var i = 0; i < 2; i++) for (var j = 0; j < 2; j++) addCell(gx+i, gy+j, hi, now);
+  }
+  function stroke(x, y){
+    var now = performance.now();
+    var dx = x - lx, dy = y - ly, d = Math.sqrt(dx*dx + dy*dy);
+    var n = Math.max(1, Math.ceil(d/3));
+    for (var i = 1; i <= n; i++) {
+      hue += (d/n)*0.9;                                  /* colour cycles along the line */
+      stamp(lx + dx*i/n, ly + dy*i/n, now);
+    }
+    lx = x; ly = y;
+  }
+
+  stage.addEventListener('pointerdown', function(e){
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    if (e.target.closest && e.target.closest('.orb')) return;   /* clicking an icon still follows the link */
+    var p = stagePos(e);
+    drawing = true; hue = rnd(0,360); lx = p.x; ly = p.y;
+    stroke(p.x, p.y);
+    e.preventDefault();
+  });
+  document.addEventListener('pointerup',     function(){ drawing = false; });
+  document.addEventListener('pointercancel', function(){ drawing = false; });
+  window.addEventListener('blur',            function(){ drawing = false; });
 
   var mx = null, my = null;
-  document.addEventListener('mousemove', function(e){ mx = e.clientX; my = e.clientY; });
+  document.addEventListener('pointermove', function(e){
+    mx = e.clientX; my = e.clientY;
+    if (drawing) { var p = stagePos(e); stroke(p.x, p.y); }
+  });
   document.addEventListener('mouseleave', function(){ mx = my = null; });
+
+  function hash01(id, t){ var v = Math.sin(id*12.9898 + t*78.233)*43758.5453; return v - Math.floor(v); }
+
+  /* pixels live ~4-9s; in their last 38% they flicker out one by one */
+  function updateCells(now){
+    var tick = Math.floor(now/90);
+    cells.forEach(function(c, k){
+      var age = now - c.born;
+      if (age >= c.life) { cells.delete(k); return; }
+      var left = 1 - age/c.life, fade = .38;
+      if (left > fade) { c.vis = true; c.solid = true; c.a = 1; }
+      else {
+        var p = 1 - left/fade;
+        c.vis = hash01(c.id, tick) > p*.95;
+        c.solid = c.vis;
+        c.a = 1 - p*.5;
+      }
+    });
+  }
+
+  function drawCells(){
+    ctx.clearRect(0, 0, W, H);
+    cells.forEach(function(c){
+      if (!c.vis) return;
+      var x = c.gx*CELL, y = c.gy*CELL;
+      ctx.globalAlpha = c.a;
+      ctx.fillStyle = COLS[c.hi];
+      ctx.fillRect(x, y, CELL, CELL);
+      ctx.fillStyle = 'rgba(255,255,255,.35)';
+      ctx.fillRect(x + 1, y + 1, 2, 2);
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  /* ---------- physics ---------- */
+  /* push an icon out of any line pixel it overlaps, and bounce it off */
+  function collide(s){
+    if (!cells.size) return;
+    var x0 = Math.floor((s.px - R)/CELL), x1 = Math.floor((s.px + R)/CELL);
+    var y0 = Math.floor((s.py - R)/CELL), y1 = Math.floor((s.py + R)/CELL);
+    for (var gx = x0; gx <= x1; gx++) for (var gy = y0; gy <= y1; gy++) {
+      if (gx < 0 || gy < 0) continue;
+      var c = cells.get(key(gx,gy));
+      if (!c || !c.solid) continue;
+      var rx = gx*CELL, ry = gy*CELL;
+      var dx = s.px - clamp(s.px, rx, rx + CELL), dy = s.py - clamp(s.py, ry, ry + CELL);
+      var d2 = dx*dx + dy*dy;
+      if (d2 >= R*R) continue;
+      var d = Math.sqrt(d2), ux, uy;
+      if (d < .001) {
+        ux = s.px - (rx + CELL/2); uy = s.py - (ry + CELL/2);
+        var l = Math.sqrt(ux*ux + uy*uy) || 1; ux /= l; uy /= l; d = 0;
+      } else { ux = dx/d; uy = dy/d; }
+      s.px += ux*(R - d); s.py += uy*(R - d);
+      var vn = s.vx*ux + s.vy*uy;
+      if (vn < 0) { s.vx -= (1 + s.e)*vn*ux; s.vy -= (1 + s.e)*vn*uy; }
+    }
+  }
+
+  function edges(s){
+    var bounce = s.mode !== 'flee';       /* fleeing icons pin to the edge so they can be cornered */
+    if (s.px < HALF)   { s.px = HALF;   s.vx = bounce ?  Math.abs(s.vx) : 0; }
+    if (s.px > W-HALF) { s.px = W-HALF; s.vx = bounce ? -Math.abs(s.vx) : 0; }
+    if (s.py < HALF)   { s.py = HALF;   s.vy = bounce ?  Math.abs(s.vy) : 0; }
+    if (s.py > H-HALF) { s.py = H-HALF; s.vy = bounce ? -Math.abs(s.vy) : 0; }
+  }
+
+  function step(s, h, curX, curY){
+    if (s.mode === 'orbit') {
+      var w2 = s.w*s.w;
+      s.vx -= w2*(s.px - s.ox)*h; s.vy -= w2*(s.py - s.oy)*h;
+    }
+    else if (s.mode === 'flee') {
+      s.vx += rnd(-1,1)*40*h; s.vy += rnd(-1,1)*40*h;                /* wander */
+      s.vx += (s.hx - s.px)*0.15*h; s.vy += (s.hy - s.py)*0.15*h;     /* drift back home */
+      if (curX !== null) {
+        var dx = s.px - curX, dy = s.py - curY, d = Math.sqrt(dx*dx + dy*dy) || 1;
+        if (d < 150) { var f = (1 - d/150)*1100; s.vx += dx/d*f*h; s.vy += dy/d*f*h; }
+      }
+      var fr = Math.pow(.35, h); s.vx *= fr; s.vy *= fr;
+      var sp = Math.sqrt(s.vx*s.vx + s.vy*s.vy);
+      if (sp > 320) { s.vx = s.vx/sp*320; s.vy = s.vy/sp*320; }
+    }
+    s.px += s.vx*h; s.py += s.vy*h;
+    edges(s);
+    collide(s);
+    if (s.mode === 'spin') {                                          /* keep a steady speed */
+      var v = Math.sqrt(s.vx*s.vx + s.vy*s.vy);
+      if (v < 1) { var a = rnd(0, 6.28); s.vx = Math.cos(a)*s.sp0; s.vy = Math.sin(a)*s.sp0; }
+      else { s.vx *= s.sp0/v; s.vy *= s.sp0/v; }
+    }
+  }
 
   var last = performance.now();
   function frame(t){
-    var dt = Math.min(.05, (t - last)/1000); last = t;
+    var dt = Math.max(0, Math.min(.05, (t - last)/1000)); last = t;
     var rect = stage.getBoundingClientRect();
-    var px = mx === null ? null : mx - rect.left;
-    var py = my === null ? null : my - rect.top;
+    var curX = mx === null ? null : mx - rect.left;
+    var curY = my === null ? null : my - rect.top;
+
+    updateCells(t);
 
     S.forEach(function(s){
       if (s.hover) return;
-
-      if (s.mode === 'spin') {
-        s.x += s.vx*dt; s.y += s.vy*dt; s.rot += s.rs*dt;
-        if (s.x < 0)      { s.x = 0;      s.vx = -s.vx; }
-        if (s.x > W-SIZE) { s.x = W-SIZE; s.vx = -s.vx; }
-        if (s.y < 0)      { s.y = 0;      s.vy = -s.vy; }
-        if (s.y > H-SIZE) { s.y = H-SIZE; s.vy = -s.vy; }
-      }
-      else if (s.mode === 'orbit') {
-        s.th += s.om*dt; s.rot += s.rs*dt;
-        s.x = s.cx + s.r*Math.cos(s.th) - SIZE/2;
-        s.y = s.cy + s.r*s.ry*Math.sin(s.th) - SIZE/2;
-      }
-      else { /* flee */
-        s.vx += rnd(-1,1)*40*dt; s.vy += rnd(-1,1)*40*dt;           /* wander */
-        s.vx += (s.hx - s.x)*0.15*dt; s.vy += (s.hy - s.y)*0.15*dt;  /* drift back home */
-        if (px !== null) {
-          var dx = s.x + SIZE/2 - px, dy = s.y + SIZE/2 - py;
-          var d = Math.sqrt(dx*dx + dy*dy) || 1;
-          if (d < 150) { var f = (1 - d/150)*1100; s.vx += dx/d*f*dt; s.vy += dy/d*f*dt; }
-        }
-        var fr = Math.pow(.35, dt); s.vx *= fr; s.vy *= fr;
-        var sp = Math.sqrt(s.vx*s.vx + s.vy*s.vy);
-        if (sp > 320) { s.vx = s.vx/sp*320; s.vy = s.vy/sp*320; }
-        s.x += s.vx*dt; s.y += s.vy*dt;
-        if (s.x < 0)      { s.x = 0;      s.vx = 0; }   /* pins at the edge so it can be cornered */
-        if (s.x > W-SIZE) { s.x = W-SIZE; s.vx = 0; }
-        if (s.y < 0)      { s.y = 0;      s.vy = 0; }
-        if (s.y > H-SIZE) { s.y = H-SIZE; s.vy = 0; }
-      }
-      draw(s);
+      var speed = Math.sqrt(s.vx*s.vx + s.vy*s.vy);
+      var n = Math.min(12, Math.max(1, Math.ceil(speed*dt/3)));      /* small steps so icons can't tunnel through lines */
+      var h = dt/n;
+      for (var k = 0; k < n; k++) step(s, h, curX, curY);
+      s.rot += s.rs*dt;
     });
+
+    S.forEach(draw);
+    drawCells();
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+})();
+</script>
+
+<script>
+/* Background music: starts 3 seconds after the page opens, fading in slowly,
+   then plays through the playlist and loops it. */
+(function(){
+  var PLAYLIST = [
+    './sounds/music/home1.mp3',
+    './sounds/music/home2.mp3',
+    './sounds/music/home3.mp3',
+   './sounds/music/home4.mp3',
+    /* add more tracks here, e.g. './sounds/music/yourtrack.mp3' */
+  ];
+  var DELAY_MS = 2000;   /* wait before the music starts */
+  var FADE_MS  = 5000;   /* how long the fade-in takes */
+  var VOLUME   = 0.5;    /* final volume, 0 to 1 */
+  var SHUFFLE  = true;   /* new random track order every visit */
+
+  var order = PLAYLIST.map(function(_, i){ return i; });
+  if (SHUFFLE) {
+    for (var i = order.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random()*(i+1)), t = order[i]; order[i] = order[j]; order[j] = t;
+    }
+  }
+
+  var music = new Audio();
+  music.preload = 'auto';
+  var cur = 0, fails = 0, started = false, starting = false;
+
+  function load(){ music.src = PLAYLIST[order[cur]]; }
+  function next(){ cur = (cur + 1) % order.length; load(); return music.play(); }
+
+  music.addEventListener('ended', function(){ fails = 0; next().catch(function(){}); });
+  music.addEventListener('error', function(){          /* missing/bad file: skip it, but don't loop forever */
+    if (++fails < order.length) next().catch(function(){});
+  });
+
+  function fadeIn(){
+    var t0 = Date.now();
+    music.volume = 0;
+    var timer = setInterval(function(){
+      var f = Math.min(1, (Date.now() - t0)/FADE_MS);
+      music.volume = VOLUME*f;
+      if (f >= 1) clearInterval(timer);
+    }, 50);
+  }
+
+  function begin(){
+    if (started || starting || !order.length) return;
+    starting = true;
+    music.volume = 0;
+    if (!music.src) load();
+    var p = music.play();
+    if (p && p.then) {
+      p.then(function(){ started = true; starting = false; fadeIn(); })
+       .catch(function(){ starting = false; waitForTouch(); });   /* browser blocked autoplay */
+    } else { started = true; starting = false; fadeIn(); }
+  }
+
+  /* browsers can block sound until the visitor interacts: if so, start (and fade in) on their first click/key/tap */
+  function waitForTouch(){
+    var evs = ['pointerdown', 'keydown', 'touchstart'];
+    function go(){ evs.forEach(function(e){ document.removeEventListener(e, go, true); }); begin(); }
+    evs.forEach(function(e){ document.addEventListener(e, go, true); });
+  }
+
+  setTimeout(begin, DELAY_MS);
 })();
 </script>
   </body>
