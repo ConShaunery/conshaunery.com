@@ -6,36 +6,82 @@
 <style type="text/css">
 
   body {
-      background: #000 url("./backgrounds/Grape_Gravity.jpg") repeat;
-      background-size: 100%;
-      color: #fff;
-      font-family: Helvetica, Arial, sans-serif;
-      margin:0; padding:40px 20px;
-      text-align:center;
-      a { color: #ff8800; text-decoration: none; }
+   background: #000 url("./pictures/bit_castle.png") repeat;
+    color: #cfd0ff;
+    font-family: "Lucida Console", "Courier New", monospace;
+    margin: 0; padding: 40px 20px;
+    text-align: center;
   }
 
+  /* faint scanlines */
+  body::after {
+    content: ""; position: fixed; inset: 0; z-index: 900; pointer-events: none;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,.15) 0 1px, transparent 1px 3px);
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  a { color: #ffb347; text-decoration: none; }
   a:hover { text-decoration: underline; }
 
+  /* header */
+  header { margin-bottom: 26px; padding-bottom: 14px; border-bottom: 2px solid #2f35e6; }
   header img { max-height: 120px; display: inline-block; }
-  header { margin-bottom: 20px; border-bottom: 1px solid #330055; padding-bottom: 10px; }
+  header div {
+    margin-top: 10px; font-size: 14px; letter-spacing: 3px; color: #fff;
+    text-shadow: -2px 0 #3a3aff, 2px 0 #ff4fd8;
+  }
+  header div::after { content: " \25AE"; color: #3cff5a; animation: blink 1s steps(1) infinite; }
 
-  .sec-title { color: #ffff00; font-family: Impact, Arial, sans-serif; letter-spacing: 3px; }
-  .sec-note  { color: #9988bb; font-style: italic; margin: 4px 0 8px; }
+  /* section titles - window-light orange */
+  .sec-title {
+    display: inline-block; margin-top: 18px; padding: 6px 16px;
+    font-size: 18px; letter-spacing: 4px; text-transform: lowercase;
+    color: #ffb347; background: #07072e;
+    text-shadow: 0 0 10px rgba(255,179,71,.55);
+    box-shadow: 0 -2px 0 #2f35e6, 0 2px 0 #2f35e6, -2px 0 0 #2f35e6, 2px 0 0 #2f35e6;
+  }
+  .sec-title::before { content: ">"; margin-right: 8px; color: #3cff5a; }
+  .sec-note { color: #ff7be5; font-style: italic; margin: 12px 0 4px; }
 
-  .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 10px 0 20px; }
-  .gallery img { width: 260px; height: 200px; object-fit: cover; border: 2px solid #330055; cursor: pointer; }
-  .gallery img:hover { border-color: #9933ff; }
+  /* galleries */
+  .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin: 18px 0 26px; }
+  .gallery img {
+    --c: #3a3aff;
+    width: 260px; height: 200px; object-fit: cover; cursor: pointer; background: #05051a;
+    box-shadow: 0 -2px 0 var(--c), 0 2px 0 var(--c), -2px 0 0 var(--c), 2px 0 0 var(--c), 5px 5px 0 rgba(58,58,255,.35);
+  }
+  .gallery img:nth-child(3n+2) { --c: #3cff5a; }
+  .gallery img:nth-child(3n+3) { --c: #ff4fd8; }
+  .gallery img:hover {
+    --c: #ffb347;
+    transform: translate(-2px, -2px);
+    box-shadow: 0 -2px 0 var(--c), 0 2px 0 var(--c), -2px 0 0 var(--c), 2px 0 0 var(--c), 0 0 18px rgba(255,179,71,.6);
+  }
 
   .gallery.single img { width: 100%; max-width: 500px; height: auto; }
 
-  footer { border-top: 1px solid #330055; margin-top: 20px; padding-top: 10px; font-size: 11px; color: #666688; }
+  footer {
+    border-top: 2px solid #2f35e6; margin-top: 26px; padding-top: 12px;
+    font-size: 12px; letter-spacing: 2px; color: #6f74ff;
+  }
 
   /* lightbox */
-  #lb { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 500; align-items: center; justify-content: center; cursor: pointer; }
+  #lb { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.94); z-index: 500; align-items: center; justify-content: center; cursor: pointer; }
   #lb.open { display: flex; }
-  #lb img { max-width: 90vw; max-height: 88vh; border: 2px solid #6600cc; cursor: default; }
-  #lb-close { position: fixed; top: 14px; right: 20px; font-size: 24px; color: #fff; cursor: pointer; z-index: 501; }
+  #lb img {
+    max-width: 90vw; max-height: 88vh; cursor: default;
+    box-shadow: 0 -3px 0 #ff4fd8, 0 3px 0 #ff4fd8, -3px 0 0 #ff4fd8, 3px 0 0 #ff4fd8, 0 0 30px rgba(255,79,216,.35);
+  }
+  #lb-close {
+    position: fixed; top: 14px; right: 20px; z-index: 501;
+    padding: 6px 12px; font-size: 18px; color: #000; background: #3cff5a; cursor: pointer;
+    box-shadow: 0 -2px 0 #3cff5a, 0 2px 0 #3cff5a, -2px 0 0 #3cff5a, 2px 0 0 #3cff5a;
+  }
+  #lb-close:hover { background: #ffb347; box-shadow: 0 -2px 0 #ffb347, 0 2px 0 #ffb347, -2px 0 0 #ffb347, 2px 0 0 #ffb347; }
+
+  @media (prefers-reduced-motion: reduce) {
+    header div::after { animation: none; }
+  }
 
 </style>
 </head>
