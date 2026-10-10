@@ -4,27 +4,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <title>vids — conshaunery.com</title>
 <style type="text/css">
+  [hidden] { display: none !important; }
+
   body {
     margin: 0; padding: 28px 14px 44px; min-height: 100vh;
     font-family: "Lucida Console", "Courier New", monospace;
     color: #cdbfff; text-align: center;
-    background: #000 url("./pictures/bit_castle2.jpg") repeat;
+    background: #000 url("./pictures/bit_building.png") center;
   }
-
 
   /* scanlines */
   body::after {
     content: ""; position: fixed; inset: 0; z-index: 900; pointer-events: none;
     background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px);
   }
-  @keyframes tw { 50% { opacity: .2; } }
   @keyframes blink { 50% { opacity: 0; } }
-  @keyframes glitch {
-    0%, 92%, 100% { transform: none; }
-    93% { transform: translate(3px, 0); }
-    95% { transform: translate(-3px, 1px); }
-    97% { transform: translate(2px, -1px); }
-  }
 
   a { color: #5ff7ff; }
 
@@ -40,19 +34,19 @@
   /* header */
   .hero i {
     display: inline-block; margin-top: 10px;
-    font-style: normal; font-size: 15px; letter-spacing: 3px; color: #fff;
-    text-shadow: -2px 0 #00f0ff, 2px 0 #ff2bd6;
-    animation: glitch 4s steps(1) infinite;
+    font-style: normal; font-size: 14px; letter-spacing: 2px; color: #fff;
+    text-shadow: -2px 0 #00f0ff, 2px 0 #ff2bd6, 0 0 6px #000;
   }
+  .hero i::before { content: "C:\\VIDS> "; color: #3cff5a; text-shadow: none; }
   .hero i::after { content: " \25AE"; color: #5ff7ff; animation: blink 1s steps(1) infinite; }
 
-  /* keypad-style jump buttons */
-  .jumps { margin: 22px 0 34px; counter-reset: k; font-size: 0; }
+  /* keypad-style jump menu */
+  .jumps { margin: 20px 0 30px; counter-reset: k; font-size: 0; }
   .jumps a {
     counter-increment: k;
     display: inline-block; margin: 6px 7px; padding: 8px 16px 8px 12px;
     font-size: 14px; letter-spacing: 2px; color: #cdbfff; text-decoration: none;
-    background: rgba(110,90,255,.18);
+    background: rgba(7,9,58,.88);
     box-shadow: 0 -2px 0 #9b7bff, 0 2px 0 #9b7bff, -2px 0 0 #9b7bff, 2px 0 0 #9b7bff;
   }
   .jumps a::before {
@@ -60,48 +54,106 @@
     text-shadow: 0 0 8px rgba(95,247,255,.6);
   }
   .jumps a:hover {
-    color: #fff; background: rgba(255,79,216,.2);
+    color: #fff; background: rgba(60,10,70,.92);
     box-shadow: 0 -2px 0 #ff4fd8, 0 2px 0 #ff4fd8, -2px 0 0 #ff4fd8, 2px 0 0 #ff4fd8;
   }
   .jumps a:hover::before { color: #ff9be8; }
 
-  /* sections */
-  .section {
-    max-width: 1000px; margin: 0 auto 40px; padding: 18px 10px 12px;
-    background: rgba(110,90,255,.1);
-    box-shadow: 0 -3px 0 #6f55d8, 0 3px 0 #6f55d8, -3px 0 0 #6f55d8, 3px 0 0 #6f55d8;
+  /* page layout: theatre + comments on the left, video list on the right */
+  .layout {
+    max-width: 1300px; margin: 0 auto; text-align: left;
+    display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 22px; align-items: start;
   }
-  h2 {
-    margin: 0 0 16px; font-size: 22px; letter-spacing: 4px; text-transform: lowercase;
-    color: #fff; text-shadow: -2px 0 #00f0ff, 2px 0 #ff2bd6;
-  }
-  h2::after { content: " \25AE"; color: #5ff7ff; animation: blink 1s steps(1) infinite; }
+  .main { min-width: 0; }
 
-  /* video cards */
-  .card {
-    display: inline-block; vertical-align: top; width: 290px; margin: 9px; text-align: left;
-    background: #0b0d44;
-    box-shadow: 0 -2px 0 #9b7bff, 0 2px 0 #9b7bff, -2px 0 0 #9b7bff, 2px 0 0 #9b7bff, 6px 6px 0 rgba(0,0,0,.45);
+  /* panels */
+  .win, .side, .comments {
+    border: 2px solid #9b7bff; background: rgba(7,9,58,.92);
+    box-shadow: 6px 6px 0 rgba(0,0,0,.45);
   }
-  .card:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 0 -2px 0 #ff4fd8, 0 2px 0 #ff4fd8, -2px 0 0 #ff4fd8, 2px 0 0 #ff4fd8, 8px 8px 0 rgba(0,0,0,.45);
-  }
-  .card b {
-    display: block; padding: 6px 10px; font-size: 12px; font-weight: normal; letter-spacing: 1px;
+
+  /* theatre window */
+  .win { margin-bottom: 26px; }
+  .bar {
+    display: flex; padding: 4px 10px; font-size: 13px; white-space: nowrap; overflow: hidden;
     color: #5ff7ff; background: #17167a; border-bottom: 2px solid #9b7bff;
-    text-shadow: 1px 0 #ff2bd6;
   }
-  .card b::before { content: ">"; margin-right: 6px; color: #ff4fd8; }
-  video, iframe { width: 100%; display: block; background: #000; border: none; }
+  .bar .dash { flex: 1; min-width: 0; overflow: hidden; color: #6f55d8; }
+  .bar .dash::before { content: "------------------------------------------------------------------------------------------------------------------------------------------------------"; }
+  .screen { position: relative; aspect-ratio: 16 / 9; background: #000; }
+  .screen video, .screen iframe {
+    position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; display: block;
+  }
+  .screen video { object-fit: contain; }
+  .info { padding: 10px 14px; border-top: 2px solid #9b7bff; }
+  .info .t { font-size: 16px; color: #fff; text-shadow: -1px 0 #00f0ff, 1px 0 #ff2bd6; }
+  .info .t::before { content: "> "; color: #3cff5a; text-shadow: none; }
+  .info .t::after { content: " \25AE"; color: #5ff7ff; animation: blink 1s steps(1) infinite; }
+  .info .f { margin-top: 4px; font-size: 11px; letter-spacing: 1px; color: #7a82ff; word-break: break-all; }
+  .info .f::before { content: "file: "; color: #ff4fd8; }
+
+  /* ascii section headers */
+  h2, .hd {
+    display: flex; align-items: center; white-space: nowrap; overflow: hidden;
+    margin: 0 0 8px; font-size: 16px; font-weight: normal; letter-spacing: 2px;
+    text-transform: lowercase; color: #5ff7ff;
+  }
+  h2::before, .hd::before { content: "+-[ "; color: #9b7bff; white-space: pre; }
+  h2::after, .hd::after {
+    content: " ]------------------------------------------------------------------------------------------------------------------------------------------------------";
+    flex: 1; min-width: 0; overflow: hidden; color: #9b7bff; white-space: pre;
+  }
+
+  /* right-hand video list */
+  .side {
+    position: sticky; top: 14px; max-height: calc(100vh - 28px); overflow-y: auto;
+    padding: 12px 12px 6px; counter-reset: v;
+    scrollbar-color: #9b7bff #07093a; scrollbar-width: thin;
+  }
+  .side::-webkit-scrollbar { width: 10px; }
+  .side::-webkit-scrollbar-track { background: #07093a; }
+  .side::-webkit-scrollbar-thumb { background: #9b7bff; }
+  .side .section { margin-bottom: 18px; }
+  .vid {
+    display: flex; align-items: baseline; gap: 10px; padding: 6px 8px;
+    color: #cdbfff; text-decoration: none; font-size: 13px;
+    border-bottom: 1px dashed #2a2f8a;
+  }
+  .vid::before { counter-increment: v; content: counter(v, decimal-leading-zero); color: #7a82ff; }
+  .vid::after { content: "[mp4]"; margin-left: auto; padding-left: 6px; font-size: 11px; color: #4b52c0; }
+  .vid[data-embed]::after { content: "[web]"; }
+  .vid:hover { color: #fff; background: rgba(95,247,255,.12); }
+  .vid:hover::before { color: #5ff7ff; }
+  .vid.active { color: #000; background: #3cff5a; }
+  .vid.active::before, .vid.active::after { color: #000; }
+
+  /* comments */
+  .comments { padding: 12px 14px 6px; }
+  .c { display: flex; gap: 12px; padding: 10px 2px; border-bottom: 1px dashed #2a2f8a; }
+  .c:last-child { border-bottom: 0; }
+  .av {
+    flex: none; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+    font-size: 15px; color: #fff; background: #17167a;
+    box-shadow: 0 -2px 0 var(--c), 0 2px 0 var(--c), -2px 0 0 var(--c), 2px 0 0 var(--c);
+  }
+  .cb { min-width: 0; }
+  .u { font-size: 13px; color: #5ff7ff; }
+  .d { margin-left: 8px; font-size: 11px; color: #7a82ff; }
+  .x { margin-top: 3px; font-size: 13px; line-height: 1.5; color: #cdbfff; word-wrap: break-word; }
+  .l { margin-top: 4px; font-size: 11px; color: #3cff5a; }
 
   .foot {
-    margin: 6px 0 0; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: #fff;
-    text-shadow: -2px 0 #00f0ff, 2px 0 #ff2bd6;
+    margin: 30px 0 0; font-size: 13px; letter-spacing: 3px; text-align: center;
+    text-transform: uppercase; color: #fff;
+    text-shadow: -2px 0 #00f0ff, 2px 0 #ff2bd6, 0 0 6px #000;
   }
 
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .side { position: static; max-height: 70vh; }
+  }
   @media (prefers-reduced-motion: reduce) {
-    body::before, .hero i, .hero i::after, h2::after { animation: none; }
+    .hero i::after, .info .t::after { animation: none; }
   }
 </style>
 </head>
@@ -109,7 +161,7 @@
 
 <button id="muteBtn">&#x1F50A;</button>
 
-<div class="hero">
+<div class="hero" style="text-align:center;">
   <!-- gif at top -->
   <img src="./gifs/Vidz-.gif" alt="VIDS" style="width: 200px; height: auto;"><br>
   <i>~ video transmissions from the void ~</i>
@@ -125,57 +177,86 @@
   <source src="./sounds/Adrianna Kirikl 02 Glitch.mp3" type="audio/mpeg">
 </audio>
 
-<!-- VHS VAULT -->
-<div class="section">
-  <h2 id="vault">VHS Vault</h2>
-  <div>
-    <div class="card"><b>The Internet For Beginners (1998)</b>
-      <iframe src="https://archive.org/embed/theinternetforbeginners1998" allowfullscreen></iframe></div>
-  </div>
-</div>
+<div class="layout">
 
-<!-- MY VIDEOS -->
-<div class="section">
-  <h2 id="myvideos">My Videos</h2>
-  <div>
-    <div class="card"><b>UFO Truth</b><video controls preload="none"><source src="./vids/WATCH NOW!!! The Truth Revealed About UFOs!!!.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>Halo CE</b><video controls preload="none"><source src="./vids/haloce.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>HOW TO GET FREE ARC TOKENS!!!</b><video controls preload="none"><source src="./vids/Arc Coins.mp4" type="video/mp4"></video></div>
-  </div>
-</div>
+  <!-- LEFT: theatre + comments -->
+  <div class="main">
 
-<!-- OTHER VIDZ -->
-<div class="section">
-  <h2 id="othervidz">Other Vidz</h2>
-  <div>
-    <div class="card"><b>networking</b><video controls preload="none"><source src="./vids/network_wizard.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>piggy</b><video controls preload="none"><source src="./vids/panties.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>sick rap</b><video controls preload="none"><source src="./vids/rapper.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>walls</b><video controls preload="none"><source src="./vids/walls.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>my ass</b><video controls preload="none"><source src="./vids/myass.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>cring flute</b><video controls preload="none"><source src="./vids/This is The Day.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>banana man</b><video controls preload="none"><source src="./vids/bananaman.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>grandma</b><video controls preload="none"><source src="./vids/grandma.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>no</b><video controls preload="none"><source src="./vids/oh_no.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>transformers</b><video controls preload="none"><source src="./vids/transformer.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>hermuckuless</b><video controls preload="none"><source src="./vids/suck_toes.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>propoganda</b><video controls preload="none"><source src="./vids/propagada.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>xman</b><video controls preload="none"><source src="./vids/xman.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>grandpa</b><video controls preload="none"><source src="./vids/grandpa.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>scary</b><video controls preload="none"><source src="./vids/scary.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>kat</b><video controls preload="none"><source src="./vids/cat.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>Cat Harmonics</b><video controls preload="none"><source src="./vids/cat_hermonics.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>German Cola</b><video controls preload="none"><source src="./vids/germancola.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>Turkey</b><video controls preload="none"><source src="./vids/turkey.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>Rubert</b><video controls preload="none"><source src="./vids/rubert.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>Millkers</b><video controls preload="none"><source src="./vids/millkers.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>Fotosynthasis</b><video controls preload="none"><source src="./vids/fotosynthasis.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>edging</b><video controls preload="none"><source src="./vids/edging.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>frog_guy</b><video controls preload="none"><source src="./vids/frog_guy.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>irs_guy</b><video controls preload="none"><source src="./vids/irs.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>children</b><video controls preload="none"><source src="./vids/children.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>butt_i_do</b><video controls preload="none"><source src="./vids/butt_i_do.mp4" type="video/mp4"></video></div>
-    <div class="card"><b>connection_terminated</b><video controls preload="none"><source src="./vids/connection%20terminated.mp4" type="video/mp4"></video></div>
+    <div class="win" id="theatre">
+      <div class="bar"><span>[ now playing ]</span><span class="dash"></span><span>[_][#][x]</span></div>
+      <div class="screen">
+        <video id="mv" controls preload="none"></video>
+        <iframe id="mf" allowfullscreen hidden></iframe>
+      </div>
+      <div class="info">
+        <div class="t" id="vt"></div>
+        <div class="f" id="vf"></div>
+      </div>
+    </div>
+
+    <div class="comments">
+      <div class="hd" id="ch">comments</div>
+      <div id="cl"></div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: video list -->
+  <div class="side">
+
+    <!-- VHS VAULT -->
+    <div class="section">
+      <h2 id="vault">VHS Vault</h2>
+      <div class="list">
+        <a class="vid" href="#" data-embed data-src="https://archive.org/embed/theinternetforbeginners1998">The Internet For Beginners (1998)</a>
+      </div>
+    </div>
+
+    <!-- MY VIDEOS -->
+    <div class="section">
+      <h2 id="myvideos">My Videos</h2>
+      <div class="list">
+        <a class="vid" href="#" data-src="./vids/WATCH NOW!!! The Truth Revealed About UFOs!!!.mp4">UFO Truth</a>
+        <a class="vid" href="#" data-src="./vids/haloce.mp4">Halo CE</a>
+        <a class="vid" href="#" data-src="./vids/Arc Coins.mp4">HOW TO GET FREE ARC TOKENS!!!</a>
+      </div>
+    </div>
+
+    <!-- OTHER VIDZ -->
+    <div class="section">
+      <h2 id="othervidz">Other Vidz</h2>
+      <div class="list">
+        <a class="vid" href="#" data-src="./vids/network_wizard.mp4">networking</a>
+        <a class="vid" href="#" data-src="./vids/panties.mp4">piggy</a>
+        <a class="vid" href="#" data-src="./vids/rapper.mp4">sick rap</a>
+        <a class="vid" href="#" data-src="./vids/walls.mp4">walls</a>
+        <a class="vid" href="#" data-src="./vids/myass.mp4">my ass</a>
+        <a class="vid" href="#" data-src="./vids/This is The Day.mp4">cring flute</a>
+        <a class="vid" href="#" data-src="./vids/bananaman.mp4">banana man</a>
+        <a class="vid" href="#" data-src="./vids/grandma.mp4">grandma</a>
+        <a class="vid" href="#" data-src="./vids/oh_no.mp4">no</a>
+        <a class="vid" href="#" data-src="./vids/transformer.mp4">transformers</a>
+        <a class="vid" href="#" data-src="./vids/suck_toes.mp4">hermuckuless</a>
+        <a class="vid" href="#" data-src="./vids/propagada.mp4">propoganda</a>
+        <a class="vid" href="#" data-src="./vids/xman.mp4">xman</a>
+        <a class="vid" href="#" data-src="./vids/grandpa.mp4">grandpa</a>
+        <a class="vid" href="#" data-src="./vids/scary.mp4">scary</a>
+        <a class="vid" href="#" data-src="./vids/cat.mp4">kat</a>
+        <a class="vid" href="#" data-src="./vids/cat_hermonics.mp4">Cat Harmonics</a>
+        <a class="vid" href="#" data-src="./vids/germancola.mp4">German Cola</a>
+        <a class="vid" href="#" data-src="./vids/turkey.mp4">Turkey</a>
+        <a class="vid" href="#" data-src="./vids/rubert.mp4">Rubert</a>
+        <a class="vid" href="#" data-src="./vids/millkers.mp4">Millkers</a>
+        <a class="vid" href="#" data-src="./vids/fotosynthasis.mp4">Fotosynthasis</a>
+        <a class="vid" href="#" data-src="./vids/edging.mp4">edging</a>
+        <a class="vid" href="#" data-src="./vids/frog_guy.mp4">frog_guy</a>
+        <a class="vid" href="#" data-src="./vids/irs.mp4">irs_guy</a>
+        <a class="vid" href="#" data-src="./vids/children.mp4">children</a>
+        <a class="vid" href="#" data-src="./vids/butt_i_do.mp4">butt_i_do</a>
+        <a class="vid" href="#" data-src="./vids/connection%20terminated.mp4">connection_terminated</a>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -185,26 +266,124 @@
 var BASE=0.6, DUCK=0.08;
 var bg=document.getElementById('bg-audio');
 var btn=document.getElementById('muteBtn');
-var vids=document.querySelectorAll('video');
+var mv=document.getElementById('mv');
+var mf=document.getElementById('mf');
+var vt=document.getElementById('vt');
+var vf=document.getElementById('vf');
+var ch=document.getElementById('ch');
+var cl=document.getElementById('cl');
+var rows=document.querySelectorAll('.vid');
 var muted=false;
 bg.volume=BASE;
 
+/* ---------- generated comments (same video = same comments) ---------- */
+var NAMES=['xX_larry_Xx','dialup_dave','melonking99','SANIC_FAN_1998','y2k_survivor','guest_4721',
+  'NetscapeNick','w1nd0ws98','cyber_gran','hotdog_wizard','AOL_refugee','floppy_bandit',
+  'mr_hogsnag','geocities_ghost','pentium_pete'];
+var TEXTS=['first!!','lol this is so cool how did u make this',
+  'my dialup took 4 hrs to load this and it was worth it',
+  'watch out for larry... he de alien...',
+  'who else is watching this on their pentium II',
+  'this made my day. 10/10 would buffer again',
+  'sign the guestbook!!',
+  'i showed my mom and now she wont use the computer',
+  'compiling melon fragments... done',
+  'the moldiverse of fwiends approves',
+  'NOT KOOL (jk its kool)',
+  'can someone explain this to me',
+  'i watched this 7 times already',
+  'y2k is coming and i am watching this. no regrets',
+  'bill gates went to that island btw',
+  'this video is brought to you by dial-up',
+  'anybody else feel like theyre being watched',
+  'plz upload more!!! subscribe to ur channel (how do i do that)',
+  'quality is amazing for 1998',
+  'downloaded this to my floppy',
+  'my cat sat on the keyboard and also likes this',
+  'i dont know what i just watched but i love it',
+  'the audio on this is sooo crispy',
+  'rainic the hogsnag would be proud',
+  'this is the best thing on the internet right now',
+  'ok but why is this so relaxing',
+  'saved to favourites',
+  'added to my webring',
+  '1 like = 1 prayer',
+  'commenting from the library computer'];
+var FACES=[':)',':P','8)','XD','o_O',':D',';)','>:)','^_^','B)'];
+var COLS=['#9b7bff','#3cff5a','#ff4fd8','#ffb347'];
+
+function hash(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shuffle(arr,r){for(var i=arr.length-1;i>0;i--){var j=Math.floor(r()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t;}return arr;}
+function p2(n){return n<10?'0'+n:''+n;}
+function mk(cls,txt){var e=document.createElement('div');e.className=cls;e.textContent=txt;return e;}
+
+function renderComments(key){
+  var r=rng(hash(key));
+  var n=4+Math.floor(r()*6);
+  var names=shuffle(NAMES.slice(),r), texts=shuffle(TEXTS.slice(),r);
+  cl.innerHTML='';
+  ch.textContent='comments ('+n+')';
+  for(var i=0;i<n;i++){
+    var c=document.createElement('div'); c.className='c';
+    var av=mk('av',FACES[Math.floor(r()*FACES.length)]);
+    av.style.setProperty('--c',COLS[Math.floor(r()*COLS.length)]);
+    var cb=document.createElement('div'); cb.className='cb';
+    var u=mk('u',names[i]);
+    var date=(1998+Math.floor(r()*2))+'-'+p2(1+Math.floor(r()*12))+'-'+p2(1+Math.floor(r()*28))+' '+p2(Math.floor(r()*24))+':'+p2(Math.floor(r()*60));
+    var d=document.createElement('span'); d.className='d'; d.textContent=date; u.appendChild(d);
+    var x=mk('x',texts[i]);
+    var l=mk('l','[+'+Math.floor(r()*r()*120)+']');
+    cb.appendChild(u); cb.appendChild(x); cb.appendChild(l);
+    c.appendChild(av); c.appendChild(cb);
+    cl.appendChild(c);
+  }
+}
+
+/* ---------- player ---------- */
 function duck(){
   if(bg.muted)return;
-  var playing=false;
-  for(var i=0;i<vids.length;i++){ if(!vids[i].paused && !vids[i].ended) playing=true; }
+  var playing = !mv.hidden && !mv.paused && !mv.ended;
   bg.volume = playing ? DUCK : BASE;
 }
-for(var i=0;i<vids.length;i++){
-  vids[i].addEventListener('play',duck);
-  vids[i].addEventListener('pause',duck);
-  vids[i].addEventListener('ended',duck);
+mv.addEventListener('play',duck);
+mv.addEventListener('pause',duck);
+mv.addEventListener('ended',duck);
+
+function loadRow(row, play){
+  for(var i=0;i<rows.length;i++){ rows[i].classList.remove('active'); }
+  row.classList.add('active');
+  var src=row.getAttribute('data-src');
+  vt.textContent=row.textContent;
+  vf.textContent=src;
+  renderComments(src);
+  if(row.hasAttribute('data-embed')){
+    mv.pause(); mv.removeAttribute('src'); mv.load(); mv.hidden=true;
+    mf.src=src; mf.hidden=false;
+  } else {
+    mf.hidden=true; mf.src='about:blank';
+    mv.hidden=false; mv.src=src; mv.load();
+    if(play) mv.play().catch(function(){});
+  }
+  duck();
 }
+
+for(var i=0;i<rows.length;i++){
+  rows[i].addEventListener('click',function(e){
+    e.preventDefault();
+    loadRow(this,true);
+    try{ document.getElementById('theatre').scrollIntoView({behavior:'smooth',block:'start'}); }catch(err){}
+  });
+}
+
 btn.onclick=function(){
   muted=!muted; bg.muted=muted;
   btn.innerHTML = muted ? '&#x1F507;' : '&#x1F50A;';
 };
 document.addEventListener('click',function(){ if(bg.paused && !muted) bg.play(); },{once:true});
+
+/* start with the first of "my videos" loaded in the theatre (no autoplay) */
+loadRow(document.querySelector('#myvideos + .list .vid'), false);
 </script>
 
 </body>
